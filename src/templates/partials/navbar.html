@@ -29,16 +29,17 @@
             <li><a href=""> Contact Us </a></li>
             <span>|</span>
             <li class="dropdown">
-            <a href="#"> Science <i class="dropdown-arrow down"></i></a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'account:profile' %}"> Dashboard <i class="dropdown-arrow down"></i></a>
                 <div class="dropdown-content">
-                    <a href="#"><i class="fas fa-book"></i> Library </a>
-                    <a href="#"><i class="fas fa-newspaper"></i>  Publications </a>
-                    <a href="#"><i class="fas fa-flask"></i> Research </a>
+                    <a href="{% url 'account:profile' %}" class="dropdown-item"><i class="fa-solid fa-user"></i> <span>Edit Profile</span> <span class="arrow">&#10095;</span></a>
+                    {% if user.is_superuser or user.is_staff %}
+                    <a href="{% url 'admin:index' %}" class="dropdown-item"><i class="fa-solid fa-gear"></i> <span>Admin Panel</span> <span class="arrow">&#10095;</span></a>
+                    {% endif %}
+                    <a href="{% url 'account:logout' %}" class="dropdown-item"><i class="fa-solid fa-door-open"></i> <span>Logout</span> <span class="arrow">&#10095;</span></a>
                 </div>
             </li>
         </ul>
-        {% if user.is_authenticated %}
-        <a href="{% url 'account:profile' %}" class="action_btn"> Dashboard </a>
         <form id="logout-form" action="{% url 'account:logout' %}" method="POST" style="display: none;">
             {% csrf_token %}
         </form>

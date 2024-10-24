@@ -234,8 +234,30 @@ header {
 .dropdown-content {
     display: none;
     position: absolute;
-    min-width: 160px;
+    width: 240px;
+    height: 100px;
     z-index: 1;
+    flex-direction: column;
+}
+
+.dropdown span {
+    color: #bbbbbb;
+}
+
+.dropdown span:hover {
+    color: #fff;
+}
+
+.dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    color: #fff;
+}
+
+.dropdown-item .arrow {
+    margin-left: auto;
 }
 
 .dropdown-content a:first-child {
@@ -307,7 +329,7 @@ header {
   pointer-events: auto;
 }
 
-.alert-success.show{
+.alert-success.show {
   animation: show_slide 1s ease forwards;
 }
 

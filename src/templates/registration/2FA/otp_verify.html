@@ -10,13 +10,31 @@
         height: 70vh;
     }
     .form-container {
-        background-color: #fff;
+        background-color: #f0f0f0;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         text-align: center;
         width: 100%;
         max-width: 400px;
+        border: 2px solid #ccc;
+    }
+    h2 {
+        margin-bottom: 20px; 
+    }
+    .label-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px; 
+    }
+    .label-container i {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    .label-container .question-icon {
+        margin-left: 5px;
+        font-size: 16px;
     }
     .form-control {
         width: 100%;
@@ -26,38 +44,46 @@
         border-radius: 4px;
     }
     .btn-submit {
-        padding: 10px 20px;
-        background-color: #007bff;
+        padding: 10px 40px;
+        background-color: #008fbf;
         color: #fff;
         border: none;
         border-radius: 4px;
         cursor: pointer;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px; 
     }
     .btn-submit:hover {
-        background-color: #0056b3;
+        background-color: #005a7f;
     }
 </style>
 {% endblock %}
 
-{% block title %} Otp Verify Account {% endblock %}
+{% block title %} Two-factor authentication {% endblock %}
 
 {% block content %}
 
 {% include 'partials/navbar.html' %}
 
-  <div class="container-login">
-        <div class="form-container">
-            <form method="POST" action="{% url 'account:verify_mfa' %}">
-                {% csrf_token %}
-                <input type="text" id="otp_code" name="otp_code"
-                class="form-control" maxlength="6"
-                placeholder="Enter your OTP code" required>
-                <input type="hidden" name="user_id" value="{{ user_id }}">
-                <button class="btn-submit" type="submit">Verify</button>
-            </form>
-        </div>
+<div class="container-login">
+    <div class="form-container">
+        <h2>Two-factor authentication</h2>
+        <form method="POST" action="{% url 'account:verify_mfa' %}">
+            {% csrf_token %}
+            <div class="label-container">
+                <i class="fa-solid fa-phone"></i>
+                <label for="otp_code">Authentication code <i class="fa-solid fa-circle-question question-icon"></i></label>
+            </div>
+            <input type="text" id="otp_code" name="otp_code"
+                   class="form-control" maxlength="6"
+                   placeholder="xxxxxx" required
+                   onfocus="if(this.value=='xxxxxx') this.value='';">
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <button class="btn-submit" type="submit">Verify</button>
+        </form>
+        <p>Open your two-factor authenticator (TOTP) app or browser extension to view your authentication code.</p>
     </div>
+</div>
 
 {% include 'partials/footer.html' %}
 
