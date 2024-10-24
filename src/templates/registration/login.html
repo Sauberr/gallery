@@ -1,0 +1,81 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/registration/login.css' %}">
+
+{% endblock %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+
+<body>
+    {% if messages or form.errors %}
+    <div class="alert-warning" role="alert">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <h6>
+            {% if messages %}
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            {% else %}
+                {{ form.non_field_errors }}
+            {% endif %}
+        </h6>
+    </div>
+    {% endif %}
+    <div class="login-container">
+        <div class="image-section">
+            <img src="{% static 'images/registration/login.jpg' %}" width="650" height="650" alt="Login Image">
+        </div>
+        <div class="form-box login">
+            <h2>Login</h2>
+            <form action="{% url 'account:login' %}" method="POST">
+                {% csrf_token %}
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="person"></ion-icon></span>
+                    {{ form.username }}
+                    <label> Email/Phone number </label>
+                </div>
+                <div class="input-box">
+                    <span class="icon lock-icon" onclick="togglePasswordVisibility(this)"><ion-icon name="lock-closed"></ion-icon></span>
+                    {{ form.password }}
+                    <label>Password</label>
+                </div>
+                <div class="remember-forgot">
+                    <label><input type="checkbox">Remember me ? </label>
+                    <a href="{% url 'account:password_reset' %}"> Forgot Password? </a>
+                </div>
+                <button type="submit" class="btn"> Login </button>
+                <div class="login-register">
+                    <p> New an account ? <a href="{% url 'account:registration' %}" class="register-link">Registration </a></p>
+                </div>
+                <p class="or-text">or</p>
+                <button class="btn auth-btn google-btn">
+                    <a style="color: cornsilk" href="{% url 'social:begin' 'google-oauth2' %}">
+                        <ion-icon name="logo-google"></ion-icon>Login via Google
+                    </a>
+                </button>
+                <button class="btn auth-btn github-btn">
+                    <a style="color: cornsilk" href="{% url 'social:begin' "github" %}">
+                        <ion-icon name="logo-github"></ion-icon>Login via GitHub
+                    </a>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+
+{% block js %}
+
+<script src="{% static 'js/dark_light_mode.js' %}"></script>
+<script src="{% static 'js/alert.js' %}"></script>
+<script src="{% static 'js/password-eye.js' %}"></script>
+
+{% endblock %}
+
+{% endblock %}

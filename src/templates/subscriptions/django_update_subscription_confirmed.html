@@ -1,0 +1,30 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/subscriptions/django_update_subscription_confirmed.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+
+<div class="subscription-activated">
+    <h5> Final approval confirmed !</h5>
+    <br>
+    <h1> ✅ </h1>
+    <br>
+    <p>
+        We're pleased to inform you that your new subscription plan has been approved.
+    </p>
+    <br>
+    <a class="btn btn-success" type="button" href="{% url 'core:index' %}">
+        &gt; &nbsp; Return to dashboard
+    </a>
+</div>
+
+
+{% endblock %}

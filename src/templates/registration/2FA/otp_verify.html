@@ -1,0 +1,64 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block css %}
+<style>
+    .container-login {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+    }
+    .form-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .btn-submit {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block title %} Otp Verify Account {% endblock %}
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+
+  <div class="container-login">
+        <div class="form-container">
+            <form method="POST" action="{% url 'account:verify_mfa' %}">
+                {% csrf_token %}
+                <input type="text" id="otp_code" name="otp_code"
+                class="form-control" maxlength="6"
+                placeholder="Enter your OTP code" required>
+                <input type="hidden" name="user_id" value="{{ user_id }}">
+                <button class="btn-submit" type="submit">Verify</button>
+            </form>
+        </div>
+    </div>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

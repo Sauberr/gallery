@@ -1,0 +1,42 @@
+{% extends "partials/base.html" %}
+{% load static humanize %}
+
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/partials/books_list.css' %}">
+
+{% endblock %}
+
+{% block title %} {{ title }} {% endblock %}
+
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+
+
+<div class="book-container">
+        <ul>
+            {% for book in books %}
+                <li>
+                    <h2><a href="">{{ book.title }}</a></h2>
+                    <p><strong>Author:</strong> {{ book.author }}</p>
+                    <p><strong>Description:</strong> {{ book.description }}</p>
+                    <p><strong>Price:</strong> {{ book.price|intcomma }}$</p>
+                    <p><strong>Quantity:</strong> {{ book.quantity }}</p>
+                    <p><strong>Total Quantity:</strong> {{ book.total_quantity|intcomma }}$</p>
+                </li>
+            {% endfor %}
+        </ul>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/books_list.js' %}"></script>
+
+{% endblock %}
+

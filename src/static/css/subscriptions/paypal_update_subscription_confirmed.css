@@ -1,0 +1,32 @@
+.subscription-activated {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    margin: 60px auto;
+    max-width: 600px;
+}
+
+.subscription-activated h5 {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.subscription-activated h1 {
+    font-size: 3em;
+    color: #28a745;
+}
+
+.subscription-activated p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+.subscription-activated .btn {
+    font-size: 1em;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #333;
+}

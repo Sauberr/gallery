@@ -1,0 +1,182 @@
+{% extends 'partials/base.html' %}
+{% load static humanize %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/partials/pricing.css' %}">
+{% endblock %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+
+{% if subscription_id %}
+<section class="plans__container">
+    <div class="plans">
+        <div class="plansHero">
+            <h1 class="plansHero__title"> 𝓒𝓱𝓸𝓸𝓼𝓮 𝔂𝓸𝓾𝓻 𝓹𝓻𝓲𝓬𝓲𝓷𝓰 𝓹𝓵𝓪𝓷 </h1>
+            <h3>Subscription status: {{ subscription_plan|title }}</h3>
+            <h3>Delete subscription</h3>
+            <a type="button" href="{% url 'subscriptions:confirm_delete_subscription' subscription_id %}">Delete</a>
+            <br>
+            <h3>Change subscription</h3>
+            {% if subscription_plan == 'Basic' %}
+            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Premium' %}">Upgrade to
+                Premium</a> |
+            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Enterprise' %}">Upgrade
+                to Enterprise</a>
+            {% elif subscription_plan == 'Premium' %}
+            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Basic' %}">Downgrade to
+                Basic</a> |
+            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Enterprise' %}">Upgrade
+                to Enterprise</a>
+            {% elif subscription_plan == 'Enterprise' %}
+            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Basic' %}">Downgrade to
+                Basic</a> |
+            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Premium' %}">Downgrade to
+                Premium</a>
+            {% endif %}
+            <br>
+            <p class="plansHero__subtitle">No contracts. No surprise fees.</p>
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="plans__container">
+    <div class="plans">
+        <div class="plansHero">
+            <h1 class="plansHero__title">Choose your pricing plan</h1>
+            <h3>Subscription status: {{ subscription_plan|title }}</h3>
+            <h3>No subscription</h3>
+            <br>
+            <p class="plansHero__subtitle">No contracts. No surprise fees.</p>
+        </div>
+    </div>
+</section>
+{% endif %}
+<section class="plans__container">
+    <div class="plans">
+        <div class="planItem__container">
+            <div class="planItem planItem--free">
+                <div class="card">
+                    <div class="card__header">
+                        <div class="card__icon symbol symbol--rounded"></div>
+                        <h2>{{ basic_plan.subscriber_name|title }}</h2>
+                    </div>
+                    <div class="card__desc">{{ basic_plan.description }}</div>
+                </div>
+                <div class="price">$<span>{{ basic_plan.subscription_cost|intcomma }}/ month</span></div>
+                <ul class="featureList">
+                    <li> {{ basic_plan.thumbnail_photo_200px }}</li>
+                    <li class="disabled"> thumbnail_photo_400px</li>
+                    <li class="disabled"> original_photo</li>
+                    <li class="disabled"> binary_link</li>
+                </ul>
+                <div id="paypal-button-container-P-6GS86287F0539600CM3YD7OQ"></div>
+                <script src="https://www.paypal.com/sdk/js?client-id=AViFM_g_S_EyBgXIsU-k_4QiK8ZWGDcEax1_923d_rG48UOhsPhv8inLaAUUEE-8TverOEUKZneI2DQx&vault=true&intent=subscription"
+                        data-sdk-integration-source="button-factory"></script>
+                <script>
+                    paypal.Buttons({
+                        style: {
+                            shape: 'pill',
+                            color: 'silver',
+                            layout: 'vertical',
+                            label: 'subscribe'
+                        },
+                        createSubscription: function (data, actions) {
+                            return actions.subscription.create({
+                                plan_id: 'P-6GS86287F0539600CM3YD7OQ'
+                            });
+                        },
+                        onApprove: function (data, actions) {
+                            var current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Basic"
+                            window.open(current_url, '_self')
+                        }
+                    }).render('#paypal-button-container-P-6GS86287F0539600CM3YD7OQ');
+                </script>
+                <!--                <button class="button">Get Started</button>-->
+            </div>
+            <div class="planItem planItem--pro">
+                <div class="card">
+                    <div class="card__header">
+                        <div class="card__icon symbol"></div>
+                        <h2>{{ premium_plan.subscriber_name|title }}</h2>
+                        <div class="card__label label">Best Value</div>
+                    </div>
+                    <div class="card__desc">{{ premium_plan.description }}</div>
+                </div>
+                <div class="price">$<span>{{ premium_plan.subscription_cost|intcomma }}/ month</span></div>
+                <ul class="featureList">
+                    <li>{{ premium_plan.thumbnail_photo_200px }}</li>
+                    <li>{{ premium_plan.thumbnail_photo_400px }}</li>
+                    <li>{{ premium_plan.original_photo }}</li>
+                    <li class="disabled"> binary_link</li>
+                </ul>
+                <div id="paypal-button-container-P-7KE47576DG258030BM3YEAFA"></div>
+                <script>
+                    paypal.Buttons({
+                        style: {
+                            shape: 'pill',
+                            color: 'gold',
+                            layout: 'vertical',
+                            label: 'subscribe'
+                        },
+                        createSubscription: function (data, actions) {
+                            return actions.subscription.create({
+                                plan_id: 'P-7KE47576DG258030BM3YEAFA'
+                            });
+                        },
+                        onApprove: function (data, actions) {
+                            var current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Premium"
+                            window.open(current_url, '_self')
+                        }
+                    }).render('#paypal-button-container-P-7KE47576DG258030BM3YEAFA');
+                </script>
+                <!--                <button class="button button&#45;&#45;pink">Get Started</button>-->
+            </div>
+            <div class="planItem planItem--entp">
+                <div class="card">
+                    <div class="card__header">
+                        <div class="card__icon"></div>
+                        <h2>{{ enterprise_plan.subscriber_name|title }}</h2>
+                    </div>
+                    <div class="card__desc">{{ enterprise_plan.description }}</div>
+                </div>
+                <div class="price">$<span
+                        style="color: white;"> {{ enterprise_plan.subscription_cost|intcomma }}/ month</span></div>
+                <ul class="featureList">
+                    <li>{{ enterprise_plan.thumbnail_photo_200px }}</li>
+                    <li>{{ enterprise_plan.thumbnail_photo_400px }}</li>
+                    <li>{{ enterprise_plan.original_photo }}</li>
+                    <li> {{ enterprise_plan.binary_link }}</li>
+                </ul>
+                <div id="paypal-button-container-P-3WE528458D9215156M3YEAMI"></div>
+                <script>
+                    paypal.Buttons({
+                        style: {
+                            shape: 'pill',
+                            color: 'black',
+                            layout: 'vertical',
+                            label: 'subscribe'
+                        },
+                        createSubscription: function (data, actions) {
+                            return actions.subscription.create({
+                                plan_id: 'P-3WE528458D9215156M3YEAMI'
+                            });
+                        },
+                        onApprove: function (data, actions) {
+                            var current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Enterprise"
+                            window.open(current_url, '_self')
+                        }
+                    }).render('#paypal-button-container-P-3WE528458D9215156M3YEAMI');
+                </script>
+                <!--                <button class="button button&#45;&#45;white">Get Started</button>-->
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

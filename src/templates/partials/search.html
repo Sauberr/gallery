@@ -1,0 +1,17 @@
+{% load static %}
+
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/partials/search.css' %}">
+
+{% endblock %}
+
+<div class="search">
+    <form class="search-form">
+        <i class="fas fa-search"></i>
+        <input type="text" name="q" placeholder="Search">
+        <button type="submit">Search</button>
+    </form>
+    <div class="suggestions-box"></div>
+</div>

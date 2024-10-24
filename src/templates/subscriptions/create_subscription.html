@@ -1,0 +1,33 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/subscriptions/create_subscription.css' %}">
+
+{% endblock %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+
+<div class="subscription-activated">
+    <h5>{{ subscription_plan|title }} subscription activated!</h5>
+    <br>
+    <h1> ✅ </h1>
+    <br>
+    <p>
+        Congratulations on activating your {{ subscription_plan }} subscription!
+        You are now eligible for the perks that are associated with this plan.
+    </p>
+    <br>
+    <a class="btn btn-success" type="button" href="{% url 'core:index' %}">
+        &gt; &nbsp; Go Back
+    </a>
+</div>
+
+
+{% endblock %}

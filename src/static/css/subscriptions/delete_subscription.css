@@ -1,0 +1,38 @@
+.subscription-cancelled {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    margin: 60px auto;
+    max-width: 600px;
+}
+
+.subscription-cancelled h5 {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.subscription-cancelled h1 {
+    font-size: 3em;
+    color: #dc3545;
+}
+
+.subscription-cancelled p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+.subscription-cancelled .btn {
+    font-size: 1em;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #28a745;
+    text-decoration: none;
+}
+
+.subscription-cancelled .btn:hover {
+    background-color: #218838;
+}

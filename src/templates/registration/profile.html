@@ -1,0 +1,100 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block css %}
+<style>
+    .card {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        background-color: #fff;
+    }
+
+    .card-body {
+        text-align: center;
+    }
+
+    .icon-container {
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .centered-form-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block title %} Profile Page {% endblock %}
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+
+<div class="card mx-auto">
+    <div class="card-body text-center">
+        <i class="fas fa-user-circle fa-5x mb-3 rounded-circle"></i>
+        <h3>{{ request.user.email }}</h3>
+        <p>Member since: {{ request.user.date_joined }}</p>
+        {% if not request.user.mfa_enabled %}
+        <h4>
+            Enable 2FA with Authenticator App.
+        </h4>
+        <div>
+            <img src="{{ qrcode }}" alt="{{ img_path }}">
+
+            <form method="POST" action="{% url 'account:verify_mfa' %}" class="form text-center">
+                {% csrf_token %}
+                <div class="form-group text-">
+                    <div class="form-group centered-form-group">
+                        <input type="text" id="otp_code" name="otp_code" maxlength="6" required
+                               class="form-control" placeholder="Enter your OTP code">
+                    </div>
+                </div>
+                <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                <button class="btn btn-primary" type="submit">Verify</button>
+            </form>
+
+        </div>
+
+        {% else %}
+        <a href="{% url 'account:disable_2fa' %}" class="btn btn-success" disabled>
+            Disable 2FA
+        </a>
+        {% endif %}
+
+    </div>
+</div>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

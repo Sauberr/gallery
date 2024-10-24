@@ -1,0 +1,50 @@
+.subscription-confirmation {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    margin: 60px auto;
+    max-width: 600px;
+}
+
+.subscription-confirmation h5 {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.subscription-confirmation h1 {
+    font-size: 3em;
+    color: #dc3545;
+}
+
+.subscription-confirmation p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+.subscription-confirmation .btn {
+    font-size: 1em;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.subscription-confirmation .btn-cancel {
+    background-color: #dc3545;
+}
+
+.subscription-confirmation .btn-cancel:hover {
+    background-color: #c82333;
+}
+
+.subscription-confirmation .btn-confirm {
+    background-color: #28a745;
+}
+
+.subscription-confirmation .btn-confirm:hover {
+    background-color: #218838;
+}

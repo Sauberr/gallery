@@ -1,0 +1,124 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+
+
+{% include 'partials/search.html' %}
+
+
+<style>
+    .book-container {
+        margin: 20px;
+        padding: 20px;
+    }
+    .book-container ul {
+        list-style-type: none;
+    }
+    .book-container li {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    .book-container h2 {
+        margin-bottom: 10px;
+    }
+    .book-container p {
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="book-container">
+    {% if correction %}
+    <div class="correction-message">
+        Показаны результаты по запросу <strong>{{ original_query }}</strong>. Искать вместо этого <strong>{{ correction }}</strong>?
+    </div>
+    {% endif %}
+    {% if books %}
+        <ul>
+            {% for book in books %}
+                <li>
+                    <h2><a href="{% url 'core:books_list' %}">{{ book.title }}</a></h2>
+                    <p><strong>Author:</strong> {{ book.author }}</p>
+                    <p><strong>Description:</strong> {{ book.description }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No books found.</p>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function() {
+    const searchInput = document.querySelector('input[name="q"]');
+    const suggestionsBox = document.createElement('div');
+    suggestionsBox.classList.add('suggestions-box');
+    searchInput.parentNode.appendChild(suggestionsBox);
+
+    searchInput.addEventListener('keyup', async function() {
+        const query = searchInput.value.trim();
+        if (query.length > 0) {
+            const response = await fetch(`/?q=${encodeURIComponent(query)}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            const data = await response.json();
+            suggestionsBox.innerHTML = '';
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const element = document.createElement('div');
+                    element.classList.add(item.correction ? 'correction' : 'suggestion');
+                    if (item.correction) {
+                        element.innerHTML = `<span style="color: red;">${query}</span> is not correct. Did you mean <span style="color: green; cursor: pointer;">${item.correction}</span>?`;
+                        element.querySelector('span[style*="color: green"]').addEventListener('click', function() {
+                            searchInput.value = item.correction;
+                            suggestionsBox.innerHTML = '';
+                            document.querySelector('.search-form').submit();
+                        });
+                    } else {
+                        element.textContent = `${item.title} - ${item.author}`;
+                        element.addEventListener('click', function() {
+                            searchInput.value = item.title;
+                            suggestionsBox.innerHTML = '';
+                            document.querySelector('.search-form').submit();
+                        });
+                    }
+                    suggestionsBox.appendChild(element);
+                });
+            } else {
+                suggestionsBox.innerHTML = `<div>No suggestions available.</div>`;
+            }
+        } else {
+            suggestionsBox.innerHTML = '';
+        }
+    });
+
+    document.querySelector('.search-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const query = searchInput.value.trim();
+        if (query.length > 0) {
+            window.location.href = `/?q=${encodeURIComponent(query)}&strict=true`;
+        }
+    });
+
+    document.addEventListener('click', function(event) {
+        if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+            suggestionsBox.innerHTML = '';
+        }
+    });
+});
+</script>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}

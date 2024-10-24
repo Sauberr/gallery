@@ -1,0 +1,90 @@
+{% extends "partials/base.html" %}
+{% load static humanize %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/images/images_list.css' %}">
+
+{% endblock %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+{% include 'partials/navbar.html' %}
+
+<div class="gallery-container">
+    <h1 class="gallery-title"> 𝓘𝓶𝓪𝓰𝓮𝓼 𝓖𝓪𝓵𝓮𝓻𝔂 </h1>
+    <ul>
+        {% for image in images %}
+    <li>
+        <img src="{{ image.image.url }}" alt="{{ image.title }}">
+        <h2>{{ image.title }}</h2>
+        <p><strong>Author:</strong> {{ image.author }}</p>
+        <p><strong>Description:</strong> {{ image.description }}</p>
+        <p><strong>Created:</strong> {{ image.created_at|date:"F j, Y" }}</p>
+        <p><strong>Subscription:</strong> <span data-subscription="{{ image.subscription_plans }}">{{ image.subscription_plans }}</span></p>
+        <div class="download-buttons">
+            <button class="action_btn download-btn" data-url="{{ image.image.url }}" data-format="png"><i class="fas fa-file-image"></i> PNG</button>
+            <button class="action_btn download-btn" data-url="{{ image.image.url }}" data-format="jpeg"><i class="fas fa-file-image"></i> JPEG</button>
+        </div>
+    </li>
+{% endfor %}
+    </ul>
+</div>
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const downloadButtons = document.querySelectorAll('.download-btn');
+    const userSubscriptionPlan = "{{ user_subscription_plan }}";
+    const allowedPlans = {{ allowed_plans|safe }};
+
+    downloadButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+            const imageUrl = this.getAttribute('data-url');
+            const format = this.getAttribute('data-format');
+            const imageSubscriptionPlan = this.closest('li').querySelector('[data-subscription]').dataset.subscription;
+
+            if (!userSubscriptionPlan) {
+                showError("You need a subscription to download images. Please subscribe.");
+            } else if (allowedPlans[userSubscriptionPlan].includes(imageSubscriptionPlan)) {
+                downloadImage(imageUrl, format);
+            } else {
+                showError("You don't have permission to download this image. Please upgrade your subscription.");
+            }
+        });
+    });
+
+    function downloadImage(url, format) {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.src = url;
+        img.onload = function () {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const dataUrl = canvas.toDataURL(`image/${format}`);
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = `image.${format}`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+    }
+});
+
+
+</script>
+
+
+{% endblock %}

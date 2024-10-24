@@ -1,0 +1,158 @@
+{% load static %}
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/partials/navbar.css' %}">
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<body>
+<div class="top-bar">
+</div>
+<header class="header-separator">
+    <div class="navbar">
+        <div class="logo">
+            <a href="{% url 'core:index' %}">
+            </a>
+        </div>
+        <ul class="links">
+            <li><a href="{% url 'core:index' %}"> Home </a></li>
+            <span>|</span>
+            <li><a href="{% url 'images:images_list' %}"> Images </a></li>
+            <span>|</span>
+            <li><a href="{% url 'core:pricing' %}"> Pricing </a></li>
+            <span>|</span>
+            <li><a href=""> Contact Us </a></li>
+            <span>|</span>
+            <li class="dropdown">
+            <a href="#"> Science <i class="dropdown-arrow down"></i></a>
+                <div class="dropdown-content">
+                    <a href="#"><i class="fas fa-book"></i> Library </a>
+                    <a href="#"><i class="fas fa-newspaper"></i>  Publications </a>
+                    <a href="#"><i class="fas fa-flask"></i> Research </a>
+                </div>
+            </li>
+        </ul>
+        {% if user.is_authenticated %}
+        <a href="{% url 'account:profile' %}" class="action_btn"> Dashboard </a>
+        <form id="logout-form" action="{% url 'account:logout' %}" method="POST" style="display: none;">
+            {% csrf_token %}
+        </form>
+         <a href="#" class="logout-links" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a>
+        {% else %}
+        <a href="{% url 'account:login' %}" class="action_btn">Sign In / Login </a>
+        {% endif %}
+        <div class="toggle_btn">
+            <div class="line top_line"></div>
+            <div class="line middle_line"></div>
+            <div class="line bottom_line"></div>
+        </div>
+    </div>
+   <div class="dropdown_menu">
+        <li><a href="{% url 'core:index' %}"> Home </a></li>
+        <li><a href="{% url 'images:images_list' %}"> Images </a></li>
+        <li><a href=""> Pricing </a></li>
+        <li><a href=""> Contact Us </a></li>
+        <li class="dropdown">
+            <a href="#"> Science <i class="dropdown-arrow down"></i></a>
+            <div class="dropdown-content">
+                <a href="#"><i class="fas fa-book"></i> Library </a>
+                <a href="#"><i class="fas fa-newspaper"></i> Publications </a>
+                <a href="#"> <i class="fas fa-flask"></i> Research </a>
+            </div>
+        </li>
+        {% if user.is_authenticated %}
+        <a href="" class="action_btn"> Dashboard </a>
+         <form id="logout-form" action="{% url 'account:logout' %}" method="POST" style="display: none;">
+            {% csrf_token %}
+        </form>
+         <a href="#" class="logout-links" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a>
+        {% else %}
+        <a href="{% url 'account:login' %}" class="action_btn"> Sign In / Login </a>
+        {% endif %}
+    </div>
+</header>
+<div style="border-bottom: 1px solid grey;"></div>
+
+{% for message in messages %}
+
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+
+        <div class="alert-success" role="alert">
+            <i class="fa-solid fa-check"></i>
+            <h6>
+                {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                {% endif %}
+            </h6>
+        </div>
+
+        {% endif %}
+
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+
+        <div class="alert-error" role="alert">
+            <i class="fa-solid fa-circle-xmark"></i>
+            <h6>
+                {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                {% endif %}
+            </h6>
+        </div>
+
+        {% endif %}
+
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+
+        <div class="alert-info" role="alert">
+            <i class="fa-solid fa-circle-info"></i>
+            <h6>
+                {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                {% endif %}
+            </h6>
+        </div>
+        {% endif %}
+
+
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+
+        <div class="alert-warning" role="alert">
+            <i class="fa-solid fa-circle-info"></i>
+            <h6>
+                {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                {% endif %}
+            </h6>
+        </div>
+        {% endif %}
+
+    {% endfor %}
+
+
+
+
+</body>
+
+{% block js %}
+
+<script src="{% static 'js/alert.js' %}"></script>
+<script src="{% static 'js/drop_menu.js' %}"></script>
+<script src="https://kit.fontawesome.com/ea79e2d2f8.js" crossorigin="anonymous"></script>
+<script src="{% static 'js/toggle_btn.js' %}"></script>
+
+{% endblock %}
+
+{% endblock %}

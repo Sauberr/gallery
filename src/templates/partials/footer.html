@@ -1,0 +1,49 @@
+
+{% load static %}
+
+{% block css %}<link rel="stylesheet" href="{% static 'css/partials/footer.css' %}"> {% endblock %}
+
+<body>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="row">
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li><a href="mailto:info@yourwebsite.com">Email: test-assignment.com</a></li>
+                        <li><a href="tel:+1234567890">Phone: +1 234 567 890</a></li>
+                        <li><a href="#">Address: 123 Main Street, City, Country</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Pages</h4>
+                    <ul>
+                        <li><a href="{% url 'core:index' %}">Home</a></li>
+                        <li><a href="{% url 'images:images_list' %}">Images</a></li>
+                        <li><a href="{% url 'core:pricing' %}">Pricing</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Privacy Page & Guarantee</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Guarantee</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © {% now 'Y' %} Test Assignment. All rights reserved.
+        </div>
+    </footer>
+</body>

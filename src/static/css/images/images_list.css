@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.gallery-container {
+    margin: 20px;
+    padding: 20px;
+}
+
+.gallery-title {
+    text-align: center;
+    font-size: 36px;
+    margin: 20px 0;
+    padding: 10px 0;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.gallery-title::after {
+    content: '';
+    position: absolute;
+    width: 20%;
+    height: 2.5px;
+    background-color: #000;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.gallery-container ul {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.gallery-container li {
+    flex: 1 1 calc(25% - 20px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.gallery-container img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-container img:hover {
+    transform: scale(1.05);
+}
+
+.gallery-container h2 {
+    margin: 10px;
+    font-size: 18px;
+}
+
+.gallery-container p {
+    margin: 5px 10px;
+    color: #34363b;
+}
+
+.gallery-container p strong {
+    color: #353935;
+}
+
+.download-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 10px;
+}
+
+.download-buttons .action_btn {
+    background-color: #696969;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    outline: none;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: scale 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.download-buttons .action_btn:hover {
+    scale: 1.05;
+    color: #fff;
+}
+
+.download-buttons .action_btn:active {
+    scale: 0.95;
+}
+
+.download-buttons .action_btn i {
+    margin-right: 5px;
+}

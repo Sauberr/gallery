@@ -1,0 +1,23 @@
+
+.book-container {
+    margin: 20px;
+    padding: 20px;
+}
+
+.book-container ul {
+    list-style-type: none;
+}
+
+.book-container li {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.book-container h2 {
+    margin-bottom: 10px;
+}
+
+.book-container p {
+    margin-bottom: 5px;
+}
