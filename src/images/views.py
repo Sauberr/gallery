@@ -3,6 +3,7 @@ from django.views.generic import ListView
 
 from common.mixins import TitleMixin
 from images.models import Images
+from core.utils.paginator import paginator
 
 
 class ImagesList(LoginRequiredMixin, TitleMixin, ListView):
@@ -27,4 +28,10 @@ class ImagesList(LoginRequiredMixin, TitleMixin, ListView):
 
         context['user_subscription_plan'] = user_subscription_plan
         context['allowed_plans'] = allowed_plans
+
+        images = self.get_queryset()
+        custom_range, images = paginator(self.request, images, 4)
+        context['custom_range'] = custom_range
+        context['images'] = images
+
         return context

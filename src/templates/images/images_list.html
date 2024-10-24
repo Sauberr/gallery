@@ -30,7 +30,11 @@
     </li>
 {% endfor %}
     </ul>
+
 </div>
+    
+     {% include 'partials/pagination.html' with queryset=images custom_range=custom_range %}
+    
 
 {% include 'partials/footer.html' %}
 
