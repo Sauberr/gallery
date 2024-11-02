@@ -41,9 +41,9 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript">
 
-    document.addEventListener('DOMContentLoaded', function () {
+<script>
+document.addEventListener('DOMContentLoaded', function () {
     const downloadButtons = document.querySelectorAll('.download-btn');
     const userSubscriptionPlan = "{{ user_subscription_plan }}";
     const allowedPlans = {{ allowed_plans|safe }};
@@ -55,38 +55,69 @@
             const imageUrl = this.getAttribute('data-url');
             const format = this.getAttribute('data-format');
             const imageSubscriptionPlan = this.closest('li').querySelector('[data-subscription]').dataset.subscription;
+            const title = this.closest('li').querySelector('h2').textContent.toLowerCase();
 
             if (!userSubscriptionPlan) {
                 showError("You need a subscription to download images. Please subscribe.");
             } else if (allowedPlans[userSubscriptionPlan].includes(imageSubscriptionPlan)) {
-                downloadImage(imageUrl, format);
+                downloadImage(imageUrl, format, userSubscriptionPlan, title); 
             } else {
                 showError("You don't have permission to download this image. Please upgrade your subscription.");
             }
         });
     });
 
-    function downloadImage(url, format) {
+    function downloadImage(url, format, plan, title) {
         const img = new Image();
         img.crossOrigin = 'Anonymous';
         img.src = url;
         img.onload = function () {
             const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
+
+            if (plan === 'Basic') {
+                canvas.width = 200;
+                canvas.height = 200;
+            } else if (plan === 'Premium' || plan === 'Enterprise') {
+                const resolutions = [200, 400, img.width];
+                resolutions.forEach(resolution => {
+                    canvas.width = resolution;
+                    canvas.height = resolution;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const dataUrl = canvas.toDataURL(`image/${format}`);
+                    const link = document.createElement('a');
+                    link.href = dataUrl;
+                    link.download = `${title}_${resolution}.${format}`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+
+                if (plan === 'Enterprise') {
+                    const binaryLink = document.createElement('a');
+                    binaryLink.href = url;
+                    binaryLink.download = `${title}_binary.${format}`;
+                    document.body.appendChild(binaryLink);
+                    binaryLink.click();
+                    document.body.removeChild(binaryLink);
+                }
+                return;
+            } else {
+                canvas.width = img.width;
+                canvas.height = img.height;
+            }
+
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             const dataUrl = canvas.toDataURL(`image/${format}`);
             const link = document.createElement('a');
             link.href = dataUrl;
-            link.download = `image.${format}`;
+            link.download = `${title}.${format}`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         };
     }
 });
-
 
 </script>
 
