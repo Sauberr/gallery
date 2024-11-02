@@ -1,0 +1,9 @@
+[
+   {
+      "model":"subscriptions.enterprise",
+      "pk":5,
+      "fields":{
+         "binary_link":"Binary link"
+      }
+   }
+]

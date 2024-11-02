@@ -1,0 +1,18 @@
+[
+   {
+      "model":"subscriptions.premium",
+      "pk":3,
+      "fields":{
+         "thumbnail_photo_400px":"Thumbnail photo 400px",
+         "original_photo":"Original photo"
+      }
+   },
+   {
+      "model":"subscriptions.premium",
+      "pk":5,
+      "fields":{
+         "thumbnail_photo_400px":"Thumbnail photo 400px",
+         "original_photo":"Original photo"
+      }
+   }
+]
