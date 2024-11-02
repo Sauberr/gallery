@@ -1,12 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 
-from common.mixins import TitleMixin
+from common.mixins import TitleMixin, CacheMixin
 from images.models import Images
 from core.utils.paginator import paginator
 
 
-class ImagesList(LoginRequiredMixin, TitleMixin, ListView):
+class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
     template_name: str = "images/images_list.html"
     title: str = "Gallery"
     model = Images
@@ -32,6 +32,6 @@ class ImagesList(LoginRequiredMixin, TitleMixin, ListView):
         images = self.get_queryset()
         custom_range, images = paginator(self.request, images, 4)
         context['custom_range'] = custom_range
-        context['images'] = images
+        context['images'] = self.set_get_cache(images,  'images', 15)
 
         return context

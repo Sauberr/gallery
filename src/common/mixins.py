@@ -12,7 +12,7 @@ class TitleMixin:
 
 class CacheMixin:
 
-    def set_get_cache(self, request, query, cache_name: str, cache_time: int) -> Dict[str, object]:
+    def set_get_cache(self, query, cache_name: str, cache_time: int) -> Dict[str, object]:
         data = cache.get(cache_name)
         if not data:
             data = query

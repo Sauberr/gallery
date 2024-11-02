@@ -48,6 +48,10 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
 
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        messages.error(self.request, 'Please, write valid email or password')
+        return super().form_invalid(form)
+
 
 class UserLogoutView(LogoutView):
     pass

@@ -58,7 +58,7 @@ class ProfileForm(UserChangeForm):
     email = forms.EmailField()
     avatar = forms.ImageField()
     is_active = forms.BooleanField()
-    date_joined = forms.DateTimeField()
+    date_joined = forms.DateTimeField(disabled=True)
     birth_date = forms.DateField()
 
     class Meta:
