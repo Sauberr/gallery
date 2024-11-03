@@ -1,8 +1,12 @@
 import base64
+import io
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+import pyotp
+import qrcode
+from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
@@ -12,16 +16,12 @@ from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.generic import CreateView, RedirectView, View
 
-from account.forms import UserLoginForm, UserRegistrationForm, ProfileForm
+from account.forms import ProfileForm, UserLoginForm, UserRegistrationForm
 from account.models import Profile
 from account.services.emails import send_registration_email
 from account.services.verify_2fa_otp import verify_2fa_otp
 from common.mixins import TitleMixin
 from core.utils.token_generator import TokenGenerator
-import pyotp
-import qrcode
-import io
-from django.contrib import messages
 
 
 class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
@@ -41,15 +41,15 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
         user = form.get_user()
         if user is not None:
             if user.mfa_enabled:
-                return render(self.request, 'registration/2FA/otp_verify.html', {'user_id': user.id})
+                return render(self.request, "registration/2FA/otp_verify.html", {"user_id": user.id})
             login(self.request, user)
-            messages.success(self.request, 'Login successful!')
-            return redirect('account:profile')
+            messages.success(self.request, "Login successful!")
+            return redirect("account:profile")
 
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Please, write valid email or password')
+        messages.error(self.request, "Please, write valid email or password")
         return super().form_invalid(form)
 
 
@@ -114,10 +114,7 @@ def profile(request):
         user.mfa_secret = pyotp.random_base32()
         user.save()
 
-    otp_uri = pyotp.totp.TOTP(user.mfa_secret).provisioning_uri(
-        name=user.email,
-        issuer_name="Test Assignment"
-    )
+    otp_uri = pyotp.totp.TOTP(user.mfa_secret).provisioning_uri(name=user.email, issuer_name="Test Assignment")
 
     qr = qrcode.make(otp_uri)
     buffer = io.BytesIO()
@@ -130,11 +127,11 @@ def profile(request):
 
     context = {"qrcode": qr_code_data_uri}
 
-    return render(request, 'registration/profile.html', context)
+    return render(request, "registration/profile.html", context)
 
 
 class VerifyMfa(View):
-    template_name: str = 'registration/2FA/otp_verify.html'
+    template_name: str = "registration/2FA/otp_verify.html"
     success_url = reverse_lazy("account:profile")
     auth_backend: str = "django.contrib.auth.backends.ModelBackend"
 
@@ -145,7 +142,7 @@ class VerifyMfa(View):
 
         if not user_id:
             messages.error(request, "Invalid user id. Please try again.")
-            return render(request,  self.template_name, {"user_id": user_id})
+            return render(request, self.template_name, {"user_id": user_id})
 
         user = get_user_model().objects.get(id=user_id)
         if verify_2fa_otp(user, otp):
@@ -158,7 +155,6 @@ class VerifyMfa(View):
             return redirect("account:profile")
 
         return redirect(self.success_url)
-
 
     def get(self, request, *args, **kwargs):
         user_id = request.GET.get("user_id")

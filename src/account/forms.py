@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import (AuthenticationForm, UserChangeForm,
+                                       UserCreationForm)
 from django.core.exceptions import ValidationError
 from django_recaptcha.fields import ReCaptchaField
+from phonenumber_field.formfields import PhoneNumberField
 
 from account.models import Profile
 
@@ -10,7 +12,7 @@ from account.models import Profile
 class UserRegistrationForm(UserCreationForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
-    phone_number = forms.CharField(max_length=15)
+    phone_number = PhoneNumberField()
     email = forms.EmailField()
     password1 = forms.CharField(widget=forms.PasswordInput())
     password2 = forms.CharField(widget=forms.PasswordInput())
@@ -40,7 +42,7 @@ class UserRegistrationForm(UserCreationForm):
 
 class UserLoginForm(AuthenticationForm):
     email = forms.EmailField(required=False)
-    phone_number = forms.CharField(max_length=15, required=False)
+    phone_number = PhoneNumberField(max_length=15, required=False)
     password = forms.CharField(widget=forms.PasswordInput())
     remember_me = forms.BooleanField(
         required=False, widget=forms.CheckboxInput(attrs={"class": "form-check-input", "id": "remember_me"})
@@ -63,7 +65,13 @@ class ProfileForm(UserChangeForm):
 
     class Meta:
         model = Profile
-        fields = ("first_name", "last_name", "phone_number", "email", "avatar", "is_active",
-                  "date_joined", "birth_date")
-
-
+        fields = (
+            "first_name",
+            "last_name",
+            "phone_number",
+            "email",
+            "avatar",
+            "is_active",
+            "date_joined",
+            "birth_date",
+        )

@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
-from typing import Tuple, List, Any
-import sentry_sdk
+from typing import Any, List, Tuple
 
+import sentry_sdk
 from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +25,6 @@ INTERNAL_IPS: List[str] = [
 # Application definition
 
 INSTALLED_APPS: Tuple[str, ...] = (
-
     # Django apps
     "jet.dashboard",
     "jet",
@@ -41,7 +40,6 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "django_elasticsearch_dsl",
     "django.contrib.humanize",
     "debug_toolbar",
-
     # Custom apps
     "phonenumber_field",
     "crispy_forms",
@@ -50,7 +48,6 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "django_recaptcha",
     "drf_yasg",
     "social_django",
-
     # My apps
     "core",
     "subscriptions",
@@ -147,16 +144,14 @@ USE_I18N = True
 USE_TZ = True
 
 ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': 'http://elasticsearch:9200'
-    },
+    "default": {"hosts": "http://elasticsearch:9200"},
 }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-SECURE_CROSS_ORIGIN_OPENER_POLICY: str = 'same-origin-allow-popups'
+SECURE_CROSS_ORIGIN_OPENER_POLICY: str = "same-origin-allow-popups"
 
 
 # Default primary key field type
@@ -169,30 +164,30 @@ SOCIAL_AUTH_URL_NAMESPACE: str = "social"
 
 
 AUTHENTICATION_BACKENDS: List[str] = [
-    'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.github.GithubOAuth2',
-    'account.auth_backend.AuthBackend',
-    'django.contrib.auth.backends.ModelBackend',
+    "social_core.backends.google.GoogleOAuth2",
+    "social_core.backends.github.GithubOAuth2",
+    "account.auth_backend.AuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
 
-SOCIAL_AUTH_GITHUB_KEY = 'Ov23lituVCnvAs80C47d'
-SOCIAL_AUTH_GITHUB_SECRET = 'ae37c4070d47038ceacb6c90c00e4af48d509697'
+SOCIAL_AUTH_GITHUB_KEY = "Ov23lituVCnvAs80C47d"
+SOCIAL_AUTH_GITHUB_SECRET = "ae37c4070d47038ceacb6c90c00e4af48d509697"
 
 SOCIAL_AUTH_PIPELINE: Tuple[str, ...] = (
-    'social_core.pipeline.social_auth.social_details',
-    'social_core.pipeline.social_auth.social_uid',
-    'social_core.pipeline.social_auth.auth_allowed',
-    'social_core.pipeline.social_auth.social_user',
-    'social_core.pipeline.user.get_username',
-    'social_core.pipeline.user.create_user',
-    'account.pipeline.cleanup_social_account',
-    'account.pipeline.activate_user',
-    'social_core.pipeline.social_auth.associate_user',
-    'social_core.pipeline.social_auth.load_extra_data',
-    'social_core.pipeline.user.user_details'
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "social_core.pipeline.user.create_user",
+    "account.pipeline.cleanup_social_account",
+    "account.pipeline.activate_user",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
 )
 
 JET_THEMES = [

@@ -1,23 +1,23 @@
-from django.db import models
-from faker import Faker
 from typing import List, Tuple
 
+from django.db import models
+from faker import Faker
 
 SUBSCRIPTION_PLANS: List[Tuple[str, str]] = [
-    ('Basic', 'Basic Plan'),
-    ('Premium', 'Premium Plan'),
-    ('Enterprise', 'Enterprise Plan'),
+    ("Basic", "Basic Plan"),
+    ("Premium", "Premium Plan"),
+    ("Enterprise", "Enterprise Plan"),
 ]
 
 
 class Images(models.Model):
     title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField(upload_to="images/")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.CharField(max_length=200)
     description = models.TextField()
-    subscription_plans = models.CharField(max_length=200, choices=SUBSCRIPTION_PLANS, default='Basic')
+    subscription_plans = models.CharField(max_length=200, choices=SUBSCRIPTION_PLANS, default="Basic")
 
     class Meta:
         verbose_name: str = "Image"

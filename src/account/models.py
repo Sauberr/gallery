@@ -129,7 +129,6 @@ class Profile(models.Model):
     birth_date = models.DateField(_("birth date"), blank=True, null=True)
     avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True, null=True)
 
-
     def __str__(self):
         return f"{self.user} {self.status}"
 

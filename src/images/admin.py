@@ -1,6 +1,7 @@
 from django.contrib import admin
-from images.models import Images
 from django.utils.html import format_html
+
+from images.models import Images
 
 
 @admin.register(Images)
@@ -17,4 +18,3 @@ class ImagesAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
     list_filter = ("title", "description")
     list_per_page = 10
-

@@ -1,4 +1,5 @@
 from typing import Dict
+
 from django.core.cache import cache
 
 
@@ -9,6 +10,7 @@ class TitleMixin:
         context = super(TitleMixin, self).get_context_data(**kwargs)
         context["title"] = self.title
         return context
+
 
 class CacheMixin:
 

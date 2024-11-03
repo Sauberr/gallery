@@ -1,10 +1,10 @@
-from django.views.generic import TemplateView, ListView
-
-from subscriptions.models import Subscription, Basic, Premium, Enterprise
-from .models import Books
 from django.shortcuts import render
+from django.views.generic import ListView, TemplateView
 
 from common.mixins import TitleMixin
+from subscriptions.models import Basic, Enterprise, Premium, Subscription
+
+from .models import Books
 
 
 class IndexView(TitleMixin, TemplateView):
@@ -84,8 +84,8 @@ class BookList(TitleMixin, ListView):
     template_name: str = "partials/books_list.html"
     title: str = "Books"
     model = Books
-    context_object_name: str = 'books'
-    ordering = ['title']
+    context_object_name: str = "books"
+    ordering = ["title"]
 
 
 def subscription_plans(request):
@@ -96,36 +96,45 @@ def subscription_plans(request):
         subscriptions = Subscription.objects.get(user=request.user)
         subscription_id = subscriptions.paypal_subscription_id
         subscription_plan = subscriptions.subscription_plan
-        context = {'subscription_plan': subscription_plan, 'subscription_id': subscription_id,
-                   'basic_plan': basic_plan, 'premium_plan': premium_plan, 'enterprise_plan': enterprise_plan}
+        context = {
+            "subscription_plan": subscription_plan,
+            "subscription_id": subscription_id,
+            "basic_plan": basic_plan,
+            "premium_plan": premium_plan,
+            "enterprise_plan": enterprise_plan,
+        }
     except:
-        context = {'subscription_plan': None, 'subscription_id': None, 'basic_plan': basic_plan,
-                   'premium_plan': premium_plan, 'enterprise_plan': enterprise_plan}
+        context = {
+            "subscription_plan": None,
+            "subscription_id": None,
+            "basic_plan": basic_plan,
+            "premium_plan": premium_plan,
+            "enterprise_plan": enterprise_plan,
+        }
 
-    return render(request, 'partials/pricing.html', context)
+    return render(request, "partials/pricing.html", context)
 
 
 class Handler403(TitleMixin, TemplateView):
-    template_name: str = '403.html'
-    title: str = '403 Forbidden'
+    template_name: str = "403.html"
+    title: str = "403 Forbidden"
 
 
 class Handler404(TitleMixin, TemplateView):
-    template_name = '404.html'
-    title: str = '404 Not Found'
+    template_name = "404.html"
+    title: str = "404 Not Found"
 
 
 class Handler500(TitleMixin, TemplateView):
-    template_name: str = '500.html'
-    title: str = '500 Internal Server Error'
+    template_name: str = "500.html"
+    title: str = "500 Internal Server Error"
+
 
 class Handler502(TitleMixin, TemplateView):
-    template_name: str = '502.html'
-    title: str = '502 Bad Gateway'
+    template_name: str = "502.html"
+    title: str = "502 Bad Gateway"
 
 
 class Handler503(TitleMixin, TemplateView):
-    template_name: str = '503.html'
-    title: str = '503 Service Unavailable'
-
-
+    template_name: str = "503.html"
+    title: str = "503 Service Unavailable"

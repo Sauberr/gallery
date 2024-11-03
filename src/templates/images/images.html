@@ -3,7 +3,7 @@
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/images/images_list.css' %}">
+<link rel="stylesheet" href="{% static 'css/images/images.css' %}">
 
 {% endblock %}
 
@@ -33,7 +33,7 @@
 
 </div>
     
-     {% include 'partials/pagination.html' with queryset=images custom_range=custom_range %}
+{% include 'partials/pagination.html' with queryset=images custom_range=custom_range %}
     
 
 {% include 'partials/footer.html' %}

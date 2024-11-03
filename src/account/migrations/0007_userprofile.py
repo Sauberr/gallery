@@ -31,9 +31,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "phone_number",
-                    phonenumber_field.modelfields.PhoneNumberField(
-                        blank=True, max_length=128, null=True, region=None
-                    ),
+                    phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, null=True, region=None),
                 ),
                 (
                     "location",

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from subscriptions.models import Subscription, Basic, Premium, Enterprise
+from subscriptions.models import Basic, Enterprise, Premium, Subscription
 
 
 @admin.register(Subscription)
@@ -128,7 +128,14 @@ class EnterpriseAdmin(admin.ModelAdmin):
         "binary_link",
     )
     list_display_links = ("subscriber_name", "subscription_plan", "subscription_cost")
-    list_filter = ("subscription_plan", "is_active", "thumbnail_photo_200px", "thumbnail_photo_400px", "original_photo", "binary_link")
+    list_filter = (
+        "subscription_plan",
+        "is_active",
+        "thumbnail_photo_200px",
+        "thumbnail_photo_400px",
+        "original_photo",
+        "binary_link",
+    )
     date_hierarchy = "create_datetime"
     search_fields = ("subscriber_name", "subscription_plan", "paypal_subscription_id")
     ordering = ("create_datetime", "last_update")

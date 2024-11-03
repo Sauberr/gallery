@@ -14,16 +14,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="userprofile",
             name="avatar",
-            field=models.ImageField(
-                blank=True, null=True, upload_to="avatars/", verbose_name="avatar"
-            ),
+            field=models.ImageField(blank=True, null=True, upload_to="avatars/", verbose_name="avatar"),
         ),
         migrations.AddField(
             model_name="userprofile",
             name="date_joined",
-            field=models.DateTimeField(
-                default=django.utils.timezone.now, verbose_name="date joined"
-            ),
+            field=models.DateTimeField(default=django.utils.timezone.now, verbose_name="date joined"),
         ),
         migrations.AddField(
             model_name="userprofile",
