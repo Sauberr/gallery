@@ -25,6 +25,7 @@ INTERNAL_IPS: List[str] = [
 # Application definition
 
 INSTALLED_APPS: Tuple[str, ...] = (
+
     # Django apps
     "jet.dashboard",
     "jet",
@@ -40,6 +41,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "django_elasticsearch_dsl",
     "django.contrib.humanize",
     "debug_toolbar",
+
     # Custom apps
     "phonenumber_field",
     "crispy_forms",
@@ -48,6 +50,8 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "django_recaptcha",
     "drf_yasg",
     "social_django",
+    "cachalot",
+
     # My apps
     "core",
     "subscriptions",
@@ -131,6 +135,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CACHALOT_TIMEOUT = 60 * 60
+CACHALOT_ENABLED = True
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -161,6 +168,22 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 SOCIAL_AUTH_URL_NAMESPACE: str = "social"
+
+DEBUG_TOOLBAR_PANELS: List[str] = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'cachalot.panels.CachalotPanel',
+]
 
 
 AUTHENTICATION_BACKENDS: List[str] = [
