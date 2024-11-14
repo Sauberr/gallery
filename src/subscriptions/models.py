@@ -25,7 +25,7 @@ class Subscription(models.Model):
         verbose_name_plural: str = "Subscriptions"
         ordering = ["-create_datetime", "is_active", "last_update"]
         indexes = [
-            models.Index(fields=["subscriber_name", "subscription_plan", "subscription_cost"]),
+            models.Index(fields=["subscriber_name", "subscription_plan", "paypal_subscription_id"]),
         ]
 
 
