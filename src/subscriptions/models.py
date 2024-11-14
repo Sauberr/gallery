@@ -23,6 +23,10 @@ class Subscription(models.Model):
     class Meta:
         verbose_name: str = "Subscription"
         verbose_name_plural: str = "Subscriptions"
+        ordering = ["-create_datetime", "is_active", "last_update"]
+        indexes = [
+            models.Index(fields=["subscriber_name", "subscription_plan", "subscription_cost"]),
+        ]
 
 
 class Basic(Subscription):

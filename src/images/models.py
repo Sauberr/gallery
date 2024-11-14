@@ -22,6 +22,10 @@ class Images(models.Model):
     class Meta:
         verbose_name: str = "Image"
         verbose_name_plural: str = "Images"
+        ordering = ["-created_at", "updated_at"]
+        indexes = [
+            models.Index(fields=["title", "author"])
+        ]
 
     def __str__(self):
         return self.title

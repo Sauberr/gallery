@@ -60,6 +60,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name: str = _("User")
         verbose_name_plural: str = _("Users")
         ordering = ("first_name",)
+        indexes = [
+            models.Index(fields=["first_name", "last_name", "email"]),
+        ]
 
     def __str__(self):
         return f"{self.first_name}_{self.last_name}"
