@@ -17,8 +17,10 @@ urlpatterns = [
     path("", include("core.urls", namespace="core")),
     # Subscription URL
     path("subscriptions/", include("subscriptions.urls", namespace="subscriptions")),
+    # API DRF Auth URL
+    path("drf-auth/", include("rest_framework.urls", namespace="rest_framework")),
     # API URL
-    path("api-auth/", include("rest_framework.urls")),
+    path("api/", include("api.urls", namespace="api")),
     # Prometheus URL
     path("", include("django_prometheus.urls")),
     # Account URL

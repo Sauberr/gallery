@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Any, List, Tuple
+from typing import Any, List, Tuple, Dict
 
 import sentry_sdk
 from django.utils.translation import gettext_lazy as _
@@ -51,6 +51,8 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "drf_yasg",
     "social_django",
     "cachalot",
+    "rest_framework_simplejwt",
+    'djoser',
 
     # My apps
     "core",
@@ -60,7 +62,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "images",
 )
 
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_TEMPLATE_PACK: str = "bootstrap5"
 
 MIDDLEWARE: Tuple[str, ...] = (
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
@@ -222,4 +224,21 @@ JET_THEMES = [
     {"theme": "light-gray", "color": "#222", "title": "Light Gray"},
 ]
 
-REST_FRAMEWORK = {"DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"]}
+REST_FRAMEWORK: Dict[str, ...] = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 3,
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+

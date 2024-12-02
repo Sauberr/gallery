@@ -16,7 +16,7 @@ class Images(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(max_length=1024)
     subscription_plans = models.CharField(max_length=200, choices=SUBSCRIPTION_PLANS, default="Basic")
 
     class Meta:
