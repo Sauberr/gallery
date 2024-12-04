@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, View
 
-from common.mixins import TitleMixin
+from common.mixins import TitleMixin, CacheMixin
 from subscriptions.models import Basic, Enterprise, Premium, Subscription
 
 from .models import Books
@@ -88,14 +88,23 @@ class BookList(TitleMixin, ListView):
     ordering = ["title"]
 
 
-def subscription_plans(request):
-    basic_plan = Basic.objects.first()
-    premium_plan = Premium.objects.first()
-    enterprise_plan = Enterprise.objects.first()
-    try:
-        subscriptions = Subscription.objects.get(user=request.user)
-        subscription_id = subscriptions.paypal_subscription_id
-        subscription_plan = subscriptions.subscription_plan
+class SubscriptionPlansView(View, CacheMixin):
+    def get(self, request):
+        basic_plan = self.set_get_cache(Basic.objects.filter(
+            subscription_plan="Basic Plan").first(), "basic_plan", 600)
+        premium_plan = self.set_get_cache(Premium.objects.filter(
+            subscription_plan="Premium Plan").first(), "premium_plan", 600)
+        enterprise_plan = self.set_get_cache(Enterprise.objects.filter(
+            subscription_plan="Enterprise Plan").first(), "enterprise_plan", 600)
+
+        try:
+            subscriptions = Subscription.objects.get(user=request.user)
+            subscription_id = subscriptions.paypal_subscription_id
+            subscription_plan = subscriptions.subscription_plan
+        except Subscription.DoesNotExist:
+            subscription_id = None
+            subscription_plan = None
+
         context = {
             "subscription_plan": subscription_plan,
             "subscription_id": subscription_id,
@@ -103,16 +112,12 @@ def subscription_plans(request):
             "premium_plan": premium_plan,
             "enterprise_plan": enterprise_plan,
         }
-    except:
-        context = {
-            "subscription_plan": None,
-            "subscription_id": None,
-            "basic_plan": basic_plan,
-            "premium_plan": premium_plan,
-            "enterprise_plan": enterprise_plan,
-        }
 
-    return render(request, "partials/pricing.html", context)
+        return render(request, "partials/pricing.html", context)
+
+
+def contact(request):
+    return render(request, "partials/contact.html")
 
 
 class Handler403(TitleMixin, TemplateView):
