@@ -56,11 +56,14 @@ class BasicAdmin(admin.ModelAdmin):
         "thumbnail_photo_200px",
     )
     list_display_links = ("subscriber_name", "subscription_plan", "subscription_cost")
-    list_filter = ("subscription_plan", "is_active", "thumbnail_photo_200px")
+    list_filter = ("subscription_plan", "is_active")
     date_hierarchy = "create_datetime"
     search_fields = ("subscriber_name", "subscription_plan", "paypal_subscription_id")
     ordering = ("create_datetime", "last_update")
     readonly_fields = ("create_datetime", "last_update")
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(subscription_plan="Basic Plan")
 
 
 @admin.register(Premium)
@@ -91,11 +94,14 @@ class PremiumAdmin(admin.ModelAdmin):
         "original_photo",
     )
     list_display_links = ("subscriber_name", "subscription_plan", "subscription_cost")
-    list_filter = ("subscription_plan", "is_active", "thumbnail_photo_200px", "thumbnail_photo_400px", "original_photo")
+    list_filter = ("subscription_plan", "is_active")
     date_hierarchy = "create_datetime"
     search_fields = ("subscriber_name", "subscription_plan", "paypal_subscription_id")
     ordering = ("create_datetime", "last_update")
     readonly_fields = ("create_datetime", "last_update")
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(subscription_plan="Premium Plan")
 
 
 @admin.register(Enterprise)
@@ -131,12 +137,11 @@ class EnterpriseAdmin(admin.ModelAdmin):
     list_filter = (
         "subscription_plan",
         "is_active",
-        "thumbnail_photo_200px",
-        "thumbnail_photo_400px",
-        "original_photo",
-        "binary_link",
     )
     date_hierarchy = "create_datetime"
     search_fields = ("subscriber_name", "subscription_plan", "paypal_subscription_id")
     ordering = ("create_datetime", "last_update")
     readonly_fields = ("create_datetime", "last_update")
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(subscription_plan="Enterprise Plan")
