@@ -81,5 +81,73 @@
 .search p {
     max-width: 80%;
     padding: 20px;
+}
 
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .search {
+        margin: 15px;
+        padding: 15px;
+    }
+    .search-form {
+        width: 500px;
+        height: 50px;
+    }
+    .search-form input[type="text"] {
+        padding: 8px;
+    }
+    .search-form button {
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 992px) {
+    .search {
+        margin: 10px;
+        padding: 10px;
+    }
+    .search-form {
+        width: 400px;
+        height: 45px;
+    }
+    .search-form input[type="text"] {
+        padding: 6px;
+    }
+    .search-form button {
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .search {
+        margin: 5px;
+        padding: 5px;
+    }
+    .search-form {
+        width: 300px;
+        height: 40px;
+    }
+    .search-form input[type="text"] {
+        padding: 4px;
+    }
+    .search-form button {
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .search {
+        margin: 2px;
+        padding: 2px;
+    }
+    .search-form {
+        width: 100%;
+        height: 35px;
+    }
+    .search-form input[type="text"] {
+        padding: 2px;
+    }
+    .search-form button {
+        padding: 2px 5px;
+    }
 }
