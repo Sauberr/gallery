@@ -1,3 +1,4 @@
+
 $(document).on('submit', '#contact-form-ajax', function (e) {
     e.preventDefault();
     console.log('Form submitted');
@@ -6,6 +7,16 @@ $(document).on('submit', '#contact-form-ajax', function (e) {
     let email = $('#email').val();
     let message = $('#message').val();
     let csrf_token = $('[name=csrfmiddlewaretoken]').val();
+
+    if (!full_name || !email || !message) {
+        alert('All fields are required.');
+        return;
+    }
+
+    if (!email.includes('@')) {
+        alert('Please enter a valid email address.');
+        return;
+    }
 
     console.log('Name:', full_name);
     console.log('Email:', email);

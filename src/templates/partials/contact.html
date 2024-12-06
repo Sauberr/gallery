@@ -65,9 +65,9 @@
 <form class="contact-form" id="contact-form-ajax" method="POST">
   {% csrf_token %}
   <h2>CONTACT US</h2>
-  <p type="Full Name:"><input id="full_name" name="full_name" placeholder="Write your name here.."></input></p>
-  <p type="Email:"><input id="email" name="email" placeholder="Let us know how to contact you back.."></input></p>
-  <p type="Message:"><input id="message" name="message" placeholder="What would you like to tell us.."></input></p>
+    <p type="Full Name:"><input id="full_name" name="full_name" placeholder="Write your name here.." required></input></p>
+<p type="Email:"><input id="email" name="email" placeholder="Let us know how to contact you back.." type="email" required></input></p>
+<p type="Message:"><input id="message" name="message" placeholder="What would you like to tell us.." required></input></p>
   <button type="submit">Send Message</button>
   <div class="contact-div">
     <span class="fa fa-phone"></span>+1 234 567 890
