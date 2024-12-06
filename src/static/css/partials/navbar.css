@@ -78,10 +78,10 @@ header {
 }
 
 .logo img {
-    width: 300px;
-    height: 70px;
+    width: 130px;
+    height: 130px;
     display: block;
-    margin: auto;
+    margin-left: -80px;
 }
 
 .navbar {
@@ -91,7 +91,7 @@ header {
     margin: 0 auto;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .navbar .logo a {
@@ -119,6 +119,10 @@ header {
     transition: width 0.3s ease;
 }
 
+.navbar .links .logout-links::after {
+    content: none;
+}
+
 .navbar .links a:hover,
 .dropdown_menu li a:hover {
     color: #ffffff;
@@ -128,12 +132,12 @@ header {
     width: 100%;
 }
 
-    .logout-links {
+.logout-links {
     position: relative;
     text-decoration: none;
     color: #bbbbbb;
     font-size: 1rem;
-    transition: color 0.3s ease;
+
 }
 
 .logout-links::after {
@@ -143,8 +147,6 @@ header {
     height: 2px;
     bottom: -5px;
     left: 0;
-    background-color: #fff;
-    transition: width 0.3s ease;
 }
 
 .logout-links:hover {
@@ -192,6 +194,20 @@ header {
     color: #008fbf;
 }
 
+.action_btn_navbar {
+    background-color: #008fbf;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: scale 0.2s ease;
+    margin-left: 40px;
+}
+
 .action_btn {
     background-color: #008fbf;
     color: #fff;
@@ -213,6 +229,7 @@ header {
 .action_btn:active {
     scale: 0.95;
 }
+
 
 .dropdown {
     position: relative;
@@ -266,7 +283,6 @@ header {
     text-decoration: none;
     background-color: #24262b;
     display: block;
-    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .dropdown-content a:hover {
@@ -486,7 +502,17 @@ header {
     }
 
     .dropdown_menu {
+        display: none;
+        height: 0;
+    }
+
+    .dropdown_menu.open {
         display: block;
+        height: 375px;
+    }
+
+    .logo img {
+        display: none;
     }
 }
 
@@ -494,5 +520,14 @@ header {
     .dropdown_menu {
         left: 2rem;
         width: unset;
+        height: 0;
+    }
+
+    .dropdown_menu.open {
+        height: 375px;
+    }
+
+    .logo img {
+        display: none;
     }
 }

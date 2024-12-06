@@ -2,7 +2,7 @@
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/partials/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/partials/navbar.css' %}">
 
 {% endblock %}
 
@@ -10,149 +10,153 @@
 {% block content %}
 
 
-<body>
-<div class="top-bar">
-</div>
-<header class="header-separator">
-    <div class="navbar">
-        <div class="logo">
-            <a href="{% url 'core:index' %}"></a>
+    <body>
+    <div class="top-bar">
+    </div>
+    <header class="header-separator">
+        <div class="navbar">
+            <div class="logo">
+                <a href="{% url 'core:index' %}"> <img src="{% static 'images/logo.png' %}" alt="logo"> </a>
+            </div>
+            <ul class="links">
+                <li><a href="{% url 'core:index' %}"> Home </a></li>
+                <span>|</span>
+                <li><a href="{% url 'images:images' %}"> Images </a></li>
+                <span>|</span>
+                <li><a href="{% url 'core:pricing' %}"> Pricing </a></li>
+                <span>|</span>
+                <li><a href="{% url 'core:contact' %}"> Contact Us </a></li>
+                {% if user.is_authenticated %}
+                    <span>|</span>
+                    <li class="dropdown">
+                        <a href="{% url 'account:profile' %}"> Dashboard <i class="dropdown-arrow down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="{% url 'account:profile' %}" class="dropdown-item"><i class="fa-solid fa-user"></i>
+                                <span>Edit Profile</span> <span class="arrow">&#10095;</span></a>
+                            {% if user.is_superuser or user.is_staff %}
+                                <a href="{% url 'admin:index' %}" class="dropdown-item"><i class="fa-solid fa-gear"></i>
+                                    <span>Admin Panel</span> <span class="arrow">&#10095;</span></a>
+                            {% endif %}
+                            <form id="logout-form" action="{% url 'account:logout' %}" method="POST">
+                                {% csrf_token %}
+                            </form>
+                            <a href="#" class="logout-links"
+                               onclick="document.getElementById('logout-form').submit(); return false;"> <i
+                                    class="fa-solid fa-right-from-bracket"></i> Logout <span
+                                    class="arrow">&#10095;</span></a>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
+            <form id="logout-form" action="{% url 'account:logout' %}" method="POST" style="display: none;">
+                {% csrf_token %}
+            </form>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'account:login' %}" class="action_btn_navbar">Sign In / Login </a>
+            {% endif %}
+            <div class="toggle_btn">
+                <div class="line top_line"></div>
+                <div class="line middle_line"></div>
+                <div class="line bottom_line"></div>
+            </div>
         </div>
-        <ul class="links">
+        <div class="dropdown_menu">
             <li><a href="{% url 'core:index' %}"> Home </a></li>
-            <span>|</span>
             <li><a href="{% url 'images:images' %}"> Images </a></li>
-            <span>|</span>
             <li><a href="{% url 'core:pricing' %}"> Pricing </a></li>
-            <span>|</span>
             <li><a href="{% url 'core:contact' %}"> Contact Us </a></li>
             {% if user.is_authenticated %}
-            <span>|</span>
-            <li class="dropdown">
-                <a href="{% url 'account:profile' %}"> Dashboard <i class="dropdown-arrow down"></i></a>
-                <div class="dropdown-content">
-                    <a href="{% url 'account:profile' %}" class="dropdown-item"><i class="fa-solid fa-user"></i> <span>Edit Profile</span> <span class="arrow">&#10095;</span></a>
-                    {% if user.is_superuser or user.is_staff %}
-                    <a href="{% url 'admin:index' %}" class="dropdown-item"><i class="fa-solid fa-gear"></i> <span>Admin Panel</span> <span class="arrow">&#10095;</span></a>
-                    {% endif %}
-                            <form id="logout-form" action="{% url 'account:logout' %}" method="POST" style="display: none;">
-            {% csrf_token %}
-        </form>
-         <a href="#" class="logout-links" onclick="document.getElementById('logout-form').submit(); return false;"> <i class="fa-solid fa-right-from-bracket"></i> Logout <span class="arrow">&#10095;</span></a>
-                </div>
-            </li>
+                <li class="dropdown">
+                    <a href="#"> Dashboard <i class="dropdown-arrow down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'account:profile' %}"><i class="fa-solid fa-user"></i> Edit Profile </a>
+                        {% if user.is_superuser or user.is_staff %}
+                            <a href="{% url 'admin:index' %}"><i class="fa-solid fa-gear"></i> Admin Panel </a>
+                        {% endif %}
+                        <a href="#" onclick="document.getElementById('logout-form').submit(); return false;"><i
+                                class="fa-solid fa-right-from-bracket"></i> Logout </a>
+                    </div>
+                </li>
+            {% else %}
+                <a href="{% url 'account:login' %}" class="action_btn"> Sign In / Login </a>
             {% endif %}
-        </ul>
-        <form id="logout-form" action="{% url 'account:logout' %}" method="POST" style="display: none;">
-            {% csrf_token %}
-        </form>
-        {% if not user.is_authenticated %}
-        <a href="{% url 'account:login' %}" class="action_btn">Sign In / Login </a>
-        {% endif %}
-        <div class="toggle_btn">
-            <div class="line top_line"></div>
-            <div class="line middle_line"></div>
-            <div class="line bottom_line"></div>
         </div>
-    </div>
-    <div class="dropdown_menu">
-        <li><a href="{% url 'core:index' %}"> Home </a></li>
-        <li><a href="{% url 'images:images' %}"> Images </a></li>
-        <li><a href="{% url 'core:pricing' %}"> Pricing </a></li>
-        <li><a href="{% url 'core:contact' %}"> Contact Us </a></li>
-        {% if user.is_authenticated %}
-        <li class="dropdown">
-            <a href="#"> Dashboard <i class="dropdown-arrow down"></i></a>
-            <div class="dropdown-content">
-                <a href="{% url 'account:profile' %}"><i class="fa-solid fa-user"></i> Edit Profile </a>
-                {% if user.is_superuser or user.is_staff %}
-                <a href="{% url 'admin:index' %}"><i class="fa-solid fa-gear"></i> Admin Panel </a>
-                {% endif %}
-                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;"><i class="fa-solid fa-right-from-bracket"></i> Logout </a>
-            </div>
-        </li>
-        {% else %}
-        <a href="{% url 'account:login' %}" class="action_btn"> Sign In / Login </a>
-        {% endif %}
-    </div>
-</header>
-<div style="border-bottom: 1px solid grey;"></div>
+    </header>
+    <div style="border-bottom: 1px solid grey;"></div>
 
-{% for message in messages %}
+    {% for message in messages %}
 
         {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
 
-        <div class="alert-success" role="alert">
-            <i class="fa-solid fa-check"></i>
-            <h6>
-                {% if messages %}
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                {% endif %}
-            </h6>
-        </div>
+            <div class="alert-success" role="alert">
+                <i class="fa-solid fa-check"></i>
+                <h6>
+                    {% if messages %}
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    {% endif %}
+                </h6>
+            </div>
 
         {% endif %}
 
         {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
 
-        <div class="alert-error" role="alert">
-            <i class="fa-solid fa-circle-xmark"></i>
-            <h6>
-                {% if messages %}
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                {% endif %}
-            </h6>
-        </div>
+            <div class="alert-error" role="alert">
+                <i class="fa-solid fa-circle-xmark"></i>
+                <h6>
+                    {% if messages %}
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    {% endif %}
+                </h6>
+            </div>
 
         {% endif %}
 
         {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
 
-        <div class="alert-info" role="alert">
-            <i class="fa-solid fa-circle-info"></i>
-            <h6>
-                {% if messages %}
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                {% endif %}
-            </h6>
-        </div>
+            <div class="alert-info" role="alert">
+                <i class="fa-solid fa-circle-info"></i>
+                <h6>
+                    {% if messages %}
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    {% endif %}
+                </h6>
+            </div>
         {% endif %}
 
 
         {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
 
-        <div class="alert-warning" role="alert">
-            <i class="fa-solid fa-circle-info"></i>
-            <h6>
-                {% if messages %}
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                {% endif %}
-            </h6>
-        </div>
+            <div class="alert-warning" role="alert">
+                <i class="fa-solid fa-circle-info"></i>
+                <h6>
+                    {% if messages %}
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    {% endif %}
+                </h6>
+            </div>
         {% endif %}
 
     {% endfor %}
 
 
+    </body>
 
+    {% block js %}
 
-</body>
+        <script src="{% static 'js/alert.js' %}"></script>
+        <script src="{% static 'js/drop_menu.js' %}"></script>
+        <script src="https://kit.fontawesome.com/ea79e2d2f8.js" crossorigin="anonymous"></script>
+        <script src="{% static 'js/toggle_btn.js' %}"></script>
 
-{% block js %}
-
-<script src="{% static 'js/alert.js' %}"></script>
-<script src="{% static 'js/drop_menu.js' %}"></script>
-<script src="https://kit.fontawesome.com/ea79e2d2f8.js" crossorigin="anonymous"></script>
-<script src="{% static 'js/toggle_btn.js' %}"></script>
-
-{% endblock %}
+    {% endblock %}
 
 {% endblock %}

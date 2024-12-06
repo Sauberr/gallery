@@ -48,7 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
     birth_date = models.DateField(_("birth date"), blank=True, null=True)
     avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True, null=True)
-    mfa_secret = models.CharField(max_length=16, blank=True, null=True)
+    mfa_secret = models.CharField(max_length=32, blank=True, null=True)
     mfa_enabled = models.BooleanField(default=False)
 
     objects = CustomerManager()
@@ -112,25 +112,13 @@ class ProxyUser(get_user_model()):
 
 class Profile(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    pk = user.primary_key
-    first_name = models.CharField(_("name"), max_length=150, blank=True)
-    last_name = models.CharField(_("surname"), max_length=150, blank=True)
-    email = models.EmailField(_("email address"), blank=True, null=True, unique=True)
-    photo = models.ImageField(upload_to="user_photos", blank=True, null=True)
     phone_number = PhoneNumberField(null=True, blank=True)
     location = models.CharField(max_length=44, choices=COUNTRY_CHOICES, default="Undefined")
+    avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True, null=True)
     sex = models.CharField(max_length=9, choices=SEX_CHOICES, default="Undefined")
     status = models.CharField(max_length=25, choices=STATUS_CHOICES, default="Unmarried")
-    is_active = models.BooleanField(
-        _("active"),
-        default=False,
-        help_text=_(
-            "Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts."
-        ),
-    )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
     birth_date = models.DateField(_("birth date"), blank=True, null=True)
-    avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True, null=True)
 
     def __str__(self):
         return f"{self.user} {self.status}"

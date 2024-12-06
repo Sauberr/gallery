@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 
 from account.models import Profile, ProxyUser
 
-admin.site.register([ProxyUser, Profile])
+admin.site.register([Profile, ProxyUser])
 
 
 class ProfileAdmin(admin.StackedInline):

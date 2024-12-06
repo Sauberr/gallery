@@ -15,7 +15,6 @@ def profile_create(sender, instance, created, **kwargs) -> None:
 @receiver(post_delete, sender=get_user_model())
 def profile_delete(sender, instance, **kwargs) -> None:
     try:
-        user = instance.profile
-        user.delete()
+        user = instance.profile.delete()
     except Profile.DoesNotExist:
         pass
