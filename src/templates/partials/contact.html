@@ -1,0 +1,31 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+
+{% block css %}
+    
+<link rel="stylesheet" href="{% static 'css/partials/contact.css' %}">
+
+{% endblock %}
+
+
+
+{% block content %}
+    
+{% include 'partials/navbar.html' %}
+
+<form class="contact-form">
+  <h2>CONTACT US</h2>
+  <p type="Name:"><input placeholder="Write your name here.."></input></p>
+  <p type="Email:"><input placeholder="Let us know how to contact you back.."></input></p>
+  <p type="Message:"><input placeholder="What would you like to tell us.."></input></p>
+  <button>Send Message</button>
+  <div class="contact-div">
+    <span class="fa fa-phone"></span>+1 234 567 890
+    <span class="fa fa-envelope-o"></span> beauti-gallery@.com
+  </div>
+</form>
+
+{% include 'partials/footer.html' %}    
+    
+{% endblock %}

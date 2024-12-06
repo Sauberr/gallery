@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, View
 
@@ -88,7 +89,7 @@ class BookList(TitleMixin, ListView):
     ordering = ["title"]
 
 
-class SubscriptionPlansView(View, CacheMixin):
+class SubscriptionPlansView(LoginRequiredMixin, View, CacheMixin):
     def get(self, request):
         basic_plan = self.set_get_cache(Basic.objects.filter(
             subscription_plan="Basic Plan").first(), "basic_plan", 600)
