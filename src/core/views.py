@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, View
@@ -5,7 +7,8 @@ from django.views.generic import ListView, TemplateView, View
 from common.mixins import TitleMixin, CacheMixin
 from subscriptions.models import Basic, Enterprise, Premium, Subscription
 
-from .models import Books
+from .models import Books, ContactUs
+from django.http import JsonResponse
 
 
 class IndexView(TitleMixin, TemplateView):
@@ -117,8 +120,33 @@ class SubscriptionPlansView(LoginRequiredMixin, View, CacheMixin):
         return render(request, "partials/pricing.html", context)
 
 
-def contact(request):
-    return render(request, "partials/contact.html")
+class ContactView(TitleMixin, TemplateView):
+    template_name: str = "partials/contact.html"
+    title: str = "Contact Us"
+
+
+def ajax_contact_form(request):
+    if request.method == 'POST':
+        name = request.POST.get("full_name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+
+        if not all([name, email, message]):
+            data = {'bool': False}
+            return JsonResponse({'data': data})
+
+        contact = ContactUs.objects.create(
+            name=name,
+            email=email,
+            message=message,
+            created_at=timezone.now()
+        )
+
+        data = {"bool": True, "message": "<i class='fa fa-exclamation-triangle'></i>"}
+        return JsonResponse({"data": data, "title": "Contact Us"})
+    else:
+        data = {'bool': False}
+        return JsonResponse({'data': data})
 
 
 class Handler403(TitleMixin, TemplateView):
