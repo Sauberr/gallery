@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers, permissions
 from api.views import ImagesViewSet, SubscriptionViewSet, BasicSubscriptionViewSet, PremiumSubscriptionViewSet, \
-    EnterpriseSubscriptionViewSet
+    EnterpriseSubscriptionViewSet, HealthView
 
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -32,14 +32,15 @@ schema_view = get_schema_view(
 
 
 router = routers.DefaultRouter()
-router.register(r"images", ImagesViewSet)
-router.register(r"subscription", SubscriptionViewSet)
+router.register(r"images", ImagesViewSet, basename="images")
+router.register(r"subscription", SubscriptionViewSet, basename="subscription")
 router.register(r"basic-subscription", BasicSubscriptionViewSet, basename="basic-subscription")
 router.register(r"premium-subscription", PremiumSubscriptionViewSet, basename="premium-subscription")
 router.register(r"enterprise-subscription", EnterpriseSubscriptionViewSet, basename="enterprise-subscription")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("health/", HealthView.as_view(), name="health"),
     path("auth/", include("djoser.urls")),
     path("auth/", include("djoser.urls.jwt")),
     path("docs/", schema_view.with_ui("swagger", cache_timeout=0), name="swagger_docs"),

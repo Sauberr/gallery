@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Final, Literal, Tuple
+from typing import Dict, Final
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -63,7 +63,7 @@ class ConfirmDeleteSubscription(LoginRequiredMixin, TitleMixin, DeleteView):
     success_url = reverse_lazy("subscriptions:delete_subscription")
     slug_field: str = "paypal_subscription_id"
     slug_url_kwarg: str = "subscription_id"
-    title = "Confirm Subscription Deletion"
+    title: str = "Confirm Subscription Deletion"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

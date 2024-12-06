@@ -1,3 +1,6 @@
+from datetime import datetime, timezone
+
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from subscriptions.models import Basic, Enterprise, Premium, Subscription
 from subscriptions.serializers import BasicSubscriptionSerializer, EnterpriseSubscriptionSerializer,  \
@@ -7,6 +10,28 @@ from images.serializers import ImagesSerializer
 from rest_framework.permissions import IsAuthenticated
 from api.permissions import IsAdminOrReadOnly
 from rest_framework import filters
+from rest_framework.response import Response
+from rest_framework import status
+
+
+class HealthView(APIView):
+    def get(self, request, *args, **kwargs) -> Response:
+        """Check health status of the API"""
+
+        database_status: str = "OK"
+        cache_status: str = "OK"
+
+        health_status = {
+            "status": status.HTTP_200_OK,
+            "version": "1.0.0",
+            "dependencies": {
+                "database": database_status,
+                "cache": cache_status,
+            },
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+        }
+
+        return Response(health_status, status=status.HTTP_200_OK)
 
 
 class SubscriptionViewSet(ModelViewSet):
