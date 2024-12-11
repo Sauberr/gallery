@@ -28,6 +28,17 @@ services:
         - discovery.type=single-node
         - xpack.security.enabled=false
 
+  redis:
+    image: redis
+    container_name: redis_container
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - backend
+    ports:
+      - 6380:6379
+
   grafana:
     container_name: grafana_container
     image: grafana/grafana:latest
