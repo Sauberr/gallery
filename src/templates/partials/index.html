@@ -14,26 +14,29 @@
 {% block css %}<link rel="stylesheet" href="{% static 'css/partials/index.css' %}"> {% endblock %}    
 
 
-<div class="book-container">
+<div class="image-container">
     {% if correction %}
     <div class="correction-message">
-        Показаны результаты по запросу <strong>{{ original_query }}</strong>. Искать вместо этого <strong>{{ correction }}</strong>?
+        Showing results for your query <strong>{{ original_query }}</strong>. Search instead <strong>{{ correction }}</strong>?
     </div>
     {% endif %}
-    {% if books %}
+    {% if images %}
         <ul>
-            {% for book in books %}
+            {% for image in images %}
                 <li>
-                    <h2><a href="{% url 'core:books_list' %}">{{ book.title }}</a></h2>
-                    <p><strong>Author:</strong> {{ book.author }}</p>
-                    <p><strong>Description:</strong> {{ book.description }}</p>
+                    <h2><a href="{% url 'core:image_list' %}">{{ image.title }}</a></h2>
+                    <p><strong>Author:</strong> {{ image.author }}</p>
+                    <p><strong>Description:</strong> {{ image.description }}</p>
                 </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>No books found.</p>
+        <p>No images found.</p>
     {% endif %}
 </div>
+    
+
+
 
 <script>
 document.addEventListener("DOMContentLoaded", async function() {

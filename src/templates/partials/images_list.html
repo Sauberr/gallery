@@ -1,0 +1,44 @@
+{% extends "partials/base.html" %}
+{% load static humanize %}
+
+
+{% block css %}
+
+<link rel="stylesheet" href="{% static 'css/partials/images_list.css' %}">
+
+{% endblock %}
+
+{% block title %} {{ title }} {% endblock %}
+
+
+{% block content %}
+
+{% include 'partials/navbar.html' %}
+
+
+<div class="image-container">
+        <ul>
+            {% for image in images %}
+                <li>
+                    <h2><a href="">{{ image.title }}</a></h2>
+                    <p><strong>Author:</strong> {{ image.author }}</p>
+                    <p><strong>Description:</strong> {{ image.description }}</p>
+                    <img src="{{ image.image.url }}" alt="{{ image.title }}" width="480" height="320">
+                    <p><strong>Created:</strong> {{ image.created_at|date:"F j, Y" }}</p>
+{#                    <p><strong>Price:</strong> {{ book.price|intcomma }}$</p>#}
+{#                    <p><strong>Quantity:</strong> {{ book.quantity }}</p>#}
+{#                    <p><strong>Total Quantity:</strong> {{ book.total_quantity|intcomma }}$</p>#}
+                </li>
+            {% endfor %}
+        </ul>
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+
+<script src="{% static 'js/images_list.js' %}"></script>
+
+{% endblock %}
+

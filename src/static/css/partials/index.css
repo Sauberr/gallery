@@ -1,64 +1,66 @@
-.book-container {
-    margin: 20px;
+.image-container {
+    margin-right: 80px;
+    margin-left: 80px;
+    margin-bottom: 40px;
     padding: 20px;
 }
 
-.book-container ul {
+.image-container ul {
     list-style-type: none;
     padding: 0;
 }
 
-.book-container li {
+.image-container li {
     margin-bottom: 20px;
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
 
-.book-container h2 {
+.image-container h2 {
     margin-bottom: 10px;
 }
 
-.book-container p {
+.image-container p {
     margin-bottom: 5px;
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-    .book-container {
+    .image-container {
         margin: 15px;
         padding: 15px;
     }
-    .book-container li {
+    .image-container li {
         padding: 8px;
     }
 }
 
 @media (max-width: 992px) {
-    .book-container {
+    .image-container {
         margin: 10px;
         padding: 10px;
     }
-    .book-container li {
+    .image-container li {
         padding: 6px;
     }
 }
 
 @media (max-width: 768px) {
-    .book-container {
+    .image-container {
         margin: 5px;
         padding: 5px;
     }
-    .book-container li {
+    .image-container li {
         padding: 4px;
     }
 }
 
 @media (max-width: 576px) {
-    .book-container {
+    .image-container {
         margin: 2px;
         padding: 2px;
     }
-    .book-container li {
+    .image-container li {
         padding: 2px;
     }
 }
