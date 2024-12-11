@@ -30,7 +30,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 EMAIL_BACKEND = str(os.environ.get("EMAIL_BACKEND"))
 EMAIL_HOST = str(os.environ.get("EMAIL_HOST"))
-EMAIL_PORT = int(os.environ.get("EMAIL_PORT"))
+EMAIL_PORT = str(os.environ.get("EMAIL_PORT"))
 EMAIL_USE_TLS = bool(os.environ.get("EMAIL_USE_TLS"))
 EMAIL_HOST_USER = str(os.environ.get("EMAIL_HOST_USER"))
 EMAIL_HOST_PASSWORD = str(os.environ.get("EMAIL_HOST_PASSWORD"))

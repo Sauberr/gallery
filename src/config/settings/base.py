@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 from typing import Any, List, Tuple, Dict
 
@@ -20,6 +21,7 @@ ALLOWED_HOSTS: List[Any] = ["*", "127.0.0.1", "localhost"]
 
 INTERNAL_IPS: List[str] = [
     "127.0.0.1",
+    "localhost",
 ]
 
 CACHES = {
@@ -163,7 +165,9 @@ USE_I18N = True
 USE_TZ = True
 
 ELASTICSEARCH_DSL = {
-    "default": {"hosts": "http://elasticsearch:9200"},
+    "default": {
+        "hosts": "http://elasticsearch:9200"
+    },
 }
 
 # Static files (CSS, JavaScript, Images)
@@ -198,6 +202,14 @@ DEBUG_TOOLBAR_PANELS: List[str] = [
 ]
 
 
+CELERY_BROKER_URL: str = "redis://127.0.0.1:6379"
+CELERY_RESULT_BACKEND: str = "redis://127.0.0.1:6379"
+
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"
+
+
 AUTHENTICATION_BACKENDS: List[str] = [
     "social_core.backends.google.GoogleOAuth2",
     "social_core.backends.github.GithubOAuth2",
@@ -208,8 +220,8 @@ AUTHENTICATION_BACKENDS: List[str] = [
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
 
-SOCIAL_AUTH_GITHUB_KEY = "Ov23lituVCnvAs80C47d"
-SOCIAL_AUTH_GITHUB_SECRET = "ae37c4070d47038ceacb6c90c00e4af48d509697"
+SOCIAL_AUTH_GITHUB_KEY: str = "Ov23lituVCnvAs80C47d"
+SOCIAL_AUTH_GITHUB_SECRET: str = "ae37c4070d47038ceacb6c90c00e4af48d509697"
 
 SOCIAL_AUTH_PIPELINE: Tuple[str, ...] = (
     "social_core.pipeline.social_auth.social_details",
@@ -233,6 +245,21 @@ JET_THEMES = [
     {"theme": "light-blue", "color": "#5EADDE", "title": "Light Blue"},
     {"theme": "light-gray", "color": "#222", "title": "Light Gray"},
 ]
+
+SIMPLE_JWT: Dict = {
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
+
+
+DJOSER: Dict[str, str | bool] = {
+    "LOGIN_FIELD": "email",
+    "USER_CREATE_PASSWORD_RETYPE": True,
+    "PASSWORD_RESET_CONFIRM_RETYPE": True,
+    "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND": True,
+    "PASSWORD_RESET_CONFIRM_URL": "auth/password-reset/{uid}/{token}",
+}
 
 REST_FRAMEWORK: Dict[str, ...] = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",

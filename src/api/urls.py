@@ -32,6 +32,7 @@ schema_view = get_schema_view(
 
 
 router = routers.DefaultRouter()
+
 router.register(r"images", ImagesViewSet, basename="images")
 router.register(r"subscription", SubscriptionViewSet, basename="subscription")
 router.register(r"basic-subscription", BasicSubscriptionViewSet, basename="basic-subscription")
