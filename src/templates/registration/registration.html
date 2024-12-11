@@ -3,7 +3,7 @@
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/registration/registration.css' %}">
+    <link rel="stylesheet" href="{% static 'css/registration/registration.css' %}">
 
 {% endblock %}
 
@@ -11,27 +11,27 @@
 
 {% block content %}
 
-{% include 'partials/navbar.html' %}
+    {% include 'partials/navbar.html' %}
 
-<body>
+    <body>
     {% if messages or form.errors %}
-    <div class="alert" role="alert">
-        <span class="fas fa-exclamation-circle"></span>
-        <h6>
-            {% if messages %}
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            {% else %}
-                {% for field, errors in form.errors.items %}
-                    {% for error in errors %}
-                        <p>{{ error }}</p>
+        <div class="alert" role="alert">
+            <span class="fas fa-exclamation-circle"></span>
+            <h6>
+                {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
                     {% endfor %}
-                {% endfor %}
-            {% endif %}
-        </h6>
-    </div>
-{% endif %}
+                {% else %}
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+            </h6>
+        </div>
+    {% endif %}
     <div class="registration-container">
         <div class="image-section">
             <img src="{% static 'images/registration/registration.jpg' %}" alt="Registration Image">
@@ -61,46 +61,55 @@
                     <label> Phone </label>
                 </div>
                 <div class="input-box">
-                    <span class="icon lock-icon" onclick="togglePasswordVisibility(this)"><ion-icon name="lock-closed"></ion-icon></span>
+                    <span class="icon lock-icon" onclick="togglePasswordVisibility(this)"><ion-icon
+                            name="lock-closed"></ion-icon></span>
                     {{ form.password1 }}
                     <label> Password </label>
                 </div>
                 <div class="input-box">
-                    <span class="icon lock-icon" onclick="togglePasswordVisibility(this)"><ion-icon name="lock-closed"></ion-icon></span>
+                    <span class="icon lock-icon" onclick="togglePasswordVisibility(this)"><ion-icon
+                            name="lock-closed"></ion-icon></span>
                     {{ form.password2 }}
                     <label> Confirm Password </label>
                 </div>
-                    {{ form.captcha }}
-                <label><input style='margin-top: 20px' type="checkbox" id="agreement" onchange="toggleConfirmButton()">  By clicking Create Account, you agree to <span style="color:#008fbf;">Terms of service</span> та <span style="color: #008fbf;">Privacy policy</span>
+                {{ form.captcha }}
+                <label><input style='margin-top: 20px' type="checkbox" id="agreement" onchange="toggleConfirmButton()">
+                    By clicking Create Account, you agree to <span style="color:#008fbf;">Terms of service</span> та
+                    <span style="color: #008fbf;">Privacy policy</span>
 
-                <button  type="submit" class="btn" id="confirmButton" disabled style="opacity: 0.5; margin-top: 20px;"> Registration </button>
-                <div class="login-register">
-                    <p>Already have an account ?<a href="{% url 'account:login' %}" class="register-link"> Login </a></p>
-                </div>
-                 <p class="or-text">or</p>
-                <button class="btn auth-btn google-btn">
-                    <a style="color: cornsilk" href="{% url 'social:begin' 'google-oauth2' %}">
-                        <ion-icon name="logo-google"></ion-icon>Registration via Google
-                    </a>
-                </button>
-                <button class="btn auth-btn github-btn">
-                    <a style="color: cornsilk" href="{% url 'social:begin' "github" %}">
-                        <ion-icon name="logo-github"></ion-icon>Registration via GitHub
-                    </a>
-                </button>
+                    <button type="submit" class="btn" id="confirmButton" disabled
+                            style="opacity: 0.5; margin-top: 20px;"> Registration
+                    </button>
+                    <div class="login-register">
+                        <p>Already have an account ?<a href="{% url 'account:login' %}" class="register-link">
+                            Login </a></p>
+                    </div>
+                    <p class="or-text">or</p>
+                    <button class="btn auth-btn google-btn">
+                        <a style="color: cornsilk" href="{% url 'social:begin' 'google-oauth2' %}">
+                            <ion-icon name="logo-google"></ion-icon>
+                            Registration via Google
+                        </a>
+                    </button>
+                    <button class="btn auth-btn github-btn">
+                        <a style="color: cornsilk" href="{% url 'social:begin' "github" %}">
+                            <ion-icon name="logo-github"></ion-icon>
+                            Registration via GitHub
+                        </a>
+                    </button>
             </form>
         </div>
     </div>
-</body>
+    </body>
 
 
-{% block js %}
+    {% block js %}
 
-<script src="{% static 'js/alert.js' %}"></script>
-<script src="{% static 'js/password-eye.js' %}"></script>
-<script src="{% static 'js/confirm.js' %}"></script>
+        <script src="{% static 'js/alert.js' %}"></script>
+        <script src="{% static 'js/password-eye.js' %}"></script>
+        <script src="{% static 'js/confirm.js' %}"></script>
 
 
-{% endblock %}
+    {% endblock %}
 
 {% endblock %}

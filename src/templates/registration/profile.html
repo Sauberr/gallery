@@ -2,460 +2,145 @@
 {% load static %}
 
 {% block css %}
-<style>
-    :root {
-        --primary-color: #007bff;
-        --secondary-color: #6c757d;
-        --background-color: #f8f9fa;
-        --text-color: #333;
-    }
-
-    body {
-        background-color: var(--background-color);
-        font-family: 'Arial', sans-serif;
-    }
-
-    .profile-container {
-        max-width: 700px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-
-    .profile-header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 2rem;
-    }
-
-    .profile-avatar {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid var(--primary-color);
-        margin-bottom: 1rem;
-    }
-
-    .profile-username {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: var(--text-color);
-    }
-
-    .profile-email {
-        color: var(--secondary-color);
-        margin-bottom: 0.5rem;
-    }
-
-    .profile-details {
-        background-color: var(--background-color);
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .detail-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .detail-label {
-        font-weight: 600;
-        color: var(--secondary-color);
-        flex-grow: 1;
-    }
-
-    .detail-value {
-        color: var(--text-color);
-        flex-grow: 2;
-        text-align: right;
-    }
-
-    .edit-input {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        display: none;
-    }
-
-    .edit-btn {
-        background: none;
-        border: none;
-        color: var(--primary-color);
-        cursor: pointer;
-        margin-left: 10px;
-    }
-
-    .edit-btn:hover {
-        text-decoration: underline;
-    }
-
-    .save-btn {
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-        display: none;
-    }
-
-    .mfa-section {
-        text-align: center;
-        background-color: var(--background-color);
-        padding: 1.5rem;
-        border-radius: 8px;
-        position: relative;
-    }
-
-    .mfa-qr {
-        max-width: 250px;
-        margin: 1rem auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-mfa {
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        margin-top: 1rem;
-    }
-
-    .btn-mfa:hover {
-        background-color: #0056b3;
-        transform: translateY(-2px);
-    }
-
-    .btn-mfa:disabled {
-        background-color: var(--secondary-color);
-        cursor: not-allowed;
-    }
-
-    .disable-2fa-btn {
-        position: relative;
-        top: 20px;
-    }
-    
-    .mfa-section {
-        position: relative;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        padding: 1.5rem;
-        margin-top: 1rem;
-    }
-
-    .mfa-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .switch-container {
-        position: relative;
-    }
-
-    .switch-input {
-        opacity: 0;
-        position: absolute;
-        cursor: pointer;
-        width: 100%;
-        height: 100%;
-        z-index: 2;
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 25px;
-        background-color: #ccc;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: 0.4s;
-    }
-
-    .slider {
-        position: absolute;
-        height: 18px;
-        width: 18px;
-        left: 2px;
-        bottom: 4px;
-        background-color: white;
-        border-radius: 50%;
-        transition: 0.4s;
-    }
-
-    .switch-input:checked + .switch {
-        background-color: #2196F3;
-    }
-
-    .switch-input:checked + .switch .slider {
-        transform: translateX(26px);
-    }
-
-    .2fa-setup {
-        margin-top: 1rem;
-    }
-
-    .qr-code-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-        background-color: white;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .mfa-qr {
-        max-width: 150px;
-        border-radius: 8px;
-    }
-
-    .qr-instructions {
-        flex-grow: 1;
-        margin-left: 1rem;
-        color: #6c757d;
-    }
-
-    .btn-mfa {
-        width: 100%;
-        padding: 0.75rem;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-mfa:hover {
-        background-color: #0056b3;
-    }
-    
-    .form-group {
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.form-group input {
-    width: 100%;
-    max-width: 300px;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease;
-}
-
-.form-group input:focus {
-    border-color: var(--primary-color);
-    outline: none;
-}
-
-   .status-input {
-        display: none;
-    }
-
-    .status-switch {
-        position: relative;
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background-color: #ccc;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    .status-input:checked + .status-switch {
-        background-color: #007bff;
-    }
-
-    .status-switch::after {
-        content: '';
-        position: absolute;
-        display: none;
-        left: 7px;
-        top: 3px;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-    }
-
-    .status-input:checked + .status-switch::after {
-        display: block;
-    }
-
-    
-    @media (max-width: 768px) {
-        .profile-container {
-            width: 95%;
-            padding: 1rem;
-        }
-    }
-</style>
+    <link rel="stylesheet" href="{% static 'css/registration/profile.css' %}">
 {% endblock %}
 
 {% block title %}Profile Page{% endblock %}
 
 {% block content %}
-{% include 'partials/navbar.html' %}
+    {% include 'partials/navbar.html' %}
 
-<div class="profile-container">
-    <div class="profile-header">
-        {% if request.user.avatar %}
-            <img src="{{ request.user.profile.avatar.url }}" alt="Profile Avatar" class="profile-avatar">
-        {% else %}
-            <img src="{% static 'images/registration/default-avatar.png' %}" alt="Profile Avatar" class="profile-avatar">
-        {% endif %}
-        <div class="profile-username">{{ request.user.first_name }} {{ request.user.last_name }}</div>
-        <div class="profile-email">{{ request.user.email }}</div>
-        <div>Member since: {{ request.user.date_joined|date:"F d, Y" }}</div>
-    </div>
-
-    <form id="profileForm" method="POST" action="">
-        {% csrf_token %}
-        <div class="profile-details">
-            <div class="detail-item">
-                <span class="detail-label">First Name</span>
-                <span class="detail-value">{{ request.user.first_name|default:"Not Set" }}</span>
-                <input type="text" name="first_name" class="edit-input" value="{{ request.user.first_name }}">
+    <div class="profile-container">
+        <div class="profile-header">
+            {% if request.user.profile.avatar %}
+                <img src="{{ request.user.profile.avatar.url }}" alt="Profile Avatar" class="profile-avatar" width="360" height="360">
+            {% else %}
+                <img src="{% static 'images/registration/default-avatar.png' %}" alt="Profile Avatar"
+                     class="profile-avatar">
+            {% endif %}
+            <div class="custom-file-upload">
+                <input type="file" id="avatar" name="avatar" class="custom-file-input">
             </div>
-            <div class="detail-item">
-                <span class="detail-label">Last Name</span>
-                <span class="detail-value">{{ request.user.last_name|default:"Not Set" }}</span>
-                <input type="text" name="last_name" class="edit-input" value="{{ request.user.last_name }}">
-            </div>
-            <div class="detail-item">
-    <span class="detail-label">Phone Number</span>
-    <span class="detail-value">{{ request.user.format_phone_number|default:"Not Set" }}</span>
-    <input type="tel" name="phone_number" class="edit-input" id="phone_number" value="{{ request.user.profile.phone_number }}">
-</div>
-            <div class="detail-item">
-                <span class="detail-label">Birth Date</span>
-                <span class="detail-value">{{ request.user.profile.birth_date|default:"Not Set" }}</span>
-                <input type="date" name="birth_date" class="edit-input" value="{{ request.user.profile.birth_date|date:'Y-m-d' }}">
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Sex</span>
-                <span class="detail-value">{{ request.user.profile.sex|default:"Not Set" }}</span>
-                <input type="text" name="sex" class="edit-input" value="{{ request.user.profile.sex }}">
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Location</span>
-                <span class="detail-value">{{ request.user.profile.location|default:"Not Set" }}</span>
-                <input type="text" name="location" class="edit-input" value="{{ request.user.profile.location }}">
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Status</span>
-                <span class="detail-value">{{ request.user.profile.status|default:"Not Set" }}</span>
-                <input type="text" name="status" class="edit-input" value="{{ request.user.profile.status }}">
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Date joined</span>
-                <span class="detail-value">{{ request.user.date_joined|date:"F d, Y" }}</span>
-            </div>
-         <div class="detail-item">
-            <span class="detail-label">Active</span>
-            <div class="status-toggle">
-                <input type="checkbox" id="active-toggle" class="status-input" 
-                       {% if request.user.is_active %}checked{% endif %} disabled>
-                <label for="active-toggle" class="status-switch">
-                    <span class="status-slider"></span>
-                </label>
-            </div>
+            <div class="profile-username">{{ request.user.first_name }} {{ request.user.last_name }}</div>
+            <div class="profile-email">{{ request.user.email }}</div>
+            <div>Member since: {{ request.user.date_joined|date:"F d, Y" }}</div>
         </div>
-        <div class="detail-item">
-    <span class="detail-label">Two-Factor Authentication</span>
-    <span class="detail-value">
+
+        <form id="profileForm" method="POST" action="{% url 'account:profile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="profile-details">
+                <div class="detail-item">
+                    <span class="detail-label">First Name</span>
+                    <span class="detail-value">{{ request.user.first_name|default:"Not Set" }}</span>
+                    <input type="text" name="first_name" class="edit-input" value="{{ request.user.first_name }}">
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Last Name</span>
+                    <span class="detail-value">{{ request.user.last_name|default:"Not Set" }}</span>
+                    <input type="text" name="last_name" class="edit-input" value="{{ request.user.last_name }}">
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Phone Number</span>
+                    <span class="detail-value">{{ request.user.format_phone_number|default:"Not Set" }}</span>
+                    <input type="tel" name="phone_number" class="edit-input" id="phone_number"
+                           value="{{ request.user.profile.phone_number }}">
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Birth Date</span>
+                    <span class="detail-value">{{ request.user.profile.birth_date|default:"Not Set" }}</span>
+                    <input type="date" name="birth_date" class="edit-input"
+                           value="{{ request.user.profile.birth_date|date:'Y-m-d' }}">
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Sex</span>
+                    <span class="detail-value">{{ request.user.profile.sex|default:"Not Set" }}</span>
+                    <input type="text" name="sex" class="edit-input" value="{{ request.user.profile.sex }}">
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Location</span>
+                    <span class="detail-value">{{ request.user.profile.location|default:"Not Set" }}</span>
+                    <input type="text" name="location" class="edit-input" value="{{ request.user.profile.location }}">
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value">{{ request.user.profile.status|default:"Not Set" }}</span>
+                    <input type="text" name="status" class="edit-input" value="{{ request.user.profile.status }}">
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Active</span>
+                    <div class="status-toggle">
+                        <input type="checkbox" id="active-toggle" class="status-input"
+                               {% if request.user.is_active %}checked{% endif %} disabled>
+                        <label for="active-toggle" class="status-switch">
+                            <span class="status-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Two-Factor Authentication</span>
+                    <span class="detail-value">
         <div class="switch-container">
-            <input type="checkbox" id="2fa-toggle" class="switch-input" 
+            <input type="checkbox" id="2fa-toggle" class="switch-input"
                    {% if request.user.mfa_enabled %}checked{% endif %}>
             <label for="2fa-toggle" class="switch">
                 <span class="slider"></span>
             </label>
         </div>
     </span>
-</div>
-            <button type="submit" class="save-btn" id="saveBtn">Save Changes</button>
-        </div>
-    </form>
-    {% if not request.user.mfa_enabled %}
-        <div id="2fa-setup-section" class="2fa-setup">
-            <p class="setup-description">
-                Two-Factor Authentication adds an extra layer of security to your account. 
-                Follow these steps to enable 2FA:
-            </p>
-            
-            <div class="qr-code-container">
-                <img src="{{ qrcode }}" alt="2FA QR Code" class="mfa-qr">
-                <p class="qr-instructions">
-                    1. Open your authenticator app
-                    2. Scan this QR code
-                </p>
-            </div>
-
-            <form method="POST" action="{% url 'account:verify_mfa' %}" class="form">
-                {% csrf_token %}
-                <div class="form-group">
-                    <input type="text" id="otp_code" name="otp_code" maxlength="6" required
-                           class="form-control" placeholder="Enter 6-digit OTP code">
                 </div>
-                <input type="hidden" name="user_id" value="{{ request.user.id }}">
-                <button class="btn-mfa" type="submit">Verify and Enable 2FA</button>
-            </form>
-        </div>
-    {% endif %}
+            </div>
+            <button type="submit" id="saveBtn">Save Changes</button>
+        </form>
+        {% if not request.user.mfa_enabled %}
+            <div id="2fa-setup-section" class="2fa-setup">
+                <p class="setup-description">
+                    Two-Factor Authentication adds an extra layer of security to your account.
+                    Follow these steps to enable 2FA:
+                </p>
+
+                <div class="qr-code-container">
+                    <img src="{{ qrcode }}" alt="2FA QR Code" class="mfa-qr">
+                    <p class="qr-instructions">
+                        1. Open your authenticator app
+                        2. Scan this QR code
+                    </p>
+                </div>
+
+                <form method="POST" action="{% url 'account:verify_mfa' %}" class="form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" id="otp_code" name="otp_code" maxlength="6" required
+                               class="form-control" placeholder="Enter 6-digit OTP code">
+                    </div>
+                    <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                    <button class="btn-mfa" type="submit">Verify and Enable 2FA</button>
+                </form>
+            </div>
+        {% endif %}
+
+    </div>
 
 
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggle = document.getElementById('2fa-toggle');
+            const setupSection = document.getElementById('2fa-setup-section');
+
+            toggle.addEventListener('change', function () {
+                if (this.checked) {
+                    if (setupSection) {
+                        setupSection.style.display = 'block';
+                    }
+                } else {
+                    window.location.href = "{% url 'account:disable_2fa' %}";
+                }
+            });
+        });
 
 
-        
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const toggle = document.getElementById('2fa-toggle');
-    const setupSection = document.getElementById('2fa-setup-section');
-
-    toggle.addEventListener('change', function() {
-        if (this.checked) {
-            if (setupSection) {
-                setupSection.style.display = 'block';
-            }
-        } else {
-            window.location.href = "{% url 'account:disable_2fa' %}";
-        }
-    });
-});
+    </script>
 
 
-</script>
-    
 
-
-{% include 'partials/footer.html' %}
+    {% include 'partials/footer.html' %}
 {% endblock %}
