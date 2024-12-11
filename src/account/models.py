@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from faker import Faker
 from phonenumber_field.modelfields import PhoneNumberField
+from phonenumbers import format_number, PhoneNumberFormat, parse
 
 from account.managers import CustomerManager, PeopleManager
 
@@ -81,6 +82,12 @@ class User(AbstractBaseUser, PermissionsMixin):
                 date_joined=faker.date_time_this_year(),
             )
 
+    def format_phone_number(self):
+        if self.phone_number:
+            parsed_number = parse(str(self.phone_number), None)
+            return format_number(parsed_number, PhoneNumberFormat.INTERNATIONAL)
+        return None
+
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
@@ -112,7 +119,6 @@ class ProxyUser(get_user_model()):
 
 class Profile(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    phone_number = PhoneNumberField(null=True, blank=True)
     location = models.CharField(max_length=44, choices=COUNTRY_CHOICES, default="Undefined")
     avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True, null=True)
     sex = models.CharField(max_length=9, choices=SEX_CHOICES, default="Undefined")
