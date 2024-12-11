@@ -3,11 +3,15 @@ from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, View
+from django_elasticsearch_dsl.search import Search
+from elasticsearch_dsl.query import Q
 
 from common.mixins import TitleMixin, CacheMixin
+from images.models import Images
 from subscriptions.models import Basic, Enterprise, Premium, Subscription
+from .documents import ImagesDocument
 
-from .models import Books, ContactUs
+from .models import ContactUs
 from django.http import JsonResponse
 
 
@@ -29,13 +33,13 @@ class IndexView(TitleMixin, TemplateView):
     #         ],
     #         minimum_should_match=1
     #     )
-    #     search = BookDocument.search().query(search_query)[0:size if correction else None]
+    #     search = ImagesDocument.search().query(search_query)[0:size if correction else None]
     #     results = [hit.to_dict() for hit in search]
     #     return results
     #
     # @staticmethod
     # def get_correction_query(query):
-    #     suggest = Search(index="books")
+    #     suggest = Search(index="images")
     #     for field in ['title', 'author', 'description']:
     #         suggest = suggest.suggest(f'{field}_suggestion', query, term={'field': field})
     #     response = suggest.execute()
@@ -52,22 +56,22 @@ class IndexView(TitleMixin, TemplateView):
     #     query = self.request.GET.get('q')
     #     if query:
     #         context['original_query'] = query
-    #         books = self.get_search_results(query)
+    #         images = self.get_search_results(query)
     #         correction = self.get_correction_query(query)
     #         if correction and correction.lower() != query.lower():
     #             context['correction'] = correction
-    #             corrected_books = self.get_search_results(correction)
-    #             if corrected_books:
-    #                 context['books'] = corrected_books
+    #             corrected_images = self.get_search_results(correction)
+    #             if corrected_images:
+    #                 context['images'] = corrected_images
     #             else:
-    #                 context['books'] = books
+    #                 context['images'] = images
     #         else:
-    #             context['books'] = books
+    #             context['images'] = images
     #             context['correction'] = None
     #     else:
-    #         search = Search(index="books")
+    #         search = Search(index="images")
     #         response = search.scan()
-    #         context['books'] = [hit.to_dict() for hit in response]
+    #         context['images'] = [hit.to_dict() for hit in response]
     #         context['correction'] = None
     #     return context
     #
@@ -84,11 +88,11 @@ class IndexView(TitleMixin, TemplateView):
     #     return super().get(request, *args, **kwargs)
 
 
-class BookList(TitleMixin, ListView):
-    template_name: str = "partials/books_list.html"
-    title: str = "Books"
-    model = Books
-    context_object_name: str = "books"
+class ImageList(TitleMixin, ListView):
+    template_name: str = "partials/images_list.html"
+    title: str = "Images"
+    model = Images
+    context_object_name: str = "images"
     ordering = ["title"]
 
 

@@ -1,8 +1,6 @@
 from django.contrib import admin
 
-from .models import Books, ContactUs
-
-admin.site.register(Books)
+from .models import ContactUs
 
 
 @admin.register(ContactUs)
