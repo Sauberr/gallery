@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
 from faker import Faker
 
@@ -12,12 +13,19 @@ SUBSCRIPTION_PLANS: List[Tuple[str, str]] = [
 
 class Images(models.Model):
     title = models.CharField(max_length=200)
-    image = models.ImageField(upload_to="images/")
+    image = models.ImageField(upload_to="images/", validators=[FileExtensionValidator(['png', 'jpg', 'jpeg', 'gif'])],)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.CharField(max_length=200)
     description = models.TextField(max_length=1024)
     subscription_plans = models.CharField(max_length=200, choices=SUBSCRIPTION_PLANS, default="Basic")
+    price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    quantity = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    total_quantity = models.GeneratedField(
+        expression=models.F("quantity") * models.F("price"),
+        output_field=models.DecimalField(max_digits=10, decimal_places=2),
+        db_persist=True,
+    )
 
     class Meta:
         verbose_name: str = "Image"
@@ -37,4 +45,8 @@ class Images(models.Model):
             cls.objects.create(
                 title=faker.sentence(),
                 image=faker.image_url(),
+                author=faker.name(),
+                description=faker.text(),
+                price=faker.random_number(digits=2),
+                quantity=faker.random_number(digits=2),
             )
