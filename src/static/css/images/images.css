@@ -95,6 +95,23 @@
     justify-content: center;
 }
 
+.title-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.title-link:hover {
+    color: #696969;
+}
+
+li img {
+    transition: transform 0.2s ease;
+}
+
+li img:hover {
+    transform: scale(1.05);
+}
+
 .download-buttons .action_btn:hover {
     scale: 1.05;
     color: #fff;

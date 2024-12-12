@@ -1,0 +1,51 @@
+{% extends "partials/base.html" %}
+{% load static humanize %}
+
+{% block css %}
+   
+<link rel="stylesheet" href="{% static 'css/images/image-detail.css' %}">    
+
+{% endblock %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+{% include 'partials/navbar.html' %}
+    
+  <div class="image-detail-container">
+    <div class="image-section">
+        <img src="{{ image.image.url }}" alt="{{ image.title }}" class="detail-image">
+    </div>
+    <div class="info-section">
+        <h1 class="title">{{ image.title }}</h1>
+        <div class="metadata">
+            <p class="author">Author: <span>{{ image.author }}</span></p>
+            <p class="date">Created: <span>{{ image.created_at|date:"F d, Y" }}</span></p>
+        </div>
+        <div class="description">
+            <h2>Description</h2>
+            <p>{{ image.description }}</p>
+        </div>
+        <div class="pricing">
+            <div class="price-info">
+                <p class="price">Price: <span>${{ image.price|intcomma }}</span></p>
+                <p class="quantity">Available: <span>{{ image.quantity }}</span></p>
+                <p class="total">Total Value: <span>${{ image.total_quantity|intcomma }}</span></p>
+            </div>
+            <p class="subscription">Subscription Plan: <span>{{ image.subscription_plans }}</span></p>
+        </div>
+        <div class="updated">
+            <p>Last updated: {{ image.updated_at|date:"F d, Y H:i" }}</p>
+        </div>
+    </div>
+</div>  
+
+{% include 'partials/footer.html' %}
+
+{% endblock %}
+
+{% block js %}
+
+
+
+{% endblock %}

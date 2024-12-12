@@ -16,7 +16,6 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
             "has_original_photo",
             "has_binary_link",
         ]
-        read_only_fields = fields
 
 
 
@@ -40,4 +39,3 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
             'subscription_plan',
             'subscription_cost',
         ]
-        read_only_fields = fields

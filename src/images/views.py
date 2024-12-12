@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from common.mixins import CacheMixin, TitleMixin
 from core.utils.paginator import paginator
@@ -46,3 +46,11 @@ class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
         context["images"] = self.set_get_cache(images, "images", 15)
 
         return context
+
+
+class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
+    template_name: str = "images/image-detail.html"
+    title: str = "Image Detail"
+    model = Images
+    context_object_name: str = "image"
+

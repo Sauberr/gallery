@@ -1,4 +1,6 @@
 from typing import List, Tuple
+from django.urls import reverse
+
 
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
@@ -37,6 +39,9 @@ class Images(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("images:image-list", args=[self.id])
 
     @classmethod
     def generate_instances(cls, count):

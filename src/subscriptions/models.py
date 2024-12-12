@@ -19,6 +19,10 @@ class SubscriptionPlan(models.Model):
     has_binary_link = models.BooleanField(default=False)
 
     class Meta:
+        indexes = [
+            models.Index(fields=['cost']),
+            models.Index(fields=['name']),
+        ]
         verbose_name: str = "Subscription Plan"
         verbose_name_plural: str = "Subscription Plans"
         ordering = ['cost']

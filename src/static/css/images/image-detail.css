@@ -1,0 +1,135 @@
+.image-detail-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+}
+
+.image-section {
+    flex: 0 0 500px;
+}
+
+.detail-image {
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.info-section {
+    flex: 1;
+    padding: 1rem;
+}
+
+.title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.metadata {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.metadata p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.metadata span {
+    color: #333;
+    font-weight: 500;
+}
+
+.description {
+    margin-bottom: 2rem;
+}
+
+.description h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.description p {
+    line-height: 1.6;
+    color: #444;
+}
+
+.pricing {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.price-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.price-info p {
+    margin: 0;
+    color: #666;
+}
+
+.price-info span {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 0.25rem;
+}
+
+.subscription {
+    margin: 0;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+    color: #666;
+}
+
+.subscription span {
+    color: #333;
+    font-weight: 500;
+}
+
+.updated {
+    color: #888;
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .image-detail-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .image-section {
+        flex: none;
+        margin-bottom: 2rem;
+    }
+
+    .info-section {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .detail-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .price-info {
+        grid-template-columns: 1fr;
+    }
+}

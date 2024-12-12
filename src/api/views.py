@@ -1,7 +1,10 @@
 from datetime import datetime, timezone
 
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 from images.models import Images
@@ -16,7 +19,7 @@ from subscriptions.models import SubscriptionPlan, UserSubscription
 from subscriptions.serializers import SubscriptionPlanSerializer, UserSubscriptionSerializer
 
 
-class SubscriptionPlanView(ModelViewSet):
+class SubscriptionPlanView(ReadOnlyModelViewSet):
     queryset = SubscriptionPlan.objects.all()
     serializer_class = SubscriptionPlanSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
@@ -25,11 +28,13 @@ class SubscriptionPlanView(ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
 
 
-class UserSubscriptionView(ModelViewSet):
-    queryset = UserSubscription.objects.all()
+
+
+class UserSubscriptionView(ReadOnlyModelViewSet):
+    queryset = UserSubscription.objects.select_related("user", "plan").all()
     serializer_class = UserSubscriptionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
-    search_fields = ["user", "plan"]
+    search_fields = ["user__email", "plan__name"]
     ordering_fields = ["create_datetime"]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
 
@@ -54,7 +59,7 @@ class HealthView(APIView):
         return Response(health_status, status=status.HTTP_200_OK)
 
 
-class ImagesViewSet(ModelViewSet):
+class ImagesViewSet(ReadOnlyModelViewSet):
     queryset = Images.objects.all()
     serializer_class = ImagesSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
