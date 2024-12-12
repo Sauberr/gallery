@@ -62,16 +62,16 @@
                 <div class="card">
                     <div class="card__header">
                         <div class="card__icon symbol symbol--rounded"></div>
-                        <h2>{{ basic_plan.subscriber_name|title }}</h2>
+                        <h2>{{ basic_plan.name }}</h2>
                     </div>
                     <div class="card__desc">{{ basic_plan.description }}</div>
                 </div>
-                <div class="price">$<span>{{ basic_plan.subscription_cost|intcomma }}/ month</span></div>
+                <div class="price">$<span>{{ basic_plan.cost|intcomma }}/ month</span></div>
                 <ul class="featureList">
-                    <li> {{ basic_plan.thumbnail_photo_200px }}</li>
-                    <li class="disabled"> thumbnail_photo_400px</li>
-                    <li class="disabled"> original_photo</li>
-                    <li class="disabled"> binary_link</li>
+                    <li {% if not basic_plan.has_thumbnail_200px %}class="disabled"{% endif %}>thumbnail_photo_200px</li>
+                    <li {% if not basic_plan.has_thumbnail_400px %}class="disabled"{% endif %}>thumbnail_photo_400px</li>
+                    <li {% if not basic_plan.has_original_photo %}class="disabled"{% endif %}>original_photo</li>
+                    <li {% if not basic_plan.has_binary_link %}class="disabled"{% endif %}>binary_link</li>
                 </ul>
                 <div id="paypal-button-container-P-6GS86287F0539600CM3YD7OQ"></div>
                 <script src="https://www.paypal.com/sdk/js?client-id=AViFM_g_S_EyBgXIsU-k_4QiK8ZWGDcEax1_923d_rG48UOhsPhv8inLaAUUEE-8TverOEUKZneI2DQx&vault=true&intent=subscription"
@@ -101,17 +101,17 @@
                 <div class="card">
                     <div class="card__header">
                         <div class="card__icon symbol"></div>
-                        <h2>{{ premium_plan.subscriber_name|title }}</h2>
+                        <h2>{{ premium_plan.name }}</h2>
                         <div class="card__label label">Best Value</div>
                     </div>
                     <div class="card__desc">{{ premium_plan.description }}</div>
                 </div>
-                <div class="price">$<span>{{ premium_plan.subscription_cost|intcomma }}/ month</span></div>
+                <div class="price">$<span>{{ premium_plan.cost|intcomma }}/ month</span></div>
                 <ul class="featureList">
-                    <li>{{ premium_plan.thumbnail_photo_200px }}</li>
-                    <li>{{ premium_plan.thumbnail_photo_400px }}</li>
-                    <li>{{ premium_plan.original_photo }}</li>
-                    <li class="disabled"> binary_link</li>
+                    <li {% if not premium_plan.has_thumbnail_200px %}class="disabled"{% endif %}>thumbnail_photo_200px</li>
+                    <li {% if not premium_plan.has_thumbnail_400px %}class="disabled"{% endif %}>thumbnail_photo_400px</li>
+                    <li {% if not premium_plan.has_original_photo %}class="disabled"{% endif %}>original_photo</li>
+                    <li {% if not premium_plan.has_binary_link %}class="disabled"{% endif %}>binary_link</li>
                 </ul>
                 <div id="paypal-button-container-P-7KE47576DG258030BM3YEAFA"></div>
                 <script>
@@ -139,17 +139,16 @@
                 <div class="card">
                     <div class="card__header">
                         <div class="card__icon"></div>
-                        <h2>{{ enterprise_plan.subscriber_name|title }}</h2>
+                        <h2>{{ enterprise_plan.name }}</h2>
                     </div>
                     <div class="card__desc">{{ enterprise_plan.description }}</div>
                 </div>
-                <div class="price">$<span
-                        style="color: white;"> {{ enterprise_plan.subscription_cost|intcomma }}/ month</span></div>
+                <div class="price">$<span style="color: white;">{{ enterprise_plan.cost|intcomma }}/ month</span></div>
                 <ul class="featureList">
-                    <li>{{ enterprise_plan.thumbnail_photo_200px }}</li>
-                    <li>{{ enterprise_plan.thumbnail_photo_400px }}</li>
-                    <li>{{ enterprise_plan.original_photo }}</li>
-                    <li> {{ enterprise_plan.binary_link }}</li>
+                    <li {% if not enterprise_plan.has_thumbnail_200px %}class="disabled"{% endif %}>thumbnail_photo_200px</li>
+                    <li {% if not enterprise_plan.has_thumbnail_400px %}class="disabled"{% endif %}>thumbnail_photo_400px</li>
+                    <li {% if not enterprise_plan.has_original_photo %}class="disabled"{% endif %}>original_photo</li>
+                    <li {% if not enterprise_plan.has_binary_link %}class="disabled"{% endif %}>binary_link</li>
                 </ul>
                 <div id="paypal-button-container-P-3WE528458D9215156M3YEAMI"></div>
                 <script>

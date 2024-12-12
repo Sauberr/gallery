@@ -1,29 +1,43 @@
-from subscriptions.models import Basic, Enterprise, Premium, Subscription
+from subscriptions.models import SubscriptionPlan, UserSubscription
 from rest_framework import serializers
 
 
-class SubscriptionSerializer(serializers.ModelSerializer):
+class SubscriptionPlanSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Subscription
-        fields = "__all__"
-        read_only_fields = ["create_datetime", "last_update"]
-        extra_kwargs = {
-            "user": {"required": False},
-        }
+        model = SubscriptionPlan
+        fields = [
+            "id",
+            "name",
+            "description",
+            "cost",
+            "paypal_plan_id",
+            "has_thumbnail_200px",
+            "has_thumbnail_400px",
+            "has_original_photo",
+            "has_binary_link",
+        ]
+        read_only_fields = fields
 
-class BasicSubscriptionSerializer(serializers.ModelSerializer):
+
+
+class UserSubscriptionSerializer(serializers.ModelSerializer):
+    plan_details = SubscriptionPlanSerializer(source='plan', read_only=True)
+    user_email = serializers.EmailField(source='user.email', read_only=True)
+
     class Meta:
-        model = Basic
-        fields = "__all__"
-
-
-class PremiumSubscriptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Premium
-        fields = "__all__"
-
-
-class EnterpriseSubscriptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Enterprise
-        fields = "__all__"
+        model = UserSubscription
+        fields = [
+            'id',
+            'user',
+            'user_email',
+            'plan',
+            'plan_details',
+            'paypal_subscription_id',
+            'is_active',
+            'create_datetime',
+            'last_update',
+            'subscriber_name',
+            'subscription_plan',
+            'subscription_cost',
+        ]
+        read_only_fields = fields

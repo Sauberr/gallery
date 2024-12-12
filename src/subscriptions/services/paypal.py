@@ -6,7 +6,14 @@ from typing import Dict, Literal
 
 import requests
 
-from subscriptions.models import Subscription
+from subscriptions.models import UserSubscription, SubscriptionPlan
+
+
+def get_paypal_headers(access_token: str) -> Dict[str, str]:
+    return {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}",
+    }
 
 
 def get_access_token() -> str | None:
@@ -21,27 +28,17 @@ def get_access_token() -> str | None:
     try:
         response = requests.post(url, data=data, headers=headers, auth=(client_id, secret_id))
         response.raise_for_status()
-        access_token = response.json()["access_token"]
-        return access_token
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Error obtaining access token: {e}")
-        return None
-    except KeyError as e:
+        return response.json()["access_token"]
+    except (requests.exceptions.RequestException, KeyError) as e:
         logging.error(f"Error obtaining access token: {e}")
         return None
 
 
 def cancel_subscription_paypal(access_token, subscription_id: str) -> None:
-    bearer_token: str = f"Bearer {access_token}"
-
-    headers: Dict[str, str] = {
-        "Content-Type": "application/json",
-        "Authorization": bearer_token,
-    }
 
     try:
         url: str = f"{os.environ.get('PAYPAL_URL')}/v1/billing/subscriptions/{subscription_id}/cancel"
-        response = requests.post(url, headers=headers)
+        requests.post(url, headers=get_paypal_headers(access_token))
 
     except requests.exceptions.RequestException as e:
         logging.error(f"Error cancelling subscription: {e}")
@@ -49,77 +46,51 @@ def cancel_subscription_paypal(access_token, subscription_id: str) -> None:
 
 
 def update_subscription_paypal(access_token, subscription_id: str, new_plan: str) -> str | None:
-    bearer_token: str = f"Bearer {access_token}"
 
-    headers: Dict[str, str] = {
-        "Content-Type": "application/json",
-        "Authorization": bearer_token,
-    }
+    try:
+        user_subscription = UserSubscription.objects.select_related('plan').get(
+            paypal_subscription_id=subscription_id
+        )
+        current_plan = user_subscription.plan.name
 
-    subscriptions_details = Subscription.objects.get(paypal_subscription_id=subscription_id)
-    current_subscription_plan = subscriptions_details.subscription_plan
+        new_subscription_plan = SubscriptionPlan.objects.get(name=new_plan)
+        new_subscription_plan_id = new_subscription_plan.paypal_plan_id
 
-    PlanType = Literal["Basic", "Premium", "Enterprise"]
-    PlanMapping = Dict[PlanType, Dict[PlanType, str]]
+        url: str = f'{os.environ.get("PAYPAL_URL")}/v1/billing/subscriptions/{subscription_id}/revise'
 
-    plan_mapping: PlanMapping = {
-        "Basic": {
-            "Premium": os.environ.get("PREMIUM"),
-            "Enterprise": os.environ.get("ENTERPRISE"),
-        },
-        "Premium": {
-            "Basic": os.environ.get("BASIC"),
-            "Enterprise": os.environ.get("ENTERPRISE"),
-        },
-        "Enterprise": {
-            "Basic": os.environ.get("BASIC"),
-            "Premium": os.environ.get("PREMIUM"),
-        },
-    }
+        revision_data: Dict[str, str] = {
+            "plan_id": new_subscription_plan_id,
+        }
 
-    new_subscription_plan_id = plan_mapping.get(current_subscription_plan, {}).get(new_plan)
+        response = requests.post(url, headers=get_paypal_headers(access_token), data=json.dumps(revision_data))
+        response_data = response.json()
 
-    url: str = f'{os.environ.get("PAYPAL_URL")}/v1/billing/subscriptions/{subscription_id}/revise'
+        if response.status_code == HTTPStatus.OK:
+            for link in response_data.get("links", []):
+                if link.get("rel") == "approve":
+                    return link["href"]
+        return None
 
-    revision_data: Dict[str, str] = {
-        "plan_id": new_subscription_plan_id,
-    }
-
-    response = requests.post(url, headers=headers, data=json.dumps(revision_data))
-
-    response_data = response.json()
-
-    approval_url = None
-
-    for link in response_data.get("links", []):
-        if link.get("rel") == "approve":
-            approval_url = link["href"]
-
-    if response.status_code == HTTPStatus.OK:
-        return approval_url
-
-    else:
+    except (UserSubscription.DoesNotExist, SubscriptionPlan.DoesNotExist) as e:
+        logging.error(f"Error updating subscription: {e}")
+        return None
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Error making PayPal request: {e}")
         return None
 
 
 def get_current_subscription(access_token, subscription_id: str) -> str | None:
-    bearer_token: str = f"Bearer {access_token}"
-
-    headers: Dict[str, str] = {
-        "Content-Type": "application/json",
-        "Authorization": bearer_token,
-    }
 
     url: str = f"{os.environ.get('PAYPAL_URL')}/v1/billing/subscriptions/{subscription_id}"
 
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=get_paypal_headers(access_token))
 
-    if response.status_code == HTTPStatus.OK:
-        subscription_data = response.json()
+        if response.status_code == HTTPStatus.OK:
+            subscription_data = response.json()
+            return subscription_data["plan_id"]
+        return None
 
-        current_plan_id = subscription_data["plan_id"]
-
-        return current_plan_id
-
-    else:
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Error getting subscription details: {e}")
         return None

@@ -1,7 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers, permissions
-from api.views import ImagesViewSet, SubscriptionViewSet, BasicSubscriptionViewSet, PremiumSubscriptionViewSet, \
-    EnterpriseSubscriptionViewSet, HealthView
+from api.views import ImagesViewSet, HealthView, UserSubscriptionView, SubscriptionPlanView
 
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -12,7 +11,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-app_name = "api"
+app_name: str = "api"
 
 
 schema_view = get_schema_view(
@@ -34,10 +33,8 @@ schema_view = get_schema_view(
 router = routers.DefaultRouter()
 
 router.register(r"images", ImagesViewSet, basename="images")
-router.register(r"subscription", SubscriptionViewSet, basename="subscription")
-router.register(r"basic-subscription", BasicSubscriptionViewSet, basename="basic-subscription")
-router.register(r"premium-subscription", PremiumSubscriptionViewSet, basename="premium-subscription")
-router.register(r"enterprise-subscription", EnterpriseSubscriptionViewSet, basename="enterprise-subscription")
+router.register(r"subscriptions", SubscriptionPlanView, basename="subscriptions")
+router.register(r"user-subscriptions", UserSubscriptionView, basename="user-subscriptions")
 
 urlpatterns = [
     path("", include(router.urls)),

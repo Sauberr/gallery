@@ -1,69 +1,52 @@
-import os
-from typing import Dict, Final
+from http import HTTPStatus
 
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import DeleteView
 
 from common.mixins import TitleMixin
-from subscriptions.models import Enterprise, Subscription
-from subscriptions.services.paypal import (cancel_subscription_paypal,
-                                           get_access_token,
-                                           get_current_subscription,
-                                           update_subscription_paypal)
-
-BASIC: Final = "Basic"
-PREMIUM: Final = "Premium"
-ENTERPRISE: Final = "Enterprise"
-
-BASIC_COST: Final = "4.99"
-PREMIUM_COST: Final = "9.99"
-ENTERPRISE_COST: Final = "14.99"
+from .models import SubscriptionPlan, UserSubscription
+from .services.paypal import (
+    cancel_subscription_paypal,
+    get_access_token,
+    get_current_subscription,
+    update_subscription_paypal
+)
 
 
-class CreateSubscription(TitleMixin, View):
+class CreateSubscription(LoginRequiredMixin, TitleMixin, View):
     title: str = "Create Subscription"
 
     def get(self, request, subscription_id: str, plan: str) -> HttpResponse:
-        user = get_user_model().objects.get(email=request.user.email)
-        first_name, last_name = user.first_name, user.last_name
-        full_name = f"{first_name} {last_name}"
+        if UserSubscription.objects.filter(user=request.user, is_active=True).exists():
+            return HttpResponse("You already have an active subscription", status=HTTPStatus.BAD_REQUEST)
 
-        selected_subscription_plan = plan
+        subscription_plan = get_object_or_404(SubscriptionPlan, name=plan)
 
-        plan_mapping: Dict[str, str] = {
-            BASIC: BASIC_COST,
-            PREMIUM: PREMIUM_COST,
-            Enterprise: ENTERPRISE_COST,
-        }
-
-        subscription_cost = plan_mapping.get(selected_subscription_plan)
-
-        subscriptions = Subscription.objects.create(
-            subscriber_name=full_name,
-            subscription_plan=selected_subscription_plan,
-            subscription_cost=subscription_cost,
-            paypal_subscription_id=subscription_id,
-            is_active=True,
+        UserSubscription.objects.create(
             user=request.user,
+            plan=subscription_plan,
+            paypal_subscription_id=subscription_id,
+            is_active=True
         )
 
-        context = {"subscription_plan": selected_subscription_plan}
-
+        context = {"subscription_plan": plan}
         return render(request, "subscriptions/create_subscription.html", context)
 
 
 class ConfirmDeleteSubscription(LoginRequiredMixin, TitleMixin, DeleteView):
-    model = Subscription
+    model = UserSubscription
     template_name: str = "subscriptions/confirm_delete_subscription.html"
     success_url = reverse_lazy("subscriptions:delete_subscription")
     slug_field: str = "paypal_subscription_id"
     slug_url_kwarg: str = "subscription_id"
     title: str = "Confirm Subscription Deletion"
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,58 +60,71 @@ class DeleteSubscription(LoginRequiredMixin, TitleMixin, View):
         access_token = get_access_token()
         cancel_subscription_paypal(access_token, subscription_id)
 
-        subscription = Subscription.objects.get(user=request.user, paypal_subscription_id=subscription_id)
+        subscription = get_object_or_404(
+            UserSubscription,
+            user=request.user,
+            paypal_subscription_id=subscription_id
+        )
         subscription.delete()
-        context = {"title": "Subscription Deleted"}
 
+        context = {"title": "Subscription Deleted"}
         return render(request, "subscriptions/delete_subscription.html", context)
 
 
-class UpdateSubscription(View):
+class UpdateSubscription(LoginRequiredMixin, View):
 
     def get(self, request, subscription_id: str, new_plan: str) -> HttpResponse:
+
+        subscription = get_object_or_404(
+            UserSubscription,
+            user=request.user,
+            paypal_subscription_id=subscription_id,
+            is_active=True
+        )
+
         access_token = get_access_token()
         approve_link = update_subscription_paypal(access_token, subscription_id, new_plan)
+
         if approve_link:
             return redirect(approve_link)
-        else:
-            return HttpResponse("Unable to obtain the approval link. Please try again later.")
+        return HttpResponse("Unable to obtain the approval link. Please try again later.")
 
 
-class PaypalUpdateSubscriptionConfirmed(View):
+class PaypalUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         try:
-            subscription_details = Subscription.objects.get(user=request.user)
-            subscription_id = subscription_details.paypal_subscription_id
-
-            context = {"subscription_id": subscription_id}
+            subscription = get_object_or_404(UserSubscription, user=request.user, is_active=True)
+            context = {"subscription_id": subscription.paypal_subscription_id}
             return render(request, "subscriptions/paypal_update_subscription_confirmed.html", context)
-        except Subscription.DoesNotExist:
+        except UserSubscription.DoesNotExist:
             return render(request, "subscriptions/paypal_update_subscription_confirmed.html")
 
 
-class DjangoUpdateSubscriptionConfirmed(View):
+class DjangoUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
 
     def get(self, request, subscription_id: str) -> HttpResponse:
-
         try:
             access_token = get_access_token()
             current_plan_id = get_current_subscription(access_token, subscription_id)
 
-            plan_mapping = {
-                os.environ.get("BASIC"): (BASIC, BASIC_COST),
-                os.environ.get("PREMIUM"): (PREMIUM, PREMIUM_COST),
-                os.environ.get("ENTERPRISE"): (ENTERPRISE, ENTERPRISE_COST),
-            }
+            subscription_plan = get_object_or_404(
+                SubscriptionPlan,
+                paypal_plan_id=current_plan_id
+            )
 
-            new_plan = plan_mapping.get(current_plan_id)
-            if new_plan:
-                new_plan_name, new_plan_cost = new_plan
-                subscription = Subscription.objects.filter(paypal_subscription_id=subscription_id).update(
-                    subscription_plan=new_plan_name, subscription_cost=new_plan_cost
-                )
+            updated = UserSubscription.objects.filter(
+                user=request.user,
+                paypal_subscription_id=subscription_id
+            ).update(
+                plan=subscription_plan,
+                is_active=True
+            )
+
+            if not updated:
+                return HttpResponse("Subscription not found", status=HTTPStatus.NOT_FOUND)
+
             return render(request, "subscriptions/django_update_subscription_confirmed.html")
 
-        except Subscription.DoesNotExist:
-            pass
+        except UserSubscription.DoesNotExist:
+            return HttpResponse("Subscription not found", status=HTTPStatus.NOT_FOUND)

@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from common.mixins import CacheMixin, TitleMixin
 from core.utils.paginator import paginator
 from images.models import Images
+from subscriptions.models import UserSubscription
 
 
 class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
@@ -13,18 +14,28 @@ class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
     context_object_name: str = "images"
     ordering = ["title"]
 
+    ALLOWED_PLANS = {
+        "Basic": ["Basic"],
+        "Premium": ["Basic", "Premium"],
+        "Enterprise": ["Basic", "Premium", "Enterprise"],
+    }
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_subscription_plan = None
         allowed_plans = {}
 
-        if hasattr(self.request.user, "subscription"):
-            user_subscription_plan = self.request.user.subscription.subscription_plan
-            allowed_plans = {
-                "Basic": ["Basic"],
-                "Premium": ["Basic", "Premium"],
-                "Enterprise": ["Basic", "Premium", "Enterprise"],
-            }
+        try:
+            user_subscription = (
+                UserSubscription.objects
+                .select_related('plan')
+                .only('plan__name')
+                .get(user=self.request.user)
+            )
+            user_subscription_plan = user_subscription.plan.name
+            allowed_plans = self.ALLOWED_PLANS
+        except UserSubscription.DoesNotExist:
+            pass
 
         context["user_subscription_plan"] = user_subscription_plan
         context["allowed_plans"] = allowed_plans

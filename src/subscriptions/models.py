@@ -1,63 +1,58 @@
+from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 
-from account.models import User
 
-
-class Subscription(models.Model):
-    subscriber_name = models.CharField(max_length=255, validators=[MinLengthValidator(2)])
-    subscription_plan = models.CharField(max_length=255, validators=[MinLengthValidator(2)])
+class SubscriptionPlan(models.Model):
+    name = models.CharField(max_length=255)
     description = models.TextField(max_length=1024, null=True, blank=True)
-    subscription_cost = models.DecimalField(
-        max_digits=10, decimal_places=2, default=0.00, validators=[MinValueValidator(0.00)]
+    cost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0.00)]
     )
+    paypal_plan_id = models.CharField(max_length=300, unique=True)
+
+    has_thumbnail_200px = models.BooleanField(default=True)
+    has_thumbnail_400px = models.BooleanField(default=False)
+    has_original_photo = models.BooleanField(default=False)
+    has_binary_link = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name: str = "Subscription Plan"
+        verbose_name_plural: str = "Subscription Plans"
+        ordering = ['cost']
+
+    def __str__(self):
+        return self.name
+
+
+class UserSubscription(models.Model):
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.PROTECT)
     paypal_subscription_id = models.CharField(max_length=300, null=True, blank=True)
     is_active = models.BooleanField(default=False)
-    create_datetime = models.DateTimeField(auto_now_add=True, null=True)
-    last_update = models.DateTimeField(auto_now=True, null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.subscriber_name} - {self.subscription_plan} subscription"
+    create_datetime = models.DateTimeField(auto_now_add=True)
+    last_update = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name: str = "Subscription"
-        verbose_name_plural: str = "Subscriptions"
-        ordering = ["-create_datetime", "is_active", "last_update"]
+        verbose_name: str = "User Subscription"
+        verbose_name_plural: str = "User Subscriptions"
         indexes = [
-            models.Index(fields=["subscriber_name", "subscription_plan", "paypal_subscription_id"]),
+            models.Index(fields=['paypal_subscription_id']),
         ]
 
-
-class Basic(Subscription):
-    thumbnail_photo_200px = models.CharField(max_length=255, validators=[MinLengthValidator(2)])
-
     def __str__(self):
-        return f"{self.subscriber_name} - {self.subscription_plan} subscription"
+        return f"{self.user.get_full_name()} - {self.plan.name} subscription"
 
-    class Meta:
-        verbose_name: str = "Basic Subscription"
-        verbose_name_plural: str = "Basic Subscriptions"
+    @property
+    def subscriber_name(self):
+        return self.user.get_full_name()
 
+    @property
+    def subscription_plan(self):
+        return self.plan.name
 
-class Premium(Basic):
-    thumbnail_photo_400px = models.CharField(max_length=255, validators=[MinLengthValidator(2)])
-    original_photo = models.CharField(max_length=255, validators=[MinLengthValidator(2)])
-
-    def __str__(self):
-        return f"{self.subscriber_name} - {self.subscription_plan} subscription"
-
-    class Meta:
-        verbose_name: str = "Premium Subscription"
-        verbose_name_plural: str = "Premium Subscriptions"
-
-
-class Enterprise(Premium):
-    binary_link = models.CharField(max_length=255, validators=[MinLengthValidator(2)])
-
-    def __str__(self):
-        return f"{self.subscriber_name} - {self.subscription_plan} subscription"
-
-    class Meta:
-        verbose_name: str = "Enterprise Subscription"
-        verbose_name_plural: str = "Enterprise Subscriptions"
+    @property
+    def subscription_cost(self):
+        return self.plan.cost

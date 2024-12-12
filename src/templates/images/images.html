@@ -13,28 +13,33 @@
 {% include 'partials/navbar.html' %}
 
 <div class="gallery-container">
-    <h1 class="gallery-title"> 𝓘𝓶𝓪𝓰𝓮𝓼 𝓖𝓪𝓵𝓮𝓻𝔂 </h1>
+ <h1 class="gallery-title"> 𝓘𝓶𝓪𝓰𝓮𝓼 𝓖𝓪𝓵𝓮𝓻𝔂 </h1>
     <ul>
         {% for image in images %}
-    <li>
-        <img src="{{ image.image.url }}" alt="{{ image.title }}">
-        <h2>{{ image.title }}</h2>
-        <p><strong>Author:</strong> {{ image.author }}</p>
-        <p><strong>Description:</strong> {{ image.description }}</p>
-        <p><strong>Created:</strong> {{ image.created_at|date:"F j, Y" }}</p>
-        <p><strong>Subscription:</strong> <span data-subscription="{{ image.subscription_plans }}">{{ image.subscription_plans }}</span></p>
-        <div class="download-buttons">
-            <button class="action_btn download-btn" data-url="{{ image.image.url }}" data-format="png"><i class="fas fa-file-image"></i> PNG</button>
-            <button class="action_btn download-btn" data-url="{{ image.image.url }}" data-format="jpeg"><i class="fas fa-file-image"></i> JPEG</button>
-        </div>
-    </li>
-{% endfor %}
+        <li>
+            <img src="{{ image.image.url }}" alt="{{ image.title }}" crossorigin="anonymous">
+            <h2>{{ image.title }}</h2>
+            <p><strong>Author:</strong> {{ image.author }}</p>
+            <p><strong>Description:</strong> {{ image.description }}</p>
+            <p><strong>Created:</strong> {{ image.created_at|date:"F j, Y" }}</p>
+            <p><strong>Subscription:</strong> <span data-subscription="{{ image.subscription_plans }}">{{ image.subscription_plans }}</span></p>
+            <div class="download-buttons">
+                <button class="action_btn download-btn" data-url="{{ image.image.url }}" data-format="png">
+                    <i class="fas fa-file-image"></i> PNG
+                </button>
+                <button class="action_btn download-btn" data-url="{{ image.image.url }}" data-format="jpeg">
+                    <i class="fas fa-file-image"></i> JPEG
+                </button>
+            </div>
+        </li>
+        {% endfor %}
     </ul>
-
 </div>
     
-{% include 'partials/pagination.html' with queryset=images custom_range=custom_range %}
     
+
+{% include 'partials/pagination.html' with queryset=images custom_range=custom_range %}
+
 
 {% include 'partials/footer.html' %}
 
@@ -43,6 +48,7 @@
 {% block js %}
 
 <script>
+
 document.addEventListener('DOMContentLoaded', function () {
     const downloadButtons = document.querySelectorAll('.download-btn');
     const userSubscriptionPlan = "{{ user_subscription_plan }}";
@@ -60,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!userSubscriptionPlan) {
                 showError("You need a subscription to download images. Please subscribe.");
             } else if (allowedPlans[userSubscriptionPlan].includes(imageSubscriptionPlan)) {
-                downloadImage(imageUrl, format, userSubscriptionPlan, title); 
+                downloadImage(imageUrl, format, userSubscriptionPlan, title);
             } else {
                 showError("You don't have permission to download this image. Please upgrade your subscription.");
             }
@@ -78,8 +84,16 @@ document.addEventListener('DOMContentLoaded', function () {
             if (plan === 'Basic') {
                 canvas.width = 200;
                 canvas.height = 200;
-            } else if (plan === 'Premium' || plan === 'Enterprise') {
-                const resolutions = [200, 400, img.width];
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const dataUrl = canvas.toDataURL(`image/${format}`);
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `${title}_200px.${format}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else if (plan === 'Premium') {
+                const resolutions = [200, 400]; 
                 resolutions.forEach(resolution => {
                     canvas.width = resolution;
                     canvas.height = resolution;
@@ -87,34 +101,56 @@ document.addEventListener('DOMContentLoaded', function () {
                     const dataUrl = canvas.toDataURL(`image/${format}`);
                     const link = document.createElement('a');
                     link.href = dataUrl;
-                    link.download = `${title}_${resolution}.${format}`;
+                    link.download = `${title}_${resolution}px.${format}`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                 });
-
-                if (plan === 'Enterprise') {
-                    const binaryLink = document.createElement('a');
-                    binaryLink.href = url;
-                    binaryLink.download = `${title}_binary.${format}`;
-                    document.body.appendChild(binaryLink);
-                    binaryLink.click();
-                    document.body.removeChild(binaryLink);
-                }
-                return;
+                const originalLink = document.createElement('a');
+                originalLink.href = url; 
+                originalLink.download = `${title}_original.${format}`;
+                document.body.appendChild(originalLink);
+                originalLink.click();
+                document.body.removeChild(originalLink);
+            } else if (plan === 'Enterprise') {
+                const resolutions = [200, 400]; 
+                resolutions.forEach(resolution => {
+                    canvas.width = resolution;
+                    canvas.height = resolution;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const dataUrl = canvas.toDataURL(`image/${format}`);
+                    const link = document.createElement('a');
+                    link.href = dataUrl;
+                    link.download = `${title}_${resolution}px.${format}`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+                const originalLink = document.createElement('a');
+                originalLink.href = url;
+                originalLink.download = `${title}_original.${format}`;
+                document.body.appendChild(originalLink);
+                originalLink.click();
+                document.body.removeChild(originalLink);
+                
+                const binaryLink = document.createElement('a');
+                binaryLink.href = url; 
+                binaryLink.download = `${title}_binary.${format}`; 
+                document.body.appendChild(binaryLink);
+                binaryLink.click();
+                document.body.removeChild(binaryLink);
             } else {
                 canvas.width = img.width;
                 canvas.height = img.height;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const dataUrl = canvas.toDataURL(`image/${format}`);
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `${title}.${format}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
-
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL(`image/${format}`);
-            const link = document.createElement('a');
-            link.href = dataUrl;
-            link.download = `${title}.${format}`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
         };
     }
 });

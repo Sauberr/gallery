@@ -8,8 +8,8 @@ from elasticsearch_dsl.query import Q
 
 from common.mixins import TitleMixin, CacheMixin
 from images.models import Images
-from subscriptions.models import Basic, Enterprise, Premium, Subscription
-from .documents import ImagesDocument
+from subscriptions.models import UserSubscription, SubscriptionPlan
+
 
 from .models import ContactUs
 from django.http import JsonResponse
@@ -98,18 +98,29 @@ class ImageList(TitleMixin, ListView):
 
 class SubscriptionPlansView(LoginRequiredMixin, View, CacheMixin):
     def get(self, request):
-        basic_plan = self.set_get_cache(Basic.objects.filter(
-            subscription_plan="Basic Plan").first(), "basic_plan", 600)
-        premium_plan = self.set_get_cache(Premium.objects.filter(
-            subscription_plan="Premium Plan").first(), "premium_plan", 600)
-        enterprise_plan = self.set_get_cache(Enterprise.objects.filter(
-            subscription_plan="Enterprise Plan").first(), "enterprise_plan", 600)
+        basic_plan = self.set_get_cache(
+            SubscriptionPlan.objects.filter(name='Basic').first(),
+            "basic_plan",
+            600
+        )
+        premium_plan = self.set_get_cache(
+            SubscriptionPlan.objects.filter(name='Premium').first(),
+            "premium_plan",
+            600
+        )
+        enterprise_plan = self.set_get_cache(
+            SubscriptionPlan.objects.filter(name='Enterprise').first(),
+            "enterprise_plan",
+            600
+        )
 
         try:
-            subscriptions = Subscription.objects.get(user=request.user)
-            subscription_id = subscriptions.paypal_subscription_id
-            subscription_plan = subscriptions.subscription_plan
-        except Subscription.DoesNotExist:
+            user_subscription = UserSubscription.objects.select_related('plan').get(
+                user=request.user
+            )
+            subscription_id = user_subscription.paypal_subscription_id
+            subscription_plan = user_subscription.plan.name
+        except UserSubscription.DoesNotExist:
             subscription_id = None
             subscription_plan = None
 

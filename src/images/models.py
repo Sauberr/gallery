@@ -19,7 +19,7 @@ class Images(models.Model):
     author = models.CharField(max_length=200)
     description = models.TextField(max_length=1024)
     subscription_plans = models.CharField(max_length=200, choices=SUBSCRIPTION_PLANS, default="Basic")
-    price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    price = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     total_quantity = models.GeneratedField(
         expression=models.F("quantity") * models.F("price"),
