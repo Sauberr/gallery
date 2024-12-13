@@ -47,10 +47,38 @@ class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
 
         return context
 
-
 class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
     template_name: str = "images/image-detail.html"
     title: str = "Image Detail"
     model = Images
     context_object_name: str = "image"
+
+    ALLOWED_PLANS = {
+        "Basic": ["Basic"],
+        "Premium": ["Basic", "Premium"],
+        "Enterprise": ["Basic", "Premium", "Enterprise"],
+    }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_subscription_plan = None
+        allowed_plans = {}
+
+        try:
+            user_subscription = (
+                UserSubscription.objects
+                .select_related('plan')
+                .only('plan__name')
+                .get(user=self.request.user)
+            )
+            user_subscription_plan = user_subscription.plan.name
+            allowed_plans = self.ALLOWED_PLANS
+        except UserSubscription.DoesNotExist:
+            pass
+
+        context["user_subscription_plan"] = user_subscription_plan
+        context["allowed_plans"] = allowed_plans
+
+        return context
+
 
