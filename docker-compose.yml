@@ -39,6 +39,54 @@ services:
     ports:
       - 6380:6379
 
+  celery:
+    build: ./
+    command: celery -A config.celery.app worker -l info
+    restart: always
+    volumes:
+      - ./src:/assignment/src
+    env_file:
+      - .env
+    working_dir: /assignment/src
+    depends_on:
+      - redis
+      - backend
+
+  celerybeat:
+    build: ./
+    command: celery -A micron.celery.app beat -l info -S django
+    restart: always
+    volumes:
+      - ./src:/assignment/src
+    env_file:
+      - .env
+    working_dir: /assignment/src
+    depends_on:
+      - redis
+      - backend
+
+  flower:
+    build: ./
+    command: celery -A micron.celery.app flower
+    restart: always
+    volumes:
+      - ./src:/assignment/src
+    env_file:
+      - .env
+    ports:
+      - 5556:5555
+    depends_on:
+      - redis
+      - backend
+
+  redisadmin:
+    image: redislabs/redisinsight
+    container_name: redisadmin
+    restart: on-failure
+    ports:
+      - 8001:8001
+    env_file: .env
+
   grafana:
     container_name: grafana_container
     image: grafana/grafana:latest

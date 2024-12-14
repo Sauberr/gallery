@@ -1,0 +1,43 @@
+   {
+      "model":"subscriptions.subscriptionplan",
+      "pk":1,
+      "fields":{
+         "name":"Basic",
+         "description":"Perfect for personal use. Enjoy essential features at an affordable price.  Basic storage, standard support, and access to core features.",
+         "cost":"4.99",
+         "paypal_plan_id":"P-6GS86287F0539600CM3YD7OQ",
+         "has_thumbnail_200px":true,
+         "has_thumbnail_400px":false,
+         "has_original_photo":false,
+         "has_binary_link":false
+      }
+   },
+   {
+      "model":"subscriptions.subscriptionplan",
+      "pk":2,
+      "fields":{
+         "name":"Premium",
+         "description":"Enhanced features and increased comfort. More storage, priority support, access to premium content, and exclusive features. Optimal value for your money!",
+         "cost":"9.99",
+         "paypal_plan_id":"P-7KE47576DG258030BM3YEAFA",
+         "has_thumbnail_200px":true,
+         "has_thumbnail_400px":true,
+         "has_original_photo":true,
+         "has_binary_link":false
+      }
+   },
+   {
+      "model":"subscriptions.subscriptionplan",
+      "pk":3,
+      "fields":{
+         "name":"Enterprise",
+         "description":"The solution for businesses of all sizes. Maximum productivity and a personalized approach. Unlimited storage, personal manager, advanced analytics, and custom solutions.",
+         "cost":"14.99",
+         "paypal_plan_id":"P-3WE528458D9215156M3YEAMI",
+         "has_thumbnail_200px":true,
+         "has_thumbnail_400px":true,
+         "has_original_photo":true,
+         "has_binary_link":true
+      }
+   }
+]

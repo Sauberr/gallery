@@ -3,130 +3,80 @@
       "model":"images.images",
       "pk":1,
       "fields":{
-         "title":"Space",
-         "image":"images/galaxy_1_2WjNAqO.jpg",
-         "created_at":"2024-10-24T15:34:13.279Z",
-         "updated_at":"2024-10-24T15:34:13.279Z",
+         "title":"Space Galaxy",
+         "image":"images/space_ayuGLkY.jpg",
+         "created_at":"2024-12-11T23:04:24.774Z",
+         "updated_at":"2024-12-12T20:05:33.987Z",
          "author":"Tom Black",
          "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Basic"
+         "subscription_plans":"Premium",
+         "price":"7.00",
+         "quantity":2,
+         "total_quantity":"14.00"
       }
    },
    {
       "model":"images.images",
       "pk":2,
       "fields":{
-         "title":"Star",
-         "image":"images/galaxy_4_buBDurU.jpg",
-         "created_at":"2024-10-24T15:34:30.407Z",
-         "updated_at":"2024-10-24T15:34:30.407Z",
-         "author":"Tom Black",
+         "title":"Galaxy World",
+         "image":"images/galaxy_worlds.jpg",
+         "created_at":"2024-12-12T00:24:56.683Z",
+         "updated_at":"2024-12-12T20:05:30.620Z",
+         "author":"Rabbit White",
          "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Premium"
+         "subscription_plans":"Enterprise",
+         "price":"11.00",
+         "quantity":10,
+         "total_quantity":"110.00"
       }
    },
    {
       "model":"images.images",
       "pk":3,
       "fields":{
-         "title":"Space Around",
-         "image":"images/galaxy_5_pBZMjb0.jpg",
-         "created_at":"2024-10-24T15:34:49.696Z",
-         "updated_at":"2024-10-24T15:34:49.696Z",
-         "author":"Rabbit White",
+         "title":"Galaxy Tornado",
+         "image":"images/galaxy-tornado.jpg",
+         "created_at":"2024-12-12T00:27:28.126Z",
+         "updated_at":"2024-12-12T20:05:25.812Z",
+         "author":"Tom Black",
          "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Enterprise"
+         "subscription_plans":"Basic",
+         "price":"11.00",
+         "quantity":30,
+         "total_quantity":"330.00"
       }
    },
    {
       "model":"images.images",
       "pk":4,
       "fields":{
-         "title":"Space Starsfall",
-         "image":"images/galaxy_7_yPsldfZ.jpg",
-         "created_at":"2024-10-24T15:35:13.214Z",
-         "updated_at":"2024-10-24T15:35:13.214Z",
-         "author":"Sauberr",
+         "title":"Galaxy Sun",
+         "image":"images/galaxy-suns.jpg",
+         "created_at":"2024-12-12T00:28:39.556Z",
+         "updated_at":"2024-12-12T20:05:22.680Z",
+         "author":"Rabbit White",
          "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Basic"
+         "subscription_plans":"Premium",
+         "price":"25.00",
+         "quantity":10,
+         "total_quantity":"250.00"
       }
    },
    {
       "model":"images.images",
       "pk":5,
       "fields":{
-         "title":"Planet",
-         "image":"images/galaxy_10_2at2p2J.jpg",
-         "created_at":"2024-10-24T15:35:33.599Z",
-         "updated_at":"2024-10-24T15:35:33.599Z",
+         "title":"Galaxy Dragon",
+         "image":"images/galaxy-dragon.jpg",
+         "created_at":"2024-12-12T00:29:25.080Z",
+         "updated_at":"2024-12-12T20:05:19.163Z",
          "author":"Tom Black",
          "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Enterprise"
-      }
-   },
-   {
-      "model":"images.images",
-      "pk":6,
-      "fields":{
-         "title":"Planet Space",
-         "image":"images/galaxy13.jfif",
-         "created_at":"2024-10-24T15:36:18.042Z",
-         "updated_at":"2024-10-24T15:37:42.702Z",
-         "author":"Sauberr",
-         "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Premium"
-      }
-   },
-   {
-      "model":"images.images",
-      "pk":7,
-      "fields":{
-         "title":"Hello Planet",
-         "image":"images/galaxy_11_PQ0EatU.jpg",
-         "created_at":"2024-10-24T15:36:38.746Z",
-         "updated_at":"2024-10-24T15:36:38.746Z",
-         "author":"Sauberr",
-         "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Premium"
-      }
-   },
-   {
-      "model":"images.images",
-      "pk":8,
-      "fields":{
-         "title":"Trash Space",
-         "image":"images/galaxy_12_llDPsqH.jpg",
-         "created_at":"2024-10-24T15:36:58.508Z",
-         "updated_at":"2024-10-24T15:36:58.508Z",
-         "author":"Rabbit White",
-         "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Basic"
-      }
-   },
-   {
-      "model":"images.images",
-      "pk":9,
-      "fields":{
-         "title":"Galaxy Astronaut",
-         "image":"images/galaxy14.jpg",
-         "created_at":"2024-10-24T15:38:38.184Z",
-         "updated_at":"2024-10-24T15:38:38.184Z",
-         "author":"Rabbit White",
-         "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Enterprise"
-      }
-   },
-   {
-      "model":"images.images",
-      "pk":10,
-      "fields":{
-         "title":"Galaxy Space",
-         "image":"images/galaxy15.jfif",
-         "created_at":"2024-10-24T15:39:30.886Z",
-         "updated_at":"2024-10-24T15:39:30.886Z",
-         "author":"Tom Black",
-         "description":"\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-         "subscription_plans":"Basic"
+         "subscription_plans":"Enterprise",
+         "price":"100.00",
+         "quantity":1,
+         "total_quantity":"100.00"
       }
    }
 ]

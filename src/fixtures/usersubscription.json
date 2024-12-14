@@ -1,0 +1,14 @@
+[
+   {
+      "model":"subscriptions.usersubscription",
+      "pk":2,
+      "fields":{
+         "user":1,
+         "plan":3,
+         "paypal_subscription_id":"I-LDSHTKKPG6PN",
+         "is_active":true,
+         "create_datetime":"2024-12-12T14:43:37.401Z",
+         "last_update":"2024-12-12T14:43:37.401Z"
+      }
+   }
+]
