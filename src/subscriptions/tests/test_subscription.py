@@ -292,3 +292,67 @@ class SubscriptionViewsTest(TestCase):
         for url in urls:
             response = self.client.get(url)
             self.assertEqual(response.status_code, HTTPStatus.FOUND)
+
+
+class UserSubscriptionTests(TestCase):
+    def setUp(self) -> None:
+        """Set up test data"""
+        self.user = create_test_user()
+        self.plan = create_test_subscription_plan()
+        self.subscription = create_test_user_subscription(
+            user=self.user,
+            plan=self.plan
+        )
+
+    def test_user_subscription_creation(self) -> None:
+        """Test UserSubscription model creation"""
+        self.assertEqual(self.subscription.user, self.user)
+        self.assertEqual(self.subscription.plan, self.plan)
+        self.assertEqual(self.subscription.paypal_subscription_id, "S-123")
+        self.assertTrue(self.subscription.is_active)
+
+    def test_user_subscription_str(self) -> None:
+        """Test UserSubscription string representation"""
+        expected_str = f"Subscription {self.subscription.paypal_subscription_id} for {self.user.email}"
+        self.assertEqual(str(self.subscription), expected_str)
+
+    def test_unique_active_subscription(self) -> None:
+        """Test that user can't have multiple active subscriptions"""
+        with self.assertRaises(Exception):
+            create_test_user_subscription(
+                user=self.user,
+                plan=self.plan,
+                paypal_subscription_id="S-456",
+                is_active=True
+            )
+
+    def test_multiple_inactive_subscriptions(self) -> None:
+        """Test that user can have multiple inactive subscriptions"""
+        self.subscription.is_active = False
+        self.subscription.save()
+
+        new_subscription = create_test_user_subscription(
+            user=self.user,
+            plan=self.plan,
+            paypal_subscription_id="S-456",
+            is_active=True
+        )
+        self.assertTrue(new_subscription.is_active)
+
+    def test_subscription_deactivation(self) -> None:
+        """Test subscription deactivation"""
+        self.subscription.is_active = False
+        self.subscription.save()
+        self.assertFalse(self.subscription.is_active)
+
+    def test_subscription_plan_change(self) -> None:
+        """Test changing subscription plan"""
+        new_plan = create_test_subscription_plan(
+            name="Basic",
+            description="Basic Plan",
+            cost=Decimal("4.99"),
+            paypal_plan_id="P-456"
+        )
+        self.subscription.plan = new_plan
+        self.subscription.save()
+        self.assertEqual(self.subscription.plan, new_plan)
