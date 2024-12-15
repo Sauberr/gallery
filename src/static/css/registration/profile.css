@@ -256,6 +256,7 @@ input[type="file"] {
 
 #otp_code {
     margin: 1.5rem 0;
+}
 
 .form-actions {
     text-align: center;
@@ -294,5 +295,4 @@ input[type="file"] {
     .mfa-qr {
         margin: 0 auto 1rem;
     }
-}
 }
