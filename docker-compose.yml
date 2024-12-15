@@ -12,10 +12,22 @@ services:
     volumes:
         - ./src:/assignment/src
         - ./commands:/assignment/commands
+        - static_content:/test-assigment/src/static
+        - media_content:/test-assigment/src/media
     env_file:
         - .env
     depends_on:
       - elasticsearch
+#      - postgres
+
+  #  postgres:
+  #    image: postgres:15
+  #    ports:
+  #      - 5432:5432
+  #    volumes:
+  #      - pg_data:/var/lib/postgresql/data
+  #    env_file:
+  #      - .env
 
   elasticsearch:
     container_name: elasticsearch_container
