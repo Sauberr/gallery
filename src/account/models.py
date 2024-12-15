@@ -46,9 +46,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             "Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts."
         ),
     )
-    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-    birth_date = models.DateField(_("birth date"), blank=True, null=True)
-    avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True, null=True)
     mfa_secret = models.CharField(max_length=32, blank=True, null=True)
     mfa_enabled = models.BooleanField(default=False)
 
@@ -82,7 +79,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 date_joined=faker.date_time_this_year(),
             )
 
-    def format_phone_number(self):
+    def format_phone_number(self) -> str | None:
         if self.phone_number:
             parsed_number = parse(str(self.phone_number), None)
             return format_number(parsed_number, PhoneNumberFormat.INTERNATIONAL)
@@ -92,18 +89,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    def get_full_name(self):
+    def get_full_name(self) -> str:
         """
         Return the first_name plus the last_name, with a space in between.
         """
         full_name = "%s %s" % (self.first_name, self.last_name)
         return full_name.strip()
 
-    def get_short_name(self):
+    def get_short_name(self) -> str:
         """Return the short name for the user."""
         return self.first_name
 
-    def get_working_time(self):
+    def get_working_time(self) -> str:
         return f"Time on site: {timezone.now() - self.date_joined}"
 
 
@@ -128,6 +125,11 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user} {self.status}"
+
+    def clean(self):
+        super().clean()
+        if self.birth_date and self.birth_date > timezone.now().date():
+            raise ValueError("Birth date cannot be in the future")
 
     class Meta:
         verbose_name: str = "User Profile"

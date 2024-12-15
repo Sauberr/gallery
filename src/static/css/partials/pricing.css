@@ -43,8 +43,9 @@ body {
 .plansHero {
     text-align: center;
     padding: 5rem 0 4.5rem;
-    line-height: 1.21;
+    line-height: 1.5;
 }
+
 
 .plansHero__title {
     font-weight: 700;

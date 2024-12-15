@@ -7,92 +7,154 @@
 
 {% block title %}Profile Page{% endblock %}
 
+
 {% block content %}
+
     {% include 'partials/navbar.html' %}
 
+
     <div class="profile-container">
+        <!-- Profile Header -->
         <div class="profile-header">
-            {% if request.user.profile.avatar %}
-                <img src="{{ request.user.profile.avatar.url }}" alt="Profile Avatar" class="profile-avatar" width="360" height="360">
-            {% else %}
-                <img src="{% static 'images/registration/default-avatar.png' %}" alt="Profile Avatar"
-                     class="profile-avatar">
-            {% endif %}
-            <div class="custom-file-upload">
-                <input type="file" id="avatar" name="avatar" class="custom-file-input">
+            <div class="avatar-section">
+                {% if request.user.profile.avatar %}
+                    <img src="{{ request.user.profile.avatar.url }}" alt="Profile Avatar" class="profile-avatar"
+                         width="360" height="360">
+                {% else %}
+                    <img src="{% static 'images/registration/default-avatar.png' %}" alt="Profile Avatar"
+                         class="profile-avatar">
+                {% endif %}
             </div>
-            <div class="profile-username">{{ request.user.first_name }} {{ request.user.last_name }}</div>
-            <div class="profile-email">{{ request.user.email }}</div>
-            <div>Member since: {{ request.user.date_joined|date:"F d, Y" }}</div>
+            <div class="profile-info">
+                <h2 class="profile-name">{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+                <p class="profile-email">{{ request.user.email }}</p>
+                <p class="member-since">Member since: {{ request.user.profile.date_joined|date:"F d, Y" }}</p>
+            </div>
         </div>
 
+        <!-- Profile Form -->
         <form id="profileForm" method="POST" action="{% url 'account:profile' %}" enctype="multipart/form-data">
             {% csrf_token %}
+
+            <!-- Avatar Upload -->
+            <div class="avatar-upload">
+                <label for="{{ form.avatar.id_for_label }}" class="custom-file-upload">
+                    <i class="fas fa-camera"></i> Change Avatar
+                </label>
+                {{ form.avatar }}
+            </div>
+
+            <!-- Profile Details -->
             <div class="profile-details">
-                <div class="detail-item">
-                    <span class="detail-label">First Name</span>
-                    <span class="detail-value">{{ request.user.first_name|default:"Not Set" }}</span>
-                    <input type="text" name="first_name" class="edit-input" value="{{ request.user.first_name }}">
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Last Name</span>
-                    <span class="detail-value">{{ request.user.last_name|default:"Not Set" }}</span>
-                    <input type="text" name="last_name" class="edit-input" value="{{ request.user.last_name }}">
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Phone Number</span>
-                    <span class="detail-value">{{ request.user.format_phone_number|default:"Not Set" }}</span>
-                    <input type="tel" name="phone_number" class="edit-input" id="phone_number"
-                           value="{{ request.user.profile.phone_number }}">
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Birth Date</span>
-                    <span class="detail-value">{{ request.user.profile.birth_date|default:"Not Set" }}</span>
-                    <input type="date" name="birth_date" class="edit-input"
-                           value="{{ request.user.profile.birth_date|date:'Y-m-d' }}">
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Sex</span>
-                    <span class="detail-value">{{ request.user.profile.sex|default:"Not Set" }}</span>
-                    <input type="text" name="sex" class="edit-input" value="{{ request.user.profile.sex }}">
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Location</span>
-                    <span class="detail-value">{{ request.user.profile.location|default:"Not Set" }}</span>
-                    <input type="text" name="location" class="edit-input" value="{{ request.user.profile.location }}">
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Status</span>
-                    <span class="detail-value">{{ request.user.profile.status|default:"Not Set" }}</span>
-                    <input type="text" name="status" class="edit-input" value="{{ request.user.profile.status }}">
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Active</span>
-                    <div class="status-toggle">
-                        <input type="checkbox" id="active-toggle" class="status-input"
-                               {% if request.user.is_active %}checked{% endif %} disabled>
-                        <label for="active-toggle" class="status-switch">
-                            <span class="status-slider"></span>
-                        </label>
+                <!-- Personal Information -->
+                <div class="details-section">
+                    <h3>Personal Information</h3>
+
+                    <div class="detail-item">
+                        <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="error-message">{{ form.first_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-item">
+                        <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="error-message">{{ form.last_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-item">
+                        <label for="{{ form.email.id_for_label }}">Email</label>
+                        {{ form.email }}
+                    </div>
+
+                    <div class="detail-item">
+                        <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                        {{ form.phone_number }}
+                        {% if form.phone_number.errors %}
+                            <div class="error-message">{{ form.phone_number.errors }}</div>
+                        {% endif %}
                     </div>
                 </div>
-                <div class="detail-item">
-                    <span class="detail-label">Two-Factor Authentication</span>
-                    <span class="detail-value">
-        <div class="switch-container">
-            <input type="checkbox" id="2fa-toggle" class="switch-input"
-                   {% if request.user.mfa_enabled %}checked{% endif %}>
-            <label for="2fa-toggle" class="switch">
-                <span class="slider"></span>
-            </label>
-        </div>
-    </span>
+
+                <!-- Additional Information -->
+                <div class="details-section">
+                    <h3>Additional Information</h3>
+
+                    <div class="detail-item">
+                        <label for="{{ form.birth_date.id_for_label }}">Birth Date</label>
+                        {{ form.birth_date }}
+                        {% if form.birth_date.errors %}
+                            <div class="error-message">{{ form.birth_date.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-item">
+                        <label for="{{ form.sex.id_for_label }}">Sex</label>
+                        {{ form.sex }}
+                        {% if form.sex.errors %}
+                            <div class="error-message">{{ form.sex.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-item">
+                        <label for="{{ form.location.id_for_label }}">Location</label>
+                        {{ form.location }}
+                        {% if form.location.errors %}
+                            <div class="error-message">{{ form.location.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="detail-item">
+                        <label for="{{ form.status.id_for_label }}">Status</label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <div class="error-message">{{ form.status.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Account Status -->
+                <div class="details-section">
+                    <h3>Account Status</h3>
+
+                    <div class="detail-item-status">
+                        <span class="detail-label">Email Verification</span>
+                        <div class="status-toggle">
+                            <input type="checkbox" id="active-toggle" class="status-input"
+                                   {% if request.user.is_active %}checked{% endif %} disabled>
+                            <label for="active-toggle" class="status-switch">
+                                <span class="status-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="detail-item-status">
+                        <span class="detail-label">Two-Factor Authentication</span>
+                        <div class="switch-container">
+                            <input type="checkbox" id="2fa-toggle" class="switch-input"
+                                   {% if request.user.mfa_enabled %}checked{% endif %}>
+                            <label for="2fa-toggle" class="switch">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button type="submit" id="saveBtn">Save Changes</button>
+
+            <!-- Save Button -->
+            <div class="form-actions">
+                <button type="submit" id="saveBtn" class="btn-save">Save Changes</button>
+            </div>
         </form>
+
+        <!-- 2FA Setup Section -->
         {% if not request.user.mfa_enabled %}
             <div id="2fa-setup-section" class="2fa-setup">
+                <h3>Two-Factor Authentication Setup</h3>
                 <p class="setup-description">
                     Two-Factor Authentication adds an extra layer of security to your account.
                     Follow these steps to enable 2FA:
@@ -100,13 +162,16 @@
 
                 <div class="qr-code-container">
                     <img src="{{ qrcode }}" alt="2FA QR Code" class="mfa-qr">
-                    <p class="qr-instructions">
-                        1. Open your authenticator app
-                        2. Scan this QR code
-                    </p>
+                    <div class="qr-instructions">
+                        <ol>
+                            <li>Open your authenticator app</li>
+                            <li>Scan this QR code</li>
+                            <li>Enter the 6-digit code below</li>
+                        </ol>
+                    </div>
                 </div>
 
-                <form method="POST" action="{% url 'account:verify_mfa' %}" class="form">
+                <form method="POST" action="{% url 'account:verify_mfa' %}" class="mfa-form">
                     {% csrf_token %}
                     <div class="form-group">
                         <input type="text" id="otp_code" name="otp_code" maxlength="6" required
@@ -117,8 +182,8 @@
                 </form>
             </div>
         {% endif %}
-
     </div>
+
 
 
     <script>

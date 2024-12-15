@@ -14,11 +14,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-from django.views.generic import CreateView, RedirectView, View
+from django.views.generic import CreateView, RedirectView, View, UpdateView
 
 from account.forms import ProfileForm, UserLoginForm, UserRegistrationForm
 from account.models import Profile
-from account.services.emails import send_registration_email
+from account.tasks import send_registration_email
 from account.services.verify_2fa_otp import verify_2fa_otp
 from common.mixins import TitleMixin
 from core.utils.token_generator import TokenGenerator
@@ -34,9 +34,12 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
 
     def form_valid(self, form):
         remember_me = form.cleaned_data["remember_me"]
-        if not remember_me:
+        if remember_me:
+            self.request.session.set_expiry(2592000)
+        else:
             self.request.session.set_expiry(0)
-            self.request.session.modified = True
+
+        self.request.session.modified = True
 
         user = form.get_user()
         if user is not None:
@@ -68,7 +71,7 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.is_active = False
         self.object.save()
-        send_registration_email(request=self.request, user_instance=self.object)
+        send_registration_email.delay(self.object.pk)
         return super().form_valid(form)
 
 
@@ -107,27 +110,88 @@ class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
     email_template_name: str = "registration/password/password_reset_email.txt"
 
 
-@login_required
-def profile(request):
-    user = request.user
-    if not user.mfa_secret:
-        user.mfa_secret = pyotp.random_base32()
+class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
+    template_name: str = 'registration/profile.html'
+    form_class = ProfileForm
+    success_url = reverse_lazy('account:profile')
+    title: str = "Profile"
+
+    def get_object(self):
+        return self.request.user
+
+    def get_initial(self):
+        user = self.request.user
+        profile = user.profile
+        return {
+            **{
+                field: (user.format_phone_number() if field == 'phone_number' else getattr(user, field))
+                for field in ['first_name', 'last_name', 'email', 'phone_number']
+            },
+            **{
+                field: getattr(profile, field)
+                for field in ['birth_date', 'sex', 'location', 'status']
+            }
+        }
+    def _update_profile(self, form):
+        user = form.save(commit=False)
+        profile = user.profile
+
+        for field in ['first_name', 'last_name', 'phone_number']:
+            setattr(user, field, form.cleaned_data[field])
         user.save()
 
-    otp_uri = pyotp.totp.TOTP(user.mfa_secret).provisioning_uri(name=user.email, issuer_name="Test Assignment")
+        for field in ['birth_date', 'sex', 'location', 'status']:
+            setattr(profile, field, form.cleaned_data[field])
 
-    qr = qrcode.make(otp_uri)
-    buffer = io.BytesIO()
-    qr.save(buffer, format="PNG")
+        if 'avatar' in self.request.FILES:
+            profile.avatar = self.request.FILES['avatar']
 
-    buffer.seek(0)
-    qr_code = base64.b64encode(buffer.getvalue()).decode("utf-8")
+        profile.save()
 
-    qr_code_data_uri = f"data:image/png;base64,{qr_code}"
+    def _has_changes(self, form, user):
+        profile = user.profile
 
-    context = {"qrcode": qr_code_data_uri}
+        user_changed = any(
+            form.cleaned_data[field] != getattr(user, field)
+            for field in ['first_name', 'last_name', 'phone_number']
+        )
 
-    return render(request, "registration/profile.html", context)
+        profile_changed = any(
+            form.cleaned_data[field] != getattr(profile, field)
+            for field in ['birth_date', 'sex', 'location', 'status']
+        )
+
+        avatar_changed = 'avatar' in self.request.FILES
+
+        return user_changed or profile_changed or avatar_changed
+
+    def form_valid(self, form):
+        if self._has_changes(form, self.request.user):
+            self._update_profile(form)
+            messages.success(self.request, 'Profile updated successfully')
+        return super().form_valid(form)
+
+    def _generate_qr_code(self):
+        user = self.request.user
+        if not user.mfa_secret:
+            user.mfa_secret = pyotp.random_base32()
+            user.save()
+
+        otp_uri = pyotp.totp.TOTP(user.mfa_secret).provisioning_uri(
+            name=user.email,
+            issuer_name="Test Assignment"
+        )
+
+        qr = qrcode.make(otp_uri)
+        buffer = io.BytesIO()
+        qr.save(buffer, format="PNG")
+        buffer.seek(0)
+        return f"data:image/png;base64,{base64.b64encode(buffer.getvalue()).decode()}"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["qrcode"] = self._generate_qr_code()
+        return context
 
 
 class VerifyMfa(View):

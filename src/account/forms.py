@@ -5,8 +5,11 @@ from django.contrib.auth.forms import (AuthenticationForm, UserChangeForm,
 from django.core.exceptions import ValidationError
 from django_recaptcha.fields import ReCaptchaField
 from phonenumber_field.formfields import PhoneNumberField
+from account.tasks import send_registration_email
 
 from account.models import Profile
+
+from account.models import STATUS_CHOICES, SEX_CHOICES, COUNTRY_CHOICES
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -21,6 +24,12 @@ class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = get_user_model()
         fields = ("email", "first_name", "last_name", "phone_number", "password1", "password2", "captcha")
+
+
+    def save(self, commit=True):
+        user = super(UserRegistrationForm, self).save(commit=True)
+        send_registration_email.delay(user.id)
+        return user
 
     def clean_password1(self):
         password1 = self.cleaned_data.get("password1")
@@ -53,25 +62,59 @@ class UserLoginForm(AuthenticationForm):
         fields = ("email", "phone_number", "password", "remember_me")
 
 
-class ProfileForm(UserChangeForm):
-    first_name = forms.CharField(max_length=25)
-    last_name = forms.CharField(max_length=25)
-    phone_number = forms.CharField(max_length=15)
-    email = forms.EmailField()
-    avatar = forms.ImageField()
-    is_active = forms.BooleanField()
-    date_joined = forms.DateTimeField(disabled=True)
-    birth_date = forms.DateField()
+
+class ProfileForm(forms.ModelForm):
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter first name"}
+        )
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter last name"}
+        )
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter email",
+                "readonly": True,
+            }
+        )
+    )
+    phone_number = PhoneNumberField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter phone number"}
+        ),
+        required=False
+    )
+    birth_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={"class": "form-control", "type": "date"}
+        ),
+        required=False
+    )
+    sex = forms.ChoiceField(
+        choices=SEX_CHOICES,
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False
+    )
+    location = forms.ChoiceField(
+        choices=COUNTRY_CHOICES,
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False
+    )
+    status = forms.ChoiceField(
+        choices=STATUS_CHOICES,
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False
+    )
+    avatar = forms.ImageField(
+        required=False,
+        widget=forms.FileInput(attrs={"class": "custom-file-input"})
+    )
 
     class Meta:
         model = Profile
-        fields = (
-            "first_name",
-            "last_name",
-            "phone_number",
-            "email",
-            "avatar",
-            "is_active",
-            "date_joined",
-            "birth_date",
-        )
+        fields = ('first_name', 'last_name', 'email', 'phone_number')
