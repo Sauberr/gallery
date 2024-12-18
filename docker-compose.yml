@@ -18,16 +18,29 @@ services:
         - .env
     depends_on:
       - elasticsearch
-#      - postgres
+      - postgres
 
-  #  postgres:
-  #    image: postgres:15
-  #    ports:
-  #      - 5432:5432
-  #    volumes:
-  #      - pg_data:/var/lib/postgresql/data
-  #    env_file:
-  #      - .env
+  postgres:
+    image: postgres:15
+    ports:
+      - 5432:5432
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    env_file:
+      - .env
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - 5000:80
+    depends_on:
+      - postgres
 
   elasticsearch:
     container_name: elasticsearch_container
@@ -119,3 +132,5 @@ volumes:
   esdata1:
   grafana_data:
   prometheus_data:
+  #  pg_data: { }
+  #  pgadmin_data: { }

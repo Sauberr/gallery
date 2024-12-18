@@ -25,15 +25,21 @@ INTERNAL_IPS: List[str] = [
     "localhost",
 ]
 
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1:6379/1",
-#         "OPTIONS": {
-#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+# if os.environ.get("DJANGO_SETTINGS_MODULE") == "config.settings.dev":
+#
+#     CACHES = {
+#         "default": {
+#             "BACKEND": "django_redis.cache.RedisCache",
+#             "LOCATION": "redis://127.0.0.1:6379/1",
+#             "OPTIONS": {
+#                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#             }
 #         }
 #     }
-# }
+# else:
+#     ...
+
+
 
 # Application definition
 

@@ -1,9 +1,10 @@
+[
    {
       "model":"subscriptions.subscriptionplan",
       "pk":1,
       "fields":{
          "name":"Basic",
-         "description":"Perfect for personal use. Enjoy essential features at an affordable price.  Basic storage, standard support, and access to core features.",
+         "description":"Perfect for personal use. Enjoy essential features at an affordable price. Basic storage, standard support, and access to core features.",
          "cost":"4.99",
          "paypal_plan_id":"P-6GS86287F0539600CM3YD7OQ",
          "has_thumbnail_200px":true,
