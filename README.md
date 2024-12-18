@@ -52,7 +52,7 @@ All actions should be executed from the source directory of the project and only
    
 6. Docker :
    ```bash
-   docker compose build .
+   docker build .
    
    docker-compose up
    ```
