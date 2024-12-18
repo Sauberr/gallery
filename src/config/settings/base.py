@@ -203,8 +203,8 @@ DEBUG_TOOLBAR_PANELS: List[str] = [
 ]
 
 
-CELERY_BROKER_URL: str = "redis://127.0.0.1:6379"
-CELERY_RESULT_BACKEND: str = "redis://127.0.0.1:6379"
+CELERY_BROKER_URL: str = "redis://redis"
+CELERY_RESULT_BACKEND: str = "redis://redis"
 
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER = "json"

@@ -12,8 +12,8 @@ services:
     volumes:
         - ./src:/assignment/src
         - ./commands:/assignment/commands
-        - static_content:/test-assigment/src/static
-        - media_content:/test-assigment/src/media
+#        - static_content:/test-assigment/src/static
+#        - media_content:/test-assigment/src/media
     env_file:
         - .env
     depends_on:
@@ -42,18 +42,15 @@ services:
 
   redis:
     image: redis
-    container_name: redis_container
     env_file:
       - .env
     restart: on-failure
     depends_on:
       - backend
-    ports:
-      - 6380:6379
 
   celery:
     build: ./
-    command: celery -A config.celery.app worker -l info
+    command: celery -A config.celery_app.app worker -l info
     restart: always
     volumes:
       - ./src:/assignment/src
@@ -66,7 +63,7 @@ services:
 
   celerybeat:
     build: ./
-    command: celery -A micron.celery.app beat -l info -S django
+    command: celery -A config.celery_app.app worker -l info -S django
     restart: always
     volumes:
       - ./src:/assignment/src
@@ -79,7 +76,7 @@ services:
 
   flower:
     build: ./
-    command: celery -A micron.celery.app flower
+    command: celery -A config.celery_app.app flower --broker=redis://redis
     restart: always
     volumes:
       - ./src:/assignment/src
@@ -89,7 +86,7 @@ services:
       - 5556:5555
     depends_on:
       - redis
-      - backend
+      - celery
 
   redisadmin:
     image: redislabs/redisinsight

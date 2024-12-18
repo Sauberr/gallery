@@ -9,7 +9,7 @@ from elasticsearch_dsl.query import Q
 from common.mixins import TitleMixin, CacheMixin
 from images.models import Images
 from subscriptions.models import UserSubscription, SubscriptionPlan
-
+from .documents import ImagesDocument
 
 from .models import ContactUs
 from django.http import JsonResponse
@@ -19,73 +19,73 @@ class IndexView(TitleMixin, TemplateView):
     template_name: str = "partials/index.html"
     title: str = "Home"
 
-    # @staticmethod
-    # def get_search_results(query, correction: bool = False, size: int = 5):
-    #     query = query.lower()
-    #     search_query = Q(
-    #         "bool",
-    #         should=[
-    #             Q("multi_match", query=query, fields=['title^7', 'author^2', 'description'],
-    #               fuzziness='AUTO', prefix_length=2, operator='and'),
-    #             Q("wildcard", title={"value": f"*{query}*", "boost": 7}),
-    #             Q("wildcard", author={"value": f"*{query}*", "boost": 2}),
-    #             Q("wildcard", description={"value": f"*{query}*"}),
-    #         ],
-    #         minimum_should_match=1
-    #     )
-    #     search = ImagesDocument.search().query(search_query)[0:size if correction else None]
-    #     results = [hit.to_dict() for hit in search]
-    #     return results
-    #
-    # @staticmethod
-    # def get_correction_query(query):
-    #     suggest = Search(index="images")
-    #     for field in ['title', 'author', 'description']:
-    #         suggest = suggest.suggest(f'{field}_suggestion', query, term={'field': field})
-    #     response = suggest.execute()
-    #
-    #     best_correction = query
-    #     for suggestion in response.suggest:
-    #         if response.suggest[suggestion][0].options:
-    #             best_correction = response.suggest[suggestion][0].options[0].text
-    #             break
-    #     return best_correction if best_correction != query else None
-    #
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     query = self.request.GET.get('q')
-    #     if query:
-    #         context['original_query'] = query
-    #         images = self.get_search_results(query)
-    #         correction = self.get_correction_query(query)
-    #         if correction and correction.lower() != query.lower():
-    #             context['correction'] = correction
-    #             corrected_images = self.get_search_results(correction)
-    #             if corrected_images:
-    #                 context['images'] = corrected_images
-    #             else:
-    #                 context['images'] = images
-    #         else:
-    #             context['images'] = images
-    #             context['correction'] = None
-    #     else:
-    #         search = Search(index="images")
-    #         response = search.scan()
-    #         context['images'] = [hit.to_dict() for hit in response]
-    #         context['correction'] = None
-    #     return context
-    #
-    # def get(self, request, *args, **kwargs):
-    #     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-    #         query = request.GET.get('q', '')
-    #         suggestions = self.get_search_results(query, correction=True) if query else []
-    #         if not suggestions:
-    #             correction = self.get_correction_query(query)
-    #             if correction and correction.lower() != query.lower():
-    #                 suggestions = self.get_search_results(correction, correction=True)
-    #                 suggestions.append({'correction': correction, 'original_query': query})
-    #         return JsonResponse(suggestions, safe=False)
-    #     return super().get(request, *args, **kwargs)
+    @staticmethod
+    def get_search_results(query, correction: bool = False, size: int = 5):
+        query = query.lower()
+        search_query = Q(
+            "bool",
+            should=[
+                Q("multi_match", query=query, fields=['title^7', 'author^2', 'description'],
+                  fuzziness='AUTO', prefix_length=2, operator='and'),
+                Q("wildcard", title={"value": f"*{query}*", "boost": 7}),
+                Q("wildcard", author={"value": f"*{query}*", "boost": 2}),
+                Q("wildcard", description={"value": f"*{query}*"}),
+            ],
+            minimum_should_match=1
+        )
+        search = ImagesDocument.search().query(search_query)[0:size if correction else None]
+        results = [hit.to_dict() for hit in search]
+        return results
+
+    @staticmethod
+    def get_correction_query(query):
+        suggest = Search(index="images")
+        for field in ['title', 'author', 'description']:
+            suggest = suggest.suggest(f'{field}_suggestion', query, term={'field': field})
+        response = suggest.execute()
+
+        best_correction = query
+        for suggestion in response.suggest:
+            if response.suggest[suggestion][0].options:
+                best_correction = response.suggest[suggestion][0].options[0].text
+                break
+        return best_correction if best_correction != query else None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query = self.request.GET.get('q')
+        if query:
+            context['original_query'] = query
+            images = self.get_search_results(query)
+            correction = self.get_correction_query(query)
+            if correction and correction.lower() != query.lower():
+                context['correction'] = correction
+                corrected_images = self.get_search_results(correction)
+                if corrected_images:
+                    context['images'] = corrected_images
+                else:
+                    context['images'] = images
+            else:
+                context['images'] = images
+                context['correction'] = None
+        else:
+            search = Search(index="images")
+            response = search.scan()
+            context['images'] = [hit.to_dict() for hit in response]
+            context['correction'] = None
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            query = request.GET.get('q', '')
+            suggestions = self.get_search_results(query, correction=True) if query else []
+            if not suggestions:
+                correction = self.get_correction_query(query)
+                if correction and correction.lower() != query.lower():
+                    suggestions = self.get_search_results(correction, correction=True)
+                    suggestions.append({'correction': correction, 'original_query': query})
+            return JsonResponse(suggestions, safe=False)
+        return super().get(request, *args, **kwargs)
 
 
 class ImageList(TitleMixin, ListView):
