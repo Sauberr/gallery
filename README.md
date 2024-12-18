@@ -1,4 +1,4 @@
-### Gallery: Online subscription service
+### 🖼 Gallery: Online subscription service
 
 Gallery is an online service where users can download unique artworks from artists through subscription plans, processed via PayPal. The platform offers three subscription tiers: Basic, Premium, and Enterprise, each granting access to different levels of content.
 
