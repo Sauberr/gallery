@@ -25,19 +25,16 @@ INTERNAL_IPS: List[str] = [
     "localhost",
 ]
 
-# if os.environ.get("DJANGO_SETTINGS_MODULE") == "config.settings.dev":
-#
-#     CACHES = {
-#         "default": {
-#             "BACKEND": "django_redis.cache.RedisCache",
-#             "LOCATION": "redis://127.0.0.1:6379/1",
-#             "OPTIONS": {
-#                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#             }
-#         }
-#     }
-# else:
-#     ...
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 
 
 
@@ -158,7 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CACHALOT_TIMEOUT = 60 * 60
 CACHALOT_ENABLED = True
-
+CACHALOT_DATABASES = ['default']
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

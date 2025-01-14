@@ -9,19 +9,11 @@ SECRET_KEY = "django-secret-key"
 
 ALLOWED_HOSTS: List[Any] = ["*", "127.0.0.1"]
 
-# MIDDLEWARE += [] # noqa # something add like debugtoolbar middleware
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": str(os.environ.get("POSTGRES_NAME")),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": str(os.environ.get("POSTGRES_DB")),
         "USER": str(os.environ.get("POSTGRES_USER")),
         "PASSWORD": str(os.environ.get("POSTGRES_PASSWORD")),
         "HOST": str(os.environ.get("POSTGRES_HOST")),
