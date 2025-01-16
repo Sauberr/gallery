@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, TemplateView, View
 from django_elasticsearch_dsl.search import Search
 from elasticsearch_dsl.query import Q
+from django.conf import settings
 
 from common.mixins import TitleMixin, CacheMixin
 from images.models import Images
@@ -96,7 +97,7 @@ class ImageList(TitleMixin, ListView):
     ordering = ["title"]
 
 
-class SubscriptionPlansView(LoginRequiredMixin, View, CacheMixin):
+class SubscriptionPlansView(CacheMixin, LoginRequiredMixin, View):
     def get(self, request):
         basic_plan = self.set_get_cache(
             SubscriptionPlan.objects.filter(name='Basic').first(),
@@ -130,6 +131,9 @@ class SubscriptionPlansView(LoginRequiredMixin, View, CacheMixin):
             "basic_plan": basic_plan,
             "premium_plan": premium_plan,
             "enterprise_plan": enterprise_plan,
+            "basic_plan_id": settings.BASIC_PLAN_ID,
+            "premium_plan_id": settings.PREMIUM_PLAN_ID,
+            "enterprise_plan_id": settings.ENTERPRISE_PLAN_ID,
         }
 
         return render(request, "partials/pricing.html", context)

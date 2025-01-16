@@ -3,15 +3,12 @@ from django.contrib import admin
 from subscriptions.models import SubscriptionPlan, UserSubscription
 
 
-
-
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
     list_display = ("name", "cost", "has_thumbnail_200px", "has_thumbnail_400px", "has_original_photo", "has_binary_link")
     list_display_links = ("name", "cost")
     search_fields = ("name", "cost")
     ordering = ("cost",)
-    readonly_fields = ("paypal_plan_id",)
 
 
 @admin.register(UserSubscription)

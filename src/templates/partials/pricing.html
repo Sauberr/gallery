@@ -73,7 +73,7 @@
                     <li {% if not basic_plan.has_original_photo %}class="disabled"{% endif %}>original_photo</li>
                     <li {% if not basic_plan.has_binary_link %}class="disabled"{% endif %}>binary_link</li>
                 </ul>
-                <div id="paypal-button-container-P-6GS86287F0539600CM3YD7OQ"></div>
+                <div id="paypal-button-container-basic"></div>
                 <script src="https://www.paypal.com/sdk/js?client-id=AViFM_g_S_EyBgXIsU-k_4QiK8ZWGDcEax1_923d_rG48UOhsPhv8inLaAUUEE-8TverOEUKZneI2DQx&vault=true&intent=subscription"
                         data-sdk-integration-source="button-factory"></script>
                 <script>
@@ -86,14 +86,14 @@
                         },
                         createSubscription: function (data, actions) {
                             return actions.subscription.create({
-                                plan_id: 'P-6GS86287F0539600CM3YD7OQ'
+                                plan_id: '{{ basic_plan_id }}'
                             });
                         },
                         onApprove: function (data, actions) {
                             var current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Basic"
                             window.open(current_url, '_self')
                         }
-                    }).render('#paypal-button-container-P-6GS86287F0539600CM3YD7OQ');
+                    }).render('#paypal-button-container-basic');
                 </script>
                 <!--                <button class="button">Get Started</button>-->
             </div>
@@ -113,7 +113,7 @@
                     <li {% if not premium_plan.has_original_photo %}class="disabled"{% endif %}>original_photo</li>
                     <li {% if not premium_plan.has_binary_link %}class="disabled"{% endif %}>binary_link</li>
                 </ul>
-                <div id="paypal-button-container-P-7KE47576DG258030BM3YEAFA"></div>
+                <div id="paypal-button-container-premium"></div>
                 <script>
                     paypal.Buttons({
                         style: {
@@ -124,14 +124,14 @@
                         },
                         createSubscription: function (data, actions) {
                             return actions.subscription.create({
-                                plan_id: 'P-7KE47576DG258030BM3YEAFA'
+                                plan_id: '{{ premium_plan_id }}'
                             });
                         },
                         onApprove: function (data, actions) {
                             var current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Premium"
                             window.open(current_url, '_self')
                         }
-                    }).render('#paypal-button-container-P-7KE47576DG258030BM3YEAFA');
+                    }).render('#paypal-button-container-premium');
                 </script>
                 <!--                <button class="button button&#45;&#45;pink">Get Started</button>-->
             </div>
@@ -150,7 +150,7 @@
                     <li {% if not enterprise_plan.has_original_photo %}class="disabled"{% endif %}>original_photo</li>
                     <li {% if not enterprise_plan.has_binary_link %}class="disabled"{% endif %}>binary_link</li>
                 </ul>
-                <div id="paypal-button-container-P-3WE528458D9215156M3YEAMI"></div>
+                <div id="paypal-button-container-enterprise"></div>
                 <script>
                     paypal.Buttons({
                         style: {
@@ -161,14 +161,14 @@
                         },
                         createSubscription: function (data, actions) {
                             return actions.subscription.create({
-                                plan_id: 'P-3WE528458D9215156M3YEAMI'
+                                plan_id: '{{ enterprise_plan_id }}'
                             });
                         },
                         onApprove: function (data, actions) {
                             var current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Enterprise"
                             window.open(current_url, '_self')
                         }
-                    }).render('#paypal-button-container-P-3WE528458D9215156M3YEAMI');
+                    }).render('#paypal-button-container-enterprise');
                 </script>
                 <!--                <button class="button button&#45;&#45;white">Get Started</button>-->
             </div>
