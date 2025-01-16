@@ -11,6 +11,7 @@ EXPOSE 8000
 
 COPY ./src ./src
 COPY ./commands ./commands
+COPY fixtures /test_assignment/fixtures
 
 COPY ./requirements.txt ./requirements.txt
 
