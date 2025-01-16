@@ -1,4 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
 
 :root {
     --baseColor: #656c7c;
@@ -14,9 +20,6 @@
     --entpIcon: url("data:image/svg+xml,%3Csvg width='42' height='42' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.813 11.077 21 1.155l17.187 9.922v19.846L21 40.845 3.813 30.923V11.077Z' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='21' cy='21' r='8' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E");
 }
 
-* {
-    box-sizing: border-box;
-}
 
 html {
     color: var(--baseColor);
@@ -42,7 +45,7 @@ body {
 
 .plansHero {
     text-align: center;
-    padding: 5rem 0 4.5rem;
+    padding: 4.5rem 0 1.2rem;
     line-height: 1.5;
 }
 

@@ -1,53 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
 .pagination {
-        display: flex;
-        justify-content: center;
-        padding-left: 0;
-        list-style: none;
-        border-radius: 0.25rem;
-        margin-top: 20px;
-        margin-bottom: 25px;
-    }
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+    list-style: none;
+    border-radius: 0.25rem;
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
 
-    .pagination .page-item {
-        margin: 0 0.25rem;
-    }
+.pagination .page-item {
+    margin: 0 0.25rem;
+}
 
-    .pagination .page-link {
-        position: relative;
-        display: block;
-        padding: 0.5rem 0.75rem;
-        margin-left: -1px;
-        line-height: 1.25;
-        color: #000;
-        background-color: #fff;
-        border: 1px solid grey;
-        border-radius: 0.25rem;
-        text-decoration: none;
-    }
+.pagination .page-link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #000;
+    background-color: #fff;
+    border: 1px solid grey;
+    border-radius: 0.25rem;
+    text-decoration: none;
+}
 
-    .pagination .page-link:hover {
-        color: #fff;
-        background-color: grey;
-        border-color: grey;
-    }
+.pagination .page-link:hover {
+    color: #fff;
+    background-color: grey;
+    border-color: grey;
+}
 
-    .pagination .page-item.active .page-link {
-        z-index: 1;
-        color: #fff;
-        background-color: grey;
-        border-color: grey;
-    }
+.pagination .page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: grey;
+    border-color: grey;
+}
 
-    .pagination .page-item.disabled .page-link {
-        color: #6c757d;
-        pointer-events: none;
-        background-color: #fff;
-        border-color: grey;
-    }
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: grey;
+}
 
-    .pagination .page-link,
-    .pagination .btn,
-    .pagination .page-link:hover,
-    .pagination .btn:hover {
-        transition: background-color 0.3s, color 0.3s, border 0.3s;
-    }
+.pagination .page-link,
+.pagination .btn,
+.pagination .page-link:hover,
+.pagination .btn:hover {
+    transition: background-color 0.3s, color 0.3s, border 0.3s;
+}
