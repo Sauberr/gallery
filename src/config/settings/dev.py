@@ -1,13 +1,22 @@
-import os
-from typing import Any, List
-
 from config.settings.base import *  # noqa
+
 
 DEBUG = True
 
 SECRET_KEY = "django-secret-key"
 
 ALLOWED_HOSTS: List[Any] = ["*", "127.0.0.1"]
+
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
 
 
 DATABASES = {
@@ -20,6 +29,10 @@ DATABASES = {
         "PORT": int(os.environ.get("POSTGRES_PORT")),
     },
 }
+
+BASIC_PLAN_ID = os.environ.get('BASIC')
+PREMIUM_PLAN_ID = os.environ.get('PREMIUM')
+ENTERPRISE_PLAN_ID = os.environ.get('ENTERPRISE')
 
 
 STATIC_URL = "/static/"

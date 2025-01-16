@@ -26,18 +26,6 @@ INTERNAL_IPS: List[str] = [
 ]
 
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis:6379/1',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
-
-
-
 # Application definition
 
 INSTALLED_APPS: Tuple[str, ...] = (
@@ -210,8 +198,8 @@ CELERY_BROKER_URL: str = "redis://redis"
 CELERY_RESULT_BACKEND: str = "redis://redis"
 
 CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER: str = "json"
+CELERY_TASK_SERIALIZER: str = "json"
 
 
 AUTHENTICATION_BACKENDS: List[str] = [
@@ -284,25 +272,17 @@ REST_FRAMEWORK: Dict[str, ...] = {
 }
 
 
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-        },
-    }
-}
-
-EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER =  'sauberrtest@gmail.com'
-EMAIL_HOST_PASSWORD='sonbtakimnluuokm'
-EMAIL_FAIL_SILENTLY=False
+# LOGGING = {
+#     'version': 1,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         },
+#     }
+# }
