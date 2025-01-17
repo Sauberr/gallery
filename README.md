@@ -50,7 +50,7 @@ All actions should be executed from the source directory of the project and only
    celery -A app name worker -l INFO --pool=solo
    ```
    
-## Docker:
+## Docker
    ```bash
    docker build .
    
