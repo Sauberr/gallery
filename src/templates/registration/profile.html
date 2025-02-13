@@ -12,9 +12,7 @@
 
     {% include 'partials/navbar.html' %}
 
-
     <div class="profile-container">
-        <!-- Profile Header -->
         <div class="profile-header">
             <div class="avatar-section">
                 {% if request.user.profile.avatar %}
@@ -32,11 +30,9 @@
             </div>
         </div>
 
-        <!-- Profile Form -->
         <form id="profileForm" method="POST" action="{% url 'account:profile' %}" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <!-- Avatar Upload -->
             <div class="avatar-upload">
                 <label for="{{ form.avatar.id_for_label }}" class="custom-file-upload">
                     <i class="fas fa-camera"></i> Change Avatar
@@ -44,9 +40,7 @@
                 {{ form.avatar }}
             </div>
 
-            <!-- Profile Details -->
             <div class="profile-details">
-                <!-- Personal Information -->
                 <div class="details-section">
                     <h3>Personal Information</h3>
 
@@ -80,7 +74,6 @@
                     </div>
                 </div>
 
-                <!-- Additional Information -->
                 <div class="details-section">
                     <h3>Additional Information</h3>
 
@@ -117,7 +110,6 @@
                     </div>
                 </div>
 
-                <!-- Account Status -->
                 <div class="details-section">
                     <h3>Account Status</h3>
 
@@ -145,13 +137,12 @@
                 </div>
             </div>
 
-            <!-- Save Button -->
             <div class="form-actions">
                 <button type="submit" id="saveBtn" class="btn-save">Save Changes</button>
             </div>
         </form>
 
-        <!-- 2FA Setup Section -->
+
         {% if not request.user.mfa_enabled %}
             <div id="2fa-setup-section" class="2fa-setup">
                 <h3>Two-Factor Authentication Setup</h3>
@@ -184,8 +175,6 @@
         {% endif %}
     </div>
 
-
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const toggle = document.getElementById('2fa-toggle');
@@ -204,8 +193,6 @@
 
 
     </script>
-
-
 
     {% include 'partials/footer.html' %}
 {% endblock %}

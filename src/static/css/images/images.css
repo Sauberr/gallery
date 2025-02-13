@@ -22,17 +22,6 @@
     width: 100%;
 }
 
-.gallery-title::after {
-    content: '';
-    position: absolute;
-    width: 20%;
-    height: 2.5px;
-    background-color: #000;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 .gallery-container ul {
     list-style-type: none;
     display: flex;
@@ -241,7 +230,7 @@
         width: 100%;
         justify-content: center;
     }
-    
+
 }
 
 @media (min-width: 601px) and (max-width: 1024px) {

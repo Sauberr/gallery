@@ -80,5 +80,3 @@ class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
         context["allowed_plans"] = allowed_plans
 
         return context
-
-
