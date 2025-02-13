@@ -5,19 +5,17 @@ import pyotp
 import qrcode
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.generic import CreateView, RedirectView, View, UpdateView
 
 from account.forms import ProfileForm, UserLoginForm, UserRegistrationForm
-from account.models import Profile
 from account.tasks import send_registration_email
 from account.services.verify_2fa_otp import verify_2fa_otp
 from common.mixins import TitleMixin

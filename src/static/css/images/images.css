@@ -38,14 +38,19 @@
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .gallery-container li {
     flex: 1 1 calc(25% - 20px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    overflow: hidden;
+    overflow: visible;
     margin-bottom: 20px;
+    position: relative;
+    min-height: 550px;
+    background: white;
 }
 
 .gallery-container img {
@@ -73,26 +78,112 @@
     color: #353935;
 }
 
-.download-buttons {
-    display: flex;
-    gap: 10px;
-    margin: 10px;
+.dropdown-image {
+    position: relative;
+    display: inline-block;
+    margin-top: 10px;
+    z-index: 1000;
 }
 
-.download-buttons .action_btn {
-    background-color: #696969;
-    color: #fff;
-    padding: 0.5rem 1rem;
+.dropbtn-image {
+    background-color: #24262b;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
     border: none;
-    outline: none;
-    font-size: 0.8rem;
-    font-weight: bold;
     cursor: pointer;
-    border-radius: 4px;
-    transition: scale 0.2s ease;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
+}
+
+.dropbtn-image:hover {
+    background-color: #333;
+}
+
+.dropbtn-image.active {
+    background-color: #333;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.dropdown-content-image {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    min-width: 250px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+    z-index: 1001;
+    border-radius: 3px;
+    margin-top: 3px;
+}
+
+.dropdown-content-image.show {
+    display: block;
+}
+
+.format-group-image {
+    padding: 8px;
+    border-bottom: 1px solid lightgrey;
+    background-color: lightgrey;
+}
+
+.format-group-image:last-child {
+    border-bottom: none;
+}
+
+.format-label-image {
+    display: block;
+    color: #000;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.format-buttons-image {
+    display: flex;
+    gap: 6px;
+}
+
+.format-group-image a.download-option,
+.format-buttons-image a {
+    flex: 1;
+    text-align: center;
+    padding: 6px;
+    background-color: #f8f9fa;
+    border-radius: 3px;
+    transition: all 0.15s;
+    color: black;
+    text-decoration: none;
+    font-size: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
+}
+
+.format-group-image a.download-option:hover,
+.format-buttons-image a:hover {
+    background-color: #e9ecef;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.format-group-image a.download-option:active,
+.format-buttons-image a:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.dropdown-content-image i,
+.format-group-image a.download-option i {
+    width: 20px;
+    text-align: center;
+    color: #666;
+    margin: 0;
 }
 
 .title-link {
@@ -104,25 +195,24 @@
     color: #696969;
 }
 
-li img {
-    transition: transform 0.2s ease;
+.dropdown-backdrop-image {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 998;
 }
 
-li img:hover {
-    transform: scale(1.05);
+.dropdown-backdrop-image.show {
+    display: block;
 }
 
-.download-buttons .action_btn:hover {
-    scale: 1.05;
-    color: #fff;
-}
-
-.download-buttons .action_btn:active {
-    scale: 0.95;
-}
-
-.download-buttons .action_btn i {
-    margin-right: 5px;
+.image-header {
+    position: relative;
+    z-index: 1;
 }
 
 @media (max-width: 600px) {
@@ -133,18 +223,27 @@ li img:hover {
     .gallery-container li {
         flex: 1 1 100%;
         max-width: 100%;
+        min-height: 600px;
     }
 
     .gallery-container h2 {
         font-size: 1.2em;
     }
 
-    .download-buttons .action_btn {
-        padding: 5px 10px;
+    .dropdown-content-image {
+        width: 100%;
+        min-width: 200px;
+        position: absolute;
+        left: 0;
     }
+
+    .dropbtn-image {
+        width: 100%;
+        justify-content: center;
+    }
+    
 }
 
-/* Tablet styles */
 @media (min-width: 601px) and (max-width: 1024px) {
     .gallery-title {
         font-size: 1.8em;
@@ -158,13 +257,8 @@ li img:hover {
     .gallery-container h2 {
         font-size: 1.4em;
     }
-
-    .download-buttons .action_btn {
-        padding: 8px 15px;
-    }
 }
 
-/* Laptop styles */
 @media (min-width: 1025px) {
     .gallery-title {
         font-size: 2em;
@@ -177,9 +271,5 @@ li img:hover {
 
     .gallery-container h2 {
         font-size: 1.5em;
-    }
-
-    .download-buttons .action_btn {
-        padding: 10px 20px;
     }
 }

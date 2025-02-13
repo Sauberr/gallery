@@ -5,101 +5,101 @@
 
 {% block content %}
 
-{% include 'partials/navbar.html' %}
+    {% include 'partials/navbar.html' %}
 
 
-{% include 'partials/search.html' %}
-    
-    
-{% block css %}<link rel="stylesheet" href="{% static 'css/partials/index.css' %}"> {% endblock %}    
+    {% include 'partials/search.html' %}
 
 
-<div class="image-container">
-    {% if correction %}
-    <div class="correction-message">
-        Showing results for your query <strong>{{ original_query }}</strong>. Search instead <strong>{{ correction }}</strong>?
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/partials/index.css' %}"> {% endblock %}
+
+
+    <div class="image-container">
+        {% if correction %}
+            <div class="correction-message">
+                Showing results for your query <strong>{{ original_query }}</strong>. Search instead
+                <strong>{{ correction }}</strong>?
+            </div>
+        {% endif %}
+        {% if images %}
+            <ul>
+                {% for image in images %}
+                    <li>
+                        <h2><a href="{% url 'core:image_list' %}">{{ image.title }}</a></h2>
+                        <p><strong>Author:</strong> {{ image.author }}</p>
+                        <p><strong>Description:</strong> {{ image.description }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No images found.</p>
+        {% endif %}
     </div>
-    {% endif %}
-    {% if images %}
-        <ul>
-            {% for image in images %}
-                <li>
-                    <h2><a href="{% url 'core:image_list' %}">{{ image.title }}</a></h2>
-                    <p><strong>Author:</strong> {{ image.author }}</p>
-                    <p><strong>Description:</strong> {{ image.description }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No images found.</p>
-    {% endif %}
-</div>
-    
 
 
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const searchInput = document.querySelector('input[name="q"]');
+            const suggestionsBox = document.createElement('div');
+            suggestionsBox.classList.add('suggestions-box');
+            searchInput.parentNode.appendChild(suggestionsBox);
 
-<script>
-document.addEventListener("DOMContentLoaded", async function() {
-    const searchInput = document.querySelector('input[name="q"]');
-    const suggestionsBox = document.createElement('div');
-    suggestionsBox.classList.add('suggestions-box');
-    searchInput.parentNode.appendChild(suggestionsBox);
-
-    searchInput.addEventListener('keyup', async function() {
-        const query = searchInput.value.trim();
-        if (query.length > 0) {
-            const response = await fetch(`/?q=${encodeURIComponent(query)}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-            const data = await response.json();
-            suggestionsBox.innerHTML = '';
-            if (data.length > 0) {
-                data.forEach(item => {
-                    const element = document.createElement('div');
-                    element.classList.add(item.correction ? 'correction' : 'suggestion');
-                    if (item.correction) {
-                        element.innerHTML = `<span style="color: red;">${query}</span> is not correct. Did you mean <span style="color: green; cursor: pointer;">${item.correction}</span>?`;
-                        element.querySelector('span[style*="color: green"]').addEventListener('click', function() {
-                            searchInput.value = item.correction;
-                            suggestionsBox.innerHTML = '';
-                            document.querySelector('.search-form').submit();
+            searchInput.addEventListener('keyup', async function () {
+                const query = searchInput.value.trim();
+                if (query.length > 0) {
+                    const response = await fetch(`/?q=${encodeURIComponent(query)}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    const data = await response.json();
+                    suggestionsBox.innerHTML = '';
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            const element = document.createElement('div');
+                            element.classList.add(item.correction ? 'correction' : 'suggestion');
+                            if (item.correction) {
+                                element.innerHTML = `<span style="color: red;">${query}</span> is not correct. Did you mean <span style="color: green; cursor: pointer;">${item.correction}</span>?`;
+                                element.querySelector('span[style*="color: green"]').addEventListener('click', function () {
+                                    searchInput.value = item.correction;
+                                    suggestionsBox.innerHTML = '';
+                                    document.querySelector('.search-form').submit();
+                                });
+                            } else {
+                                element.textContent = `${item.title} - ${item.author}`;
+                                element.addEventListener('click', function () {
+                                    searchInput.value = item.title;
+                                    suggestionsBox.innerHTML = '';
+                                    document.querySelector('.search-form').submit();
+                                });
+                            }
+                            suggestionsBox.appendChild(element);
                         });
                     } else {
-                        element.textContent = `${item.title} - ${item.author}`;
-                        element.addEventListener('click', function() {
-                            searchInput.value = item.title;
-                            suggestionsBox.innerHTML = '';
-                            document.querySelector('.search-form').submit();
-                        });
+                        suggestionsBox.innerHTML = `<div>No suggestions available.</div>`;
                     }
-                    suggestionsBox.appendChild(element);
-                });
-            } else {
-                suggestionsBox.innerHTML = `<div>No suggestions available.</div>`;
-            }
-        } else {
-            suggestionsBox.innerHTML = '';
-        }
-    });
+                } else {
+                    suggestionsBox.innerHTML = '';
+                }
+            });
 
-    document.querySelector('.search-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const query = searchInput.value.trim();
-        if (query.length > 0) {
-            window.location.href = `/?q=${encodeURIComponent(query)}&strict=true`;
-        }
-    });
+            document.querySelector('.search-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const query = searchInput.value.trim();
+                if (query.length > 0) {
+                    window.location.href = `/?q=${encodeURIComponent(query)}&strict=true`;
+                }
+            });
 
-    document.addEventListener('click', function(event) {
-        if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
-            suggestionsBox.innerHTML = '';
-        }
-    });
-});
-</script>
+            document.addEventListener('click', function (event) {
+                if (!searchInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+                    suggestionsBox.innerHTML = '';
+                }
+            });
+        });
+    </script>
 
-{% include 'partials/footer.html' %}
+    {% include 'partials/footer.html' %}
 
 {% endblock %}

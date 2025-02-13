@@ -2,83 +2,86 @@
 {% load static %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/partials/contact.css' %}">
+    <link rel="stylesheet" href="{% static 'css/partials/contact.css' %}">
 
     <style>
-  .notification-banner {
-    display: none;
-    position: fixed;
-    top: 105px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40%;
-    background-color: #2C3E50;
-    color: #ECF0F1; 
-    text-align: center;
-    padding: 15px 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    overflow: hidden;
-  }
-  
-  .notification-timer {
-    height: 3px;
-    background-color: #3498DB;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    border-radius: 0 0 15px 15px;
-  }
-  
-  .notification-banner span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .notification-banner .icon {
-    font-size: 1.5rem;
-    margin-right: 10px;
-  }
-  
-  .notification-banner .message {
-    display: flex;
-    align-items: center;
-  }
-</style>
+        .notification-banner {
+            display: none;
+            position: fixed;
+            top: 105px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            background-color: #2C3E50;
+            color: #ECF0F1;
+            text-align: center;
+            padding: 15px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .notification-timer {
+            height: 3px;
+            background-color: #3498DB;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .notification-banner span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-banner .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .notification-banner .message {
+            display: flex;
+            align-items: center;
+        }
+    </style>
 
 {% endblock %}
 
 {% block content %}
-{% include 'partials/navbar.html' %}
+    {% include 'partials/navbar.html' %}
 
-<div class="notification-banner" id="notification-banner">
+    <div class="notification-banner" id="notification-banner">
   <span>
     <div class="icon"><i class="fa-regular fa-circle-check"></i></div>
     <div class="message"><b>Success!</b> Message sent successfully!</div>
   </span>
-  <div class="notification-timer" id="notification-timer"></div>
-</div>
+        <div class="notification-timer" id="notification-timer"></div>
+    </div>
 
-<form class="contact-form" id="contact-form-ajax" method="POST">
-  {% csrf_token %}
-  <h2>CONTACT US</h2>
-    <p type="Full Name:"><input id="full_name" name="full_name" placeholder="Write your name here.." required></input></p>
-<p type="Email:"><input id="email" name="email" placeholder="Let us know how to contact you back.." type="email" required></input></p>
-<p type="Message:"><input id="message" name="message" placeholder="What would you like to tell us.." required></input></p>
-  <button type="submit">Send Message</button>
-  <div class="contact-div">
-    <span class="fa fa-phone"></span>+1 234 567 890
-    <span class="fa fa-envelope-o"></span> beauti-gallery@.com
-  </div>
-  <div id="message-response"></div>
-</form>
+    <form class="contact-form" id="contact-form-ajax" method="POST">
+        {% csrf_token %}
+        <h2>CONTACT US</h2>
+        <p type="Full Name:"><input id="full_name" name="full_name" placeholder="Write your name here.."
+                                    required></input></p>
+        <p type="Email:"><input id="email" name="email" placeholder="Let us know how to contact you back.." type="email"
+                                required></input></p>
+        <p type="Message:"><input id="message" name="message" placeholder="What would you like to tell us.."
+                                  required></input></p>
+        <button type="submit">Send Message</button>
+        <div class="contact-div">
+            <span class="fa fa-phone"></span>+1 234 567 890
+            <span class="fa fa-envelope-o"></span> beauti-gallery@.com
+        </div>
+        <div id="message-response"></div>
+    </form>
 
-<script src="{% static 'js/contact_form_ajax.js' %}"></script>
-    
-<script src="{% static 'js/show_notification.js' %}"></script>    
+    <script src="{% static 'js/contact_form_ajax.js' %}"></script>
 
-{% include 'partials/footer.html' %}
+    <script src="{% static 'js/show_notification.js' %}"></script>
+
+    {% include 'partials/footer.html' %}
 {% endblock %}

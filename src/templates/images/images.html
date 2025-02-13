@@ -5,159 +5,6 @@
 
     <link rel="stylesheet" href="{% static 'css/images/images.css' %}">
 
-    
-    <style>
-  .dropdown-image {
-    position: relative;
-    display: inline-block;
-    margin-top: 10px;
-    z-index: 1000;
-}
-
-.dropbtn-image {
-    background-color: #24262b;
-    color: white;
-    padding: 12px 20px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.3s;
-}
-
-.dropbtn-image:hover {
-    background-color: #333;
-}
-
-.dropbtn-image.active {
-    background-color: #333;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-}
-
-.dropdown-content-image {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    min-width: 250px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
-    z-index: 1001;
-    border-radius: 3px;
-    margin-top: 3px;
-}
-
-.format-group-image {
-    padding: 8px;
-    border-bottom: 1px solid lightgrey;
-    background-color: lightgrey;
-}
-
-.format-group-image:last-child {
-    border-bottom: none;
-}
-
-.format-label-image {
-    display: block;
-    color: #000;
-    margin-bottom: 6px;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.format-buttons-image {
-    display: flex;
-    gap: 6px;
-}
-
-.format-buttons-image a {
-    flex: 1;
-    text-align: center;
-    padding: 6px;
-    background-color: #f8f9fa;
-    border-radius: 3px;
-    transition: all 0.15s;
-    color: black;
-    text-decoration: none;
-    font-size: 13px;
-}
-
-.format-buttons-image a:active {
-    transform: translateY(0);
-    box-shadow: none;
-}
-
-.dropdown-content-image.show {
-    display: block;
-}
-
-
-
-.dropdown-content-image i {
-    width: 20px;
-    text-align: center;
-    color: #666;
-}
-
-
-.gallery-container-image ul {
-    position: relative;
-    z-index: 1;
-}
-
-.gallery-container-image li {
-    position: relative;
-    margin-bottom: 20px;
-}
-
-/* Добавляем hover эффект для кнопок PNG и JPEG */
-.format-buttons-image a:hover {
-    background-color: #e9ecef;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* Стили для binary link */
-.format-group-image a.download-option {
-    flex: 1;
-    text-align: center;
-    padding: 6px;
-    background-color: #f8f9fa;
-    border-radius: 3px;
-    transition: all 0.15s;
-    color: black;
-    text-decoration: none;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-.format-group-image a.download-option:hover {
-    background-color: #e9ecef;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.format-group-image a.download-option:active {
-    transform: translateY(0);
-    box-shadow: none;
-}
-
-/* Выравнивание иконок в binary link */
-.format-group-image a.download-option i {
-    margin: 0;
-    width: 20px;
-    text-align: center;
-}
-
-    </style>
-
-
 {% endblock %}
 
 {% block title %} {{ title }} {% endblock %}
@@ -166,123 +13,137 @@
     {% include 'partials/navbar.html' %}
 
     <div class="gallery-container">
-    <h1 class="gallery-title">𝓘𝓶𝓪𝓰𝓮𝓼 𝓖𝓪𝓵𝓮𝓻𝔂</h1>
-    <ul>
-        {% for image in images %}
-            <li>
-                <div class="image-header">
-                    <a href="{% url 'images:image_detail' image.pk %}">
-                        <img src="{{ image.image.url }}" alt="{{ image.title }}" crossorigin="anonymous">
-                    </a>
-                    <div class="dropdown-image">
-                        <button class="dropbtn-image" onclick="toggleDropdown(this)">
-                            <i class="fas fa-download"></i> Download
-                        </button>
-                        <div class="dropdown-content-image">
-    {% if user_subscription_plan == "Basic" %}
-        <div class="format-group-image">
-            <span class="format-label-image">200px:</span>
-            <div class="format-buttons-image">
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="200" data-format="png">
-                    <i class="fas fa-file-image"></i> PNG
-                </a>
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="200" data-format="jpeg">
-                    <i class="fas fa-file-image"></i> JPEG
-                </a>
-            </div>
-        </div>
-    {% elif user_subscription_plan == "Premium" %}
-        <div class="format-group-image">
-            <span class="format-label-image">200px:</span>
-            <div class="format-buttons-image">
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="200" data-format="png">
-                    <i class="fas fa-file-image"></i> PNG
-                </a>
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="200" data-format="jpeg">
-                    <i class="fas fa-file-image"></i> JPEG
-                </a>
-            </div>
-        </div>
-        <div class="format-group-image">
-            <span class="format-label-image">400px:</span>
-            <div class="format-buttons-image">
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="400" data-format="png">
-                    <i class="fas fa-file-image"></i> PNG
-                </a>
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="400" data-format="jpeg">
-                    <i class="fas fa-file-image"></i> JPEG
-                </a>
-            </div>
-        </div>
-        <div class="format-group-image">
-            <span class="format-label-image">Original:</span>
-            <div class="format-buttons-image">
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="original" data-format="png">
-                    <i class="fas fa-file-image"></i> PNG
-                </a>
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="original" data-format="jpeg">
-                    <i class="fas fa-file-image"></i> JPEG
-                </a>
-            </div>
-        </div>
-    {% else %}
-        <!-- Enterprise user gets all options -->
-        <div class="format-group-image">
-            <span class="format-label-image">200px:</span>
-            <div class="format-buttons-image">
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="200" data-format="png">
-                    <i class="fas fa-file-image"></i> PNG
-                </a>
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="200" data-format="jpeg">
-                    <i class="fas fa-file-image"></i> JPEG
-                </a>
-            </div>
-        </div>
-        <div class="format-group-image">
-            <span class="format-label-image">400px:</span>
-            <div class="format-buttons-image">
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="400" data-format="png">
-                    <i class="fas fa-file-image"></i> PNG
-                </a>
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="400" data-format="jpeg">
-                    <i class="fas fa-file-image"></i> JPEG
-                </a>
-            </div>
-        </div>
-        <div class="format-group-image">
-            <span class="format-label-image">Original:</span>
-            <div class="format-buttons-image">
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="original" data-format="png">
-                    <i class="fas fa-file-image"></i> PNG
-                </a>
-                <a href="#" class="download-option" data-url="{{ image.image.url }}" data-size="original" data-format="jpeg">
-                    <i class="fas fa-file-image"></i> JPEG
-                </a>
-            </div>
-        </div>
-        <div class="format-group-image">
-            <span class="format-label-image">Binary Format:</span>
-            <a href="#" class="download-option" data-url="{{ image.image.url }}" data-type="binary">
-                <i class="fas fa-file-code"></i> Download Binary
-            </a>
-        </div>
-    {% endif %}
-</div>
+        <h1 class="gallery-title">𝓘𝓶𝓪𝓰𝓮𝓼 𝓖𝓪𝓵𝓮𝓻𝔂</h1>
+        <ul>
+            {% for image in images %}
+                <li>
+                    <div class="image-header">
+                        <a href="{% url 'images:image_detail' image.pk %}">
+                            <img src="{{ image.image.url }}" alt="{{ image.title }}" crossorigin="anonymous">
+                        </a>
+                        <div class="dropdown-image">
+                            <button class="dropbtn-image" onclick="toggleDropdown(this)">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <div class="dropdown-content-image">
+                                {% if user_subscription_plan == "Basic" %}
+                                    <div class="format-group-image">
+                                        <span class="format-label-image">200px:</span>
+                                        <div class="format-buttons-image">
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="200" data-format="png">
+                                                <i class="fas fa-file-image"></i> PNG
+                                            </a>
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="200" data-format="jpeg">
+                                                <i class="fas fa-file-image"></i> JPEG
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% elif user_subscription_plan == "Premium" %}
+                                    <div class="format-group-image">
+                                        <span class="format-label-image">200px:</span>
+                                        <div class="format-buttons-image">
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="200" data-format="png">
+                                                <i class="fas fa-file-image"></i> PNG
+                                            </a>
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="200" data-format="jpeg">
+                                                <i class="fas fa-file-image"></i> JPEG
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="format-group-image">
+                                        <span class="format-label-image">400px:</span>
+                                        <div class="format-buttons-image">
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="400" data-format="png">
+                                                <i class="fas fa-file-image"></i> PNG
+                                            </a>
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="400" data-format="jpeg">
+                                                <i class="fas fa-file-image"></i> JPEG
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="format-group-image">
+                                        <span class="format-label-image">Original:</span>
+                                        <div class="format-buttons-image">
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="original" data-format="png">
+                                                <i class="fas fa-file-image"></i> PNG
+                                            </a>
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="original" data-format="jpeg">
+                                                <i class="fas fa-file-image"></i> JPEG
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="format-group-image">
+                                        <span class="format-label-image">200px:</span>
+                                        <div class="format-buttons-image">
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="200" data-format="png">
+                                                <i class="fas fa-file-image"></i> PNG
+                                            </a>
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="200" data-format="jpeg">
+                                                <i class="fas fa-file-image"></i> JPEG
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="format-group-image">
+                                        <span class="format-label-image">400px:</span>
+                                        <div class="format-buttons-image">
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="400" data-format="png">
+                                                <i class="fas fa-file-image"></i> PNG
+                                            </a>
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="400" data-format="jpeg">
+                                                <i class="fas fa-file-image"></i> JPEG
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="format-group-image">
+                                        <span class="format-label-image">Original:</span>
+                                        <div class="format-buttons-image">
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="original" data-format="png">
+                                                <i class="fas fa-file-image"></i> PNG
+                                            </a>
+                                            <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                               data-size="original" data-format="jpeg">
+                                                <i class="fas fa-file-image"></i> JPEG
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="format-group-image">
+                                        <span class="format-label-image">Binary Format:</span>
+                                        <a href="#" class="download-option" data-url="{{ image.image.url }}"
+                                           data-type="binary">
+                                            <i class="fas fa-file-code"></i> Download Binary
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <a href="{% url 'images:image_detail' image.pk %}" class="title-link">
-                    <h2>{{ image.title }}</h2>
-                </a>
-                <p><strong>Author:</strong> {{ image.author }}</p>
-                <p><strong>Description:</strong> {{ image.description }}</p>
-                <p><strong>Created:</strong> {{ image.created_at|date:"F j, Y" }}</p>
-                <p><strong>Subscription:</strong> 
-                    <span data-subscription="{{ image.subscription_plans }}">{{ image.subscription_plans }}</span>
-                </p>
-            </li>
-        {% endfor %}
-    </ul>
-</div>
+                    <a href="{% url 'images:image_detail' image.pk %}" class="title-link">
+                        <h2>{{ image.title }}</h2>
+                    </a>
+                    <p><strong>Author:</strong> {{ image.author }}</p>
+                    <p><strong>Description:</strong> {{ image.description }}</p>
+                    <p><strong>Created:</strong> {{ image.created_at|date:"F j, Y" }}</p>
+                    <p><strong>Subscription:</strong>
+                        <span data-subscription="{{ image.subscription_plans }}">{{ image.subscription_plans }}</span>
+                    </p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
     {% include 'partials/pagination.html' with queryset=images custom_range=custom_range %}
     {% include 'partials/footer.html' %}
@@ -296,22 +157,22 @@
 
             function toggleDropdown(button) {
                 button.classList.toggle('active');
-                
+
                 document.querySelectorAll('.dropdown-content-image.show').forEach(menu => {
                     if (menu !== button.nextElementSibling) {
                         menu.classList.remove('show');
                         menu.previousElementSibling.classList.remove('active');
                     }
                 });
-                
+
                 const menu = button.nextElementSibling;
                 menu.classList.toggle('show');
-                
+
                 const backdrop = document.querySelector('.dropdown-backdrop-image');
                 backdrop.classList.toggle('show');
             }
 
-            document.addEventListener('click', function(event) {
+            document.addEventListener('click', function (event) {
                 if (!event.target.closest('.dropdown-image')) {
                     document.querySelectorAll('.dropdown-content-image.show').forEach(menu => {
                         menu.classList.remove('show');
@@ -325,7 +186,7 @@
                 const img = new Image();
                 img.crossOrigin = 'Anonymous';
                 img.src = url;
-                
+
                 img.onload = function () {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
@@ -338,7 +199,7 @@
                     ctx.drawImage(img, 0, 0, width, height);
 
                     const dataUrl = canvas.toDataURL(`image/${format}`);
-                    
+
                     const link = document.createElement('a');
                     link.href = dataUrl;
                     link.download = `${title}_${size}.${format}`;
@@ -371,37 +232,36 @@
             }
 
             document.querySelectorAll('.download-option').forEach(option => {
-    option.addEventListener('click', function(e) {
-        e.preventDefault();
-        const imageUrl = this.dataset.url;
-        const size = this.dataset.size;
-        const format = this.dataset.format;
-        const type = this.dataset.type;
-        const imageSubscriptionPlan = this.closest('li').querySelector('[data-subscription]').dataset.subscription;
-        const title = this.closest('li').querySelector('h2').textContent.toLowerCase();
+                option.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const imageUrl = this.dataset.url;
+                    const size = this.dataset.size;
+                    const format = this.dataset.format;
+                    const type = this.dataset.type;
+                    const imageSubscriptionPlan = this.closest('li').querySelector('[data-subscription]').dataset.subscription;
+                    const title = this.closest('li').querySelector('h2').textContent.toLowerCase();
 
-        if (!userSubscriptionPlan) {
-            showError("You need a subscription to download images. Please subscribe.");
-            return;
-        }
+                    if (!userSubscriptionPlan) {
+                        showError("You need a subscription to download images. Please subscribe.");
+                        return;
+                    }
 
-        // Проверка доступа в соответствии с подпиской
-        if (!allowedPlans[userSubscriptionPlan].includes(imageSubscriptionPlan)) {
-            showError("You don't have permission to download this image. Please upgrade your subscription.");
-            return;
-        }
+                    if (!allowedPlans[userSubscriptionPlan].includes(imageSubscriptionPlan)) {
+                        showError("You don't have permission to download this image. Please upgrade your subscription.");
+                        return;
+                    }
 
-        if (type === 'binary') {
-            downloadBinary(imageUrl, title);
-        } else {
-            downloadImage(imageUrl, size, userSubscriptionPlan, title, format);
-        }
-        
-        this.closest('.dropdown-content-image').classList.remove('show');
-        this.closest('.dropdown-image').querySelector('.dropbtn-image').classList.remove('active');
-        document.querySelector('.dropdown-backdrop-image').classList.remove('show');
-    });
-});
+                    if (type === 'binary') {
+                        downloadBinary(imageUrl, title);
+                    } else {
+                        downloadImage(imageUrl, size, userSubscriptionPlan, title, format);
+                    }
+
+                    this.closest('.dropdown-content-image').classList.remove('show');
+                    this.closest('.dropdown-image').querySelector('.dropbtn-image').classList.remove('active');
+                    document.querySelector('.dropdown-backdrop-image').classList.remove('show');
+                });
+            });
 
             window.toggleDropdown = toggleDropdown;
         });

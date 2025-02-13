@@ -13,10 +13,10 @@
 
 {% block content %}
 
-{% include 'partials/navbar.html' %}
+    {% include 'partials/navbar.html' %}
 
 
-<div class="image-container">
+    <div class="image-container">
         <ul>
             {% for image in images %}
                 <li>
@@ -25,20 +25,20 @@
                     <p><strong>Description:</strong> {{ image.description }}</p>
                     <img src="{{ image.image.url }}" alt="{{ image.title }}" width="480" height="320">
                     <p><strong>Created:</strong> {{ image.created_at|date:"F j, Y" }}</p>
-{#                    <p><strong>Price:</strong> {{ book.price|intcomma }}$</p>#}
-{#                    <p><strong>Quantity:</strong> {{ book.quantity }}</p>#}
-{#                    <p><strong>Total Quantity:</strong> {{ book.total_quantity|intcomma }}$</p>#}
+                    {#                    <p><strong>Price:</strong> {{ book.price|intcomma }}$</p>#}
+                    {#                    <p><strong>Quantity:</strong> {{ book.quantity }}</p>#}
+                    {#                    <p><strong>Total Quantity:</strong> {{ book.total_quantity|intcomma }}$</p>#}
                 </li>
             {% endfor %}
         </ul>
-</div>
+    </div>
 
 
 {% endblock %}
 
 {% block js %}
 
-<script src="{% static 'js/images_list.js' %}"></script>
+    <script src="{% static 'js/images_list.js' %}"></script>
 
 {% endblock %}
 

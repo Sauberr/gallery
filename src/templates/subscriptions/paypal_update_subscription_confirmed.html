@@ -10,23 +10,23 @@
 
 {% block content %}
 
-{% include 'partials/navbar.html' %}
+    {% include 'partials/navbar.html' %}
 
-<div class="subscription-activated">
-    <h5> Paypal update confirmed !</h5>
-    <br>
-    <h1> ✅ </h1>
-    <br>
-    <p>
-        Your request to update your subscription has been confirmed on Paypal.
-    </p>
-    <br>
-    <a class="btn btn-success" type="button"
-       href="{% url 'subscriptions:django_update_subscription_confirmed' subscription_id %}">
-        &gt; &nbsp; Confirm for final approval
-    </a>
-</div>
+    <div class="subscription-activated">
+        <h5> Paypal update confirmed !</h5>
+        <br>
+        <h1> ✅ </h1>
+        <br>
+        <p>
+            Your request to update your subscription has been confirmed on Paypal.
+        </p>
+        <br>
+        <a class="btn btn-success" type="button"
+           href="{% url 'subscriptions:django_update_subscription_confirmed' subscription_id %}">
+            &gt; &nbsp; Confirm for final approval
+        </a>
+    </div>
 
- {% include 'partials/footer.html' %}
+    {% include 'partials/footer.html' %}
 
 {% endblock %}

@@ -2,21 +2,20 @@
 
 {% block css %}
 
-    <link rel="stylesheet" href="{% static 'css/partials/navbar.css' %}">
+<link rel="stylesheet" href="{% static 'css/partials/navbar.css' %}">
 
 {% endblock %}
 
 
 {% block content %}
 
-
-    <body>
+<body>
     <div class="top-bar">
     </div>
     <header class="header-separator">
         <div class="navbar">
             <div class="logo">
-                <a href="{% url 'core:index' %}"> <img src="{% static 'images/logo.png' %}" alt="logo"> </a>
+                <a href="{% url 'core:index' %}"> <img src="{% static 'images/logo/logo.png' %}" alt="logo"> </a>
             </div>
             <ul class="links">
                 <li><a href="{% url 'core:index' %}"> Home </a></li>
@@ -148,15 +147,15 @@
     {% endfor %}
 
 
-    </body>
+</body>
 
-    {% block js %}
+{% block js %}
 
-        <script src="{% static 'js/alert.js' %}"></script>
-        <script src="{% static 'js/drop_menu.js' %}"></script>
-        <script src="https://kit.fontawesome.com/ea79e2d2f8.js" crossorigin="anonymous"></script>
-        <script src="{% static 'js/toggle_btn.js' %}"></script>
+<script src="{% static 'js/alert.js' %}"></script>
+<script src="{% static 'js/drop_menu.js' %}"></script>
+<script src="https://kit.fontawesome.com/ea79e2d2f8.js" crossorigin="anonymous"></script>
+<script src="{% static 'js/toggle_btn.js' %}"></script>
 
-    {% endblock %}
+{% endblock %}
 
 {% endblock %}

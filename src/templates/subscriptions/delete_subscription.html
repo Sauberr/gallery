@@ -4,32 +4,32 @@
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/subscriptions/delete_subscription.css' %}">
+    <link rel="stylesheet" href="{% static 'css/subscriptions/delete_subscription.css' %}">
 
 {% endblock %}
 
 {% block content %}
 
-{% block title %} {{ title }} {% endblock %}
+    {% block title %} {{ title }} {% endblock %}
 
-{% include 'partials/navbar.html' %}
+    {% include 'partials/navbar.html' %}
 
-<br>
+    <br>
 
-<div class="subscription-cancelled">
-    <h5> Subscription cancelled! </h5>
-    <br>
-    <h1> ❌ </h1>
-    <br>
-    <p>
-        We regret to inform you that your subscription has been cancelled
-        as per your request. Thank you for your past support!
-    </p>
-    <br>
-    <a class="btn btn-success" type="button" href="{% url 'core:index' %}">
-        &gt; &nbsp; Return to dashboard
-    </a>
-</div>
+    <div class="subscription-cancelled">
+        <h5> Subscription cancelled! </h5>
+        <br>
+        <h1> ❌ </h1>
+        <br>
+        <p>
+            We regret to inform you that your subscription has been cancelled
+            as per your request. Thank you for your past support!
+        </p>
+        <br>
+        <a class="btn btn-success" type="button" href="{% url 'core:index' %}">
+            &gt; &nbsp; Return to dashboard
+        </a>
+    </div>
 
     {% include 'partials/footer.html' %}
 
