@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from typing import Any, List, Tuple, Dict
+from decouple import config
 
 import sentry_sdk
 from django.utils.translation import gettext_lazy as _
@@ -24,6 +25,24 @@ INTERNAL_IPS: List[str] = [
     "127.0.0.1",
     "localhost",
 ]
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_RESULT_SERIALIZER: str = "json"
+CELERY_TASK_SERIALIZER: str = "json"
+
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/1"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+CELERY_BROKER_TRANSPORT = "redis"
 
 
 # Application definition
@@ -194,14 +213,6 @@ DEBUG_TOOLBAR_PANELS: List[str] = [
 ]
 
 
-CELERY_BROKER_URL: str = "redis://redis"
-CELERY_RESULT_BACKEND: str = "redis://redis"
-
-CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_RESULT_SERIALIZER: str = "json"
-CELERY_TASK_SERIALIZER: str = "json"
-
-
 AUTHENTICATION_BACKENDS: List[str] = [
     "social_core.backends.google.GoogleOAuth2",
     "social_core.backends.github.GithubOAuth2",
@@ -209,11 +220,9 @@ AUTHENTICATION_BACKENDS: List[str] = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", default="", cast=str)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", default="", cast=str)
 
-SOCIAL_AUTH_GITHUB_KEY: str = "Ov23lituVCnvAs80C47d"
-SOCIAL_AUTH_GITHUB_SECRET: str = "ae37c4070d47038ceacb6c90c00e4af48d509697"
 
 SOCIAL_AUTH_PIPELINE: Tuple[str, ...] = (
     "social_core.pipeline.social_auth.social_details",
@@ -272,17 +281,17 @@ REST_FRAMEWORK: Dict[str, ...] = {
 }
 
 
-# LOGGING = {
-#     'version': 1,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'level': 'DEBUG',
-#             'handlers': ['console'],
-#         },
-#     }
-# }
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
+    }
+}
