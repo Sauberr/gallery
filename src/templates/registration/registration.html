@@ -3,7 +3,7 @@
 
 {% block css %}
 
-<link rel="stylesheet" href="{% static 'css/registration/registration.css' %}">
+    <link rel="stylesheet" href="{% static 'css/registration/registration.css' %}">
 
 {% endblock %}
 
@@ -91,12 +91,7 @@
                             Registration via Google
                         </a>
                     </button>
-                    <button class="btn auth-btn github-btn">
-                        <a style="color: cornsilk" href="{% url 'social:begin' "github" %}">
-                            <ion-icon name="logo-github"></ion-icon>
-                            Registration via GitHub
-                        </a>
-                    </button>
+                </label>
             </form>
         </div>
     </div>
