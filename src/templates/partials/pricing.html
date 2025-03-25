@@ -90,7 +90,7 @@
                             });
                         },
                         onApprove: function (data, actions) {
-                            var current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Basic"
+                            const current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Basic"
                             window.open(current_url, '_self')
                         }
                     }).render('#paypal-button-container-basic');
@@ -127,7 +127,7 @@
                             });
                         },
                         onApprove: function (data, actions) {
-                            var current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Premium"
+                            const current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Premium"
                             window.open(current_url, '_self')
                         }
                     }).render('#paypal-button-container-premium');
@@ -163,7 +163,7 @@
                             });
                         },
                         onApprove: function (data, actions) {
-                            var current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Enterprise"
+                            const current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Enterprise"
                             window.open(current_url, '_self')
                         }
                     }).render('#paypal-button-container-enterprise');
