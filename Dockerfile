@@ -1,17 +1,17 @@
 FROM python:3.12-slim
 
 RUN apt update
-RUN mkdir /test_assignment
+RUN mkdir -p /assignment
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /test_assignment
+WORKDIR /assignment
 EXPOSE 8000
 
 COPY ./src ./src
 COPY ./commands ./commands
-COPY fixtures /test_assignment/fixtures
+COPY ./src/fixtures ./src/fixtures
 
 COPY ./requirements.txt ./requirements.txt
 
