@@ -1,0 +1,21 @@
+[
+  {
+    "model": "account.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$Oo3bserLZUl8tqXgcEYoNO$T/rqXeVip5PkSB4sbj+MIcveo6qlAeqW56iIKYLu+OE=",
+      "last_login": "2025-03-30T12:25:24.056Z",
+      "is_superuser": true,
+      "first_name": "Sauberr",
+      "last_name": "White",
+      "email": "sauberr10@gmail.com",
+      "phone_number": "+380673813327",
+      "is_staff": true,
+      "is_active": true,
+      "mfa_secret": "HPTMH2N53QZGYYDXZKNPLYV7AYQPY5FN",
+      "mfa_enabled": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]
