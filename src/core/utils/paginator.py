@@ -1,7 +1,7 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
-def paginator(request, images, results):
+def paginator(request, images, results) -> tuple:
 
     page = request.GET.get("page")
     paginator = Paginator(images, results)

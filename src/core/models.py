@@ -1,5 +1,6 @@
 from django.core.validators import RegexValidator, MinLengthValidator, EmailValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from faker import Faker
 
 
@@ -12,14 +13,14 @@ class ContactUs(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name: str = "Contact Us"
-        verbose_name_plural: str = "Contact Us"
+        verbose_name: str = _("Contact Us")
+        verbose_name_plural: str = _("Contact Us")
 
     def __str__(self):
         return self.name
 
     @classmethod
-    def generate_instances(cls, count):
+    def generate_instances(cls, count) -> None:
         faker = Faker()
         for _ in range(count):
             cls.objects.create(
