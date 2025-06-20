@@ -9,15 +9,17 @@ from django.utils.translation import gettext_lazy as _
 from faker import Faker
 from phonenumber_field.modelfields import PhoneNumberField
 from phonenumbers import format_number, PhoneNumberFormat, parse
+from typing import Sequence
 
 from account.managers import CustomerManager, PeopleManager
 
-STATUS_CHOICES = (
+
+STATUS_CHOICES: Sequence[tuple[str, str]] = (
     ("Unmarried", "Unmarried"),
     ("Married", "Married"),
 )
 
-SEX_CHOICES = (
+SEX_CHOICES: Sequence[tuple[str, str]] = (
     ("Male", "Male"),
     ("Female", "Female"),
     ("Undefined", "I don't want to tell"),
@@ -110,8 +112,8 @@ class ProxyUser(get_user_model()):
     class Meta:
         proxy = True
         ordering = ("-pk",)
-        verbose_name: str = "Proxy User"
-        verbose_name_plural: str = "Proxy Users"
+        verbose_name: str = _("Proxy User")
+        verbose_name_plural: str = _("Proxy Users")
 
 
 class Profile(models.Model):
@@ -132,5 +134,5 @@ class Profile(models.Model):
             raise ValueError("Birth date cannot be in the future")
 
     class Meta:
-        verbose_name: str = "User Profile"
-        verbose_name_plural: str = "User Profiles"
+        verbose_name: str = _("User Profile")
+        verbose_name_plural: str = _("User Profiles")
