@@ -68,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.first_name}_{self.last_name}"
 
     @classmethod
-    def generate_instances(cls, count):
+    def generate_instances(cls, count) -> None:
         faker = Faker()
         for _ in range(count):
             user = cls.objects.create(  # noqa
@@ -87,7 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return format_number(parsed_number, PhoneNumberFormat.INTERNATIONAL)
         return None
 
-    def clean(self):
+    def clean(self) -> None:
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
@@ -125,10 +125,10 @@ class Profile(models.Model):
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
     birth_date = models.DateField(_("birth date"), blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user} {self.status}"
 
-    def clean(self):
+    def clean(self) -> None:
         super().clean()
         if self.birth_date and self.birth_date > timezone.now().date():
             raise ValueError("Birth date cannot be in the future")

@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
 from faker import Faker
+from django.utils.translation import gettext_lazy as _
 
 SUBSCRIPTION_PLANS: List[Tuple[str, str]] = [
     ("Basic", "Basic Plan"),
@@ -30,8 +31,8 @@ class Images(models.Model):
     )
 
     class Meta:
-        verbose_name: str = "Image"
-        verbose_name_plural: str = "Images"
+        verbose_name: str = _("Image")
+        verbose_name_plural: str = _("Images")
         ordering = ["-created_at", "updated_at"]
         indexes = [
             models.Index(fields=["title", "author"])
@@ -44,7 +45,7 @@ class Images(models.Model):
         return reverse("images:image-list", args=[self.id])
 
     @classmethod
-    def generate_instances(cls, count):
+    def generate_instances(cls, count) -> None:
         faker = Faker()
         for _ in range(count):
             cls.objects.create(

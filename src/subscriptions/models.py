@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -47,17 +49,17 @@ class UserSubscription(models.Model):
             models.Index(fields=['paypal_subscription_id']),
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user.get_full_name()} - {self.plan.name} subscription"
 
     @property
-    def subscriber_name(self):
+    def subscriber_name(self) -> str:
         return self.user.get_full_name()
 
     @property
-    def subscription_plan(self):
+    def subscription_plan(self) -> str:
         return self.plan.name
 
     @property
-    def subscription_cost(self):
+    def subscription_cost(self) -> Decimal:
         return self.plan.cost
