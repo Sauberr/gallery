@@ -20,5 +20,4 @@ RUN pip install -r ./requirements.txt
 
 RUN adduser --disabled-password sauberr-user
 
-
 USER sauberr-user
