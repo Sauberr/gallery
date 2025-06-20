@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinLengthValidator, MinValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class SubscriptionPlan(models.Model):
@@ -23,8 +24,8 @@ class SubscriptionPlan(models.Model):
             models.Index(fields=['cost']),
             models.Index(fields=['name']),
         ]
-        verbose_name: str = "Subscription Plan"
-        verbose_name_plural: str = "Subscription Plans"
+        verbose_name: str = _("Subscription Plan")
+        verbose_name_plural: str = _("Subscription Plans")
         ordering = ['cost']
 
     def __str__(self):
@@ -40,8 +41,8 @@ class UserSubscription(models.Model):
     last_update = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name: str = "User Subscription"
-        verbose_name_plural: str = "User Subscriptions"
+        verbose_name: str = _("User Subscription")
+        verbose_name_plural: str = _("User Subscriptions")
         indexes = [
             models.Index(fields=['paypal_subscription_id']),
         ]
