@@ -1,4 +1,3 @@
-import os
 from datetime import timedelta
 from pathlib import Path
 from typing import Any, List, Tuple, Dict
@@ -29,7 +28,7 @@ INTERNAL_IPS: List[str] = [
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis",
+        "LOCATION": "redis://127.0.0.1:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -40,8 +39,8 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER: str = "json"
 CELERY_TASK_SERIALIZER: str = "json"
 
-CELERY_BROKER_URL = "redis://redis"
-CELERY_RESULT_BACKEND = "redis://redis"
+CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379"
 CELERY_BROKER_TRANSPORT = "redis"
 
 
@@ -72,6 +71,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "django_inlinecss",
     "django_recaptcha",
     "drf_yasg",
+    "corsheaders",
     "social_django",
     "cachalot",
     "rest_framework_simplejwt",
@@ -91,6 +91,7 @@ MIDDLEWARE: Tuple[str, ...] = (
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -186,6 +187,8 @@ ELASTICSEARCH_DSL = {
 
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY: str = "same-origin-allow-popups"
+
+SITE_DOMAIN: str = f"127.0.0.1:{config('LOCAL_PORT', default=8000, cast=int)}"
 
 
 # Default primary key field type

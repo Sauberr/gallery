@@ -8,7 +8,20 @@ SECRET_KEY = "django-secret-key"
 
 ALLOWED_HOSTS: List[Any] = ["localhost"]
 
-SITE_DOMAIN: str = "127.0.0.1:8000"
+CORS_ALLOW_ALL_ORIGINS: bool = False
+CORS_ALLOW_CREDENTIALS: bool = True
+
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "accept",
+]
+
+CORS_ALLOWED_ORIGINS: list[str] = [
+    "http://localhost:8000",
+]
+
+SITE_DOMAIN: str = f"127.0.0.1:{config('LOCAL_PORT', default=8000, cast=int)}"
 
 
 DATABASES = {
@@ -28,9 +41,14 @@ ENTERPRISE_PLAN_ID = config("ENTERPRISE", default="", cast=str)
 
 
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "/static"
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "/media"
+
+MEDIA_ROOT = BASE_DIR / "media"
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend", cast=str)
 EMAIL_HOST = config("EMAIL_HOST", default="smtp.gmail.com", cast=str)

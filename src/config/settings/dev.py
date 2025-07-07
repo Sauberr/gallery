@@ -6,10 +6,20 @@ DEBUG = True
 
 SECRET_KEY = "django-secret-key"
 
-ALLOWED_HOSTS: List[Any] = ["*", "127.0.0.1"]
+ALLOWED_HOSTS: list[Any] = ["*", "127.0.0.1"]
 
-SITE_DOMAIN: str = "127.0.0.1:8000"
+CORS_ALLOW_ALL_ORIGINS: bool = True
+CORS_ALLOW_CREDENTIALS: bool = True
 
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+    "accept",
+]
+
+CORS_ALLOWED_ORIGINS: list[str] = [
+    "http://127.0.0.1:8000",
+]
 
 DATABASES = {
     "default": {
