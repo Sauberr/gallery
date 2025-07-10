@@ -13,7 +13,7 @@ class SubscriptionPlanAdmin(admin.ModelAdmin):
 
 @admin.register(UserSubscription)
 class UserSubscriptionAdmin(admin.ModelAdmin):
-    list_display = ("user", "plan", "paypal_subscription_id", "is_active", "create_datetime", "last_update")
+    list_display = ("user", "plan", "paypal_subscription_id", "is_active", "create_datetime", "last_update", "expiration_date")
     list_display_links = ("user", "plan")
     search_fields = ("user", "plan")
     ordering = ("plan",)

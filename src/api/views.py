@@ -41,7 +41,6 @@ class UserSubscriptionView(ReadOnlyModelViewSet):
 
 class HealthView(APIView):
     def get(self, request, *args, **kwargs) -> Response:
-        """Check health status of the API"""
 
         database_status: str = "OK"
         cache_status: str = "OK"

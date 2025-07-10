@@ -18,7 +18,6 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
         ]
 
 
-
 class UserSubscriptionSerializer(serializers.ModelSerializer):
     plan_details = SubscriptionPlanSerializer(source='plan', read_only=True)
     user_email = serializers.EmailField(source='user.email', read_only=True)
@@ -38,4 +37,6 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
             'subscriber_name',
             'subscription_plan',
             'subscription_cost',
+            'expiration_date',
+            'expiration_notification_sent',
         ]

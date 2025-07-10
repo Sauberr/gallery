@@ -5,12 +5,36 @@ from faker import Faker
 
 
 class ContactUs(models.Model):
-    name = models.CharField(max_length=255, db_index=True, validators=[MinLengthValidator(2),
-        RegexValidator(regex='^[a-zA-Z ]*$', message='Name must contain only alphabetic characters and spaces')])
-    email = models.EmailField(max_length=255, db_index=True, validators=[EmailValidator(
-        message="Invalid email address")])
-    message = models.TextField(max_length=1024)
-    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(
+        verbose_name=_("name"),
+        max_length=255,
+        db_index=True,
+        validators=[
+            MinLengthValidator(2),
+            RegexValidator(
+                regex='^[a-zA-Z ]*$',
+                message=_('Name must contain only alphabetic characters and spaces')
+            )
+        ],
+        help_text=_("Full name of the person contacting us")
+    )
+    email = models.EmailField(
+        verbose_name=_("email"),
+        max_length=255,
+        db_index=True,
+        validators=[EmailValidator(message=_("Invalid email address"))],
+        help_text=_("Email address for contact")
+    )
+    message = models.TextField(
+        verbose_name=_("message"),
+        max_length=1024,
+        help_text=_("Message content")
+    )
+    created_at = models.DateTimeField(
+        verbose_name=_("created at"),
+        auto_now_add=True,
+        help_text=_("Timestamp when the message was created")
+    )
 
     class Meta:
         verbose_name: str = _("Contact Us")
