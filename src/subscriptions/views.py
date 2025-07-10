@@ -27,13 +27,10 @@ class CreateSubscription(LoginRequiredMixin, TitleMixin, View):
         subscription_plan = get_object_or_404(SubscriptionPlan, name=plan)
 
         UserSubscription.objects.create(
-            user=request.user,
-            plan=subscription_plan,
-            paypal_subscription_id=subscription_id,
-            is_active=True
+            user=request.user, plan=subscription_plan, paypal_subscription_id=subscription_id, is_active=True
         )
 
-        context = {"subscription_plan": plan}
+        context = {"subscription_plan": subscription_plan}
         return render(request, "subscriptions/create_subscription.html", context)
 
 

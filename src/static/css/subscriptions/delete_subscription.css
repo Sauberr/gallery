@@ -1,38 +1,80 @@
+:root {
+    --red: #ea4c89;
+    --danger: #dc3545;
+    --gray: #b1b8c9;
+    --green: #28a745;
+    --blue: #1769ff;
+    --font: 'Inter', 'Poppins', sans-serif;
+}
+
+body {
+    background: #f7faff;
+}
+
 .subscription-cancelled {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font);
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #fff;
-    margin: 60px auto;
-    max-width: 600px;
+    background: #fff;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.07);
+    border-radius: 1.2rem;
+    padding: 2.5rem 2rem 2.2rem 2rem;
+    margin: 54px auto 0 auto;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .subscription-cancelled h5 {
-    font-size: 1.5em;
-    color: #333;
+    font-size: 1.44rem;
+    font-weight: 800;
+    color: #222;
+    margin: 0 0 1.2rem 0;
+    letter-spacing: 0.01em;
 }
 
 .subscription-cancelled h1 {
-    font-size: 3em;
-    color: #dc3545;
+    font-size: 2.6rem;
+    color: var(--danger);
+    margin: 0 0 1.2rem 0;
 }
 
 .subscription-cancelled p {
-    font-size: 1.2em;
-    color: #555;
+    font-size: 1.09rem;
+    color: #6f7287;
+    margin: 0 0 2.1rem 0;
+    font-weight: 500;
 }
 
 .subscription-cancelled .btn {
-    font-size: 1em;
-    padding: 10px 20px;
-    border-radius: 5px;
+    background: var(--blue);
     color: #fff;
-    background-color: #28a745;
+    font-weight: 700;
+    font-size: 1.07rem;
+    padding: 0.8rem 2rem;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    box-shadow: none;
+    border: none;
+    margin: 0 auto;
+    transition: background 0.16s, color 0.16s, box-shadow 0.16s, transform 0.16s;
+    cursor: pointer;
     text-decoration: none;
 }
+.subscription-cancelled .btn:hover,
+.subscription-cancelled .btn:focus {
+    background: var(--red);
+    color: #fff;
+    box-shadow: 0 0 0 3px #ffe6f1;
+    transform: translateY(-2px) scale(1.03);
+}
 
-.subscription-cancelled .btn:hover {
-    background-color: #218838;
+@media (max-width: 540px) {
+    .subscription-cancelled {
+        padding: 1.1rem 0.4rem 1.1rem 0.4rem;
+        min-width: 0;
+        max-width: 97vw;
+    }
 }

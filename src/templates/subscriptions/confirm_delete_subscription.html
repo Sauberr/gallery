@@ -2,32 +2,26 @@
 {% load static %}
 
 {% block css %}
-
     <link rel="stylesheet" href="{% static 'css/subscriptions/confirm_delete_subscription.css' %}">
-
 {% endblock %}
 
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
     {% include 'partials/navbar.html' %}
-    <br>
     <div class="subscription-confirmation">
-        <h5>Are you sure that you want to cancel your subscription?</h5>
-        <br>
-        <h1>❓</h1>
-        <br>
+        <h2>Are you sure you want to cancel your subscription?</h2>
         <p>
-            Please confirm if you want to cancel your subscription. This action cannot be undone.
+            Please confirm if you want to cancel your subscription.<br>This action cannot be undone.
         </p>
-        <br>
-        <a class="btn btn-cancel" href="{% url 'subscriptions:delete_subscription' subscription_id %}"> &gt; &nbsp;
-            Cancel
-            Subscription </a>
-        <a class="btn btn-confirm" href="{% url 'core:index' %}"> &gt; &nbsp; Return to Dashboard</a>
+        <div class="btn-group">
+            <a class="btn btn-cancel" href="{% url 'subscriptions:delete_subscription' subscription_id %}">
+                Cancel Subscription
+            </a>
+            <a class="btn btn-confirm" href="{% url 'core:index' %}">
+                Return to Dashboard
+            </a>
+        </div>
     </div>
-
-
     {% include 'partials/footer.html' %}
-
 {% endblock %}

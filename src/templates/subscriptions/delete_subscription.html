@@ -1,36 +1,25 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 
-
 {% block css %}
-
     <link rel="stylesheet" href="{% static 'css/subscriptions/delete_subscription.css' %}">
-
 {% endblock %}
 
 {% block content %}
-
     {% block title %} {{ title }} {% endblock %}
-
     {% include 'partials/navbar.html' %}
-
-    <br>
-
     <div class="subscription-cancelled">
-        <h5> Subscription cancelled! </h5>
-        <br>
-        <h1> ❌ </h1>
-        <br>
+        <h5>Subscription cancelled!</h5>
+        <div class="subscription-cancelled__icon">
+            <i class="fa-solid fa-circle-xmark" style="font-size:2.7rem;color:#dc3545;"></i>
+        </div>
         <p>
-            We regret to inform you that your subscription has been cancelled
+            We regret to inform you that your subscription has been cancelled<br>
             as per your request. Thank you for your past support!
         </p>
-        <br>
-        <a class="btn btn-success" type="button" href="{% url 'core:index' %}">
-            &gt; &nbsp; Return to dashboard
+        <a class="btn" href="{% url 'core:index' %}">
+            <span class="btn__icon">&gt;</span> Return to dashboard
         </a>
     </div>
-
     {% include 'partials/footer.html' %}
-
 {% endblock %}

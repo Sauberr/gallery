@@ -1,32 +1,93 @@
-.subscription-activated {
+:root {
+    --main-bg: #f7f8fa;
+    --card-bg: #fff;
+    --card-shadow: 0 8px 32px rgba(23, 105, 255, 0.10);
+    --border-radius: 1.2rem;
+    --accent: #1769ff;
+    --success: #28a745;
+    --text-color: #333;
+    --gray: #b1b8c9;
+    --pink: #ea4c89;
+}
+
+body {
+    background: var(--main-bg);
     font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.subscription-activated {
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    margin: 60px auto;
-    max-width: 600px;
+    box-shadow: var(--card-shadow);
+    padding: 2.5rem 2rem;
+    border-radius: var(--border-radius);
+    background-color: var(--card-bg);
+    margin: 40px auto;
+    max-width: 420px;
+    transition: box-shadow 0.2s;
 }
 
 .subscription-activated h5 {
-    font-size: 1.5em;
-    color: #333;
+    font-size: 1.5rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
 .subscription-activated h1 {
-    font-size: 3em;
-    color: #28a745;
+    font-size: 3rem;
+    color: var(--success);
+    margin: 0 0 1rem 0;
+    font-weight: 800;
+    text-shadow: 0 2px 8px rgba(40, 167, 69, 0.08);
 }
 
 .subscription-activated p {
-    font-size: 1.2em;
-    color: #555;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
 
 .subscription-activated .btn {
-    font-size: 1em;
-    padding: 10px 20px;
-    border-radius: 5px;
-    color: #333;
+    background: linear-gradient(90deg, var(--pink) 60%, var(--accent) 120%);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 0.6rem;
+    padding: 1rem 1.7rem;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 12px rgba(234, 76, 137, 0.10);
+    transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.subscription-activated .btn:hover,
+.subscription-activated .btn:focus {
+    background: linear-gradient(90deg, var(--accent) 60%, var(--pink) 120%);
+    box-shadow: 0 4px 16px rgba(23, 105, 255, 0.13);
+    transform: translateY(-2px) scale(1.04);
+}
+
+@media (max-width: 540px) {
+    .subscription-activated {
+        padding: 1.5rem 1rem;
+        max-width: 95%;
+    }
+    .subscription-activated h5 {
+        font-size: 1.3rem;
+    }
+    .subscription-activated h1 {
+        font-size: 2.5rem;
+    }
+    .subscription-activated p {
+        font-size: 1rem;
+    }
+    .subscription-activated .btn {
+        width: 100%;
+        font-size: 1rem;
+        padding: 0.8rem 1rem;
+    }
 }

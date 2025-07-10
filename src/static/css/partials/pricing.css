@@ -32,6 +32,175 @@ body {
     margin: 0;
 }
 
+.plans__container {
+    padding: 1rem 0 2rem;
+    margin: 0;
+}
+
+.plans {
+    width: 98%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.plansHero {
+    padding: 0.2rem 0 0.4rem;
+    text-align: center;
+}
+
+.plansHero__title {
+    font-weight: 700;
+    font-size: 2rem;
+    color: #222;
+    margin-bottom: 0.1rem;
+    margin-top: 0;
+}
+
+.plansHero__subtitle {
+    margin: 0.2rem 0 0 0;
+    font-size: 1rem;
+    color: #7b7b7b;
+}
+
+.subscription-card {
+    text-align: center;
+    padding: 0.1rem 0.1rem 0.2rem 0.1rem;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+.card__header h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 0.15rem 0;
+    color: #222;
+}
+
+.subscription-status-label {
+    margin: 0.2rem auto 0.6rem auto;
+    display: inline-block;
+    font-size: 1.07rem;
+    font-weight: 600;
+    border-radius: 2rem;
+    padding: 0.15rem 1.2rem;
+    background: #f7f8fa;
+    color: #1769ff;
+    border: none;
+}
+.subscription-status-label--basic {
+    background: #e4f4fe;
+    color: #1769ff;
+}
+.subscription-status-label--premium {
+    background: #fff7e6;
+    color: #ff9800;
+}
+.subscription-status-label--enterprise {
+    background: #e7edfa;
+    color: #3e4da3;
+}
+.subscription-status-label--none {
+    background: #f7f8fa;
+    color: #b1b8c9;
+}
+.card__desc {
+    font-size: 1rem;
+    color: #6f7287;
+    margin-bottom: 0.5rem;
+}
+
+.subscription-actions {
+    margin: 0.6rem 0 0 0;
+    text-align: center;
+}
+
+.button-group {
+    margin-bottom: 0.8rem;
+}
+
+.button-group-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 0.3rem;
+    text-align: center;
+}
+
+.button-group-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.15rem;
+}
+
+.button {
+    min-width: 230px;
+    max-width: 320px;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 1.09rem;
+    border-radius: 0.4rem;
+    background-color: #1769ff;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.18s;
+    text-align: center;
+    border: none;
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
+    box-shadow: 0 0 0 0 transparent;
+    outline: none;
+}
+.button:hover, .button:focus {
+    background-color: #ea4c89;
+    color: #fff;
+    box-shadow: 0 0 0 3px #ffe6f1;
+    transform: translateY(-2px) scale(1.03);
+}
+.button--upgrade,
+.button--downgrade,
+.button--delete {
+    background-color: #1769ff;
+    color: #fff;
+}
+.button--upgrade:hover,
+.button--downgrade:hover,
+.button--delete:hover,
+.button--upgrade:focus,
+.button--downgrade:focus,
+.button--delete:focus {
+    background-color: #ea4c89;
+    color: #fff;
+    box-shadow: 0 0 0 3px #ffe6f1;
+}
+@media (max-width: 540px) {
+    .plans,
+    .subscription-card {
+        max-width: 99vw;
+    }
+    .button-group-inner {
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+    .button {
+        min-width: 90vw;
+        max-width: 99vw;
+        font-size: 0.99rem;
+        padding: 0.3rem 0.2rem;
+    }
+    .card__header h2 {
+        font-size: 1.07rem;
+    }
+}
+
 .plans {
     width: 96%;
     max-width: 1128px;
@@ -45,7 +214,7 @@ body {
 
 .plansHero {
     text-align: center;
-    padding: 4.5rem 0 1.2rem;
+    padding: 4.2rem 0 1.2rem;
     line-height: 1.5;
 }
 
@@ -79,7 +248,7 @@ body {
     display: grid;
     grid-auto-flow: var(--direction);
     grid-auto-columns: 1fr;
-    gap: 1.5rem;
+    margin-top: 1.5rem;
 }
 
 .planItem .price {

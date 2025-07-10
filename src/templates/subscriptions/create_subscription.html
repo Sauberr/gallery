@@ -1,34 +1,42 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 
-
 {% block css %}
-
-    <link rel="stylesheet" href="{% static 'css/subscriptions/create_subscription.css' %}">
-
+<link rel="stylesheet" href="{% static 'css/subscriptions/create_subscription.css' %}">
 {% endblock %}
 
 {% block title %} {{ title }} {% endblock %}
 
 {% block content %}
-
     {% include 'partials/navbar.html' %}
 
-    <div class="subscription-activated">
-        <h5>{{ subscription_plan|title }} subscription activated!</h5>
+    <div class="subscription-activated subscription-card">
+        <h5>{{ subscription_plan.name|title }} subscription activated!</h5>
         <br>
-        <h1> ✅ </h1>
+        <h1>✅</h1>
         <br>
         <p>
-            Congratulations on activating your {{ subscription_plan }} subscription!
-            You are now eligible for the perks that are associated with this plan.
+            Congratulations on activating your <b>{{ subscription_plan.name }}</b> subscription!<br>
+            You now have access to the following features:
         </p>
-        <br>
-        <a class="btn btn-success" type="button" href="{% url 'core:index' %}">
-            &gt; &nbsp; Go Back
+        <ul class="featureList">
+            <li{% if subscription_plan.has_thumbnail_200px %}{% else %} class="disabled"{% endif %}>
+                200px preview
+            </li>
+            <li{% if subscription_plan.has_thumbnail_400px %}{% else %} class="disabled"{% endif %}>
+                400px preview
+            </li>
+            <li{% if subscription_plan.has_original_photo %}{% else %} class="disabled"{% endif %}>
+                Original photo
+            </li>
+            <li{% if subscription_plan.has_binary_link %}{% else %} class="disabled"{% endif %}>
+                Binary link
+            </li>
+        </ul>
+        <a class="button button--pink" href="{% url 'core:index' %}">
+            &gt; &nbsp; Back to Home
         </a>
     </div>
 
     {% include 'partials/footer.html' %}
-
 {% endblock %}

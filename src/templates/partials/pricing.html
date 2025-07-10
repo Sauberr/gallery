@@ -15,30 +15,48 @@
 <section class="plans__container">
     <div class="plans">
         <div class="plansHero">
-            <h1 class="plansHero__title"> 𝓒𝓱𝓸𝓸𝓼𝓮 𝔂𝓸𝓾𝓻 𝓹𝓻𝓲𝓬𝓲𝓷𝓰 𝓹𝓵𝓪𝓷 </h1>
-            <h3>Subscription status: {{ subscription_plan|title }}</h3>
-            <h3>Delete subscription</h3>
-            <a type="button" href="{% url 'subscriptions:confirm_delete_subscription' subscription_id %}">Delete</a>
-            <br>
-            <h3>Change subscription</h3>
-            {% if subscription_plan == 'Basic' %}
-            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Premium' %}">Upgrade to
-                Premium</a> |
-            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Enterprise' %}">Upgrade
-                to Enterprise</a>
-            {% elif subscription_plan == 'Premium' %}
-            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Basic' %}">Downgrade to
-                Basic</a> |
-            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Enterprise' %}">Upgrade
-                to Enterprise</a>
-            {% elif subscription_plan == 'Enterprise' %}
-            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Basic' %}">Downgrade to
-                Basic</a> |
-            <a type="button" href="{% url 'subscriptions:update_subscription' subscription_id 'Premium' %}">Downgrade to
-                Premium</a>
-            {% endif %}
-            <br>
-            <p class="plansHero__subtitle">No contracts. No surprise fees.</p>
+            <h1 class="plansHero__title plansHero__title--subscription">Manage your subscription</h1>
+        </div>
+        <div class="subscription-card subscription-card--active">
+            <div class="card">
+                <div class="card__header">
+                    <h2>Active Subscription</h2>
+                </div>
+                <div class="subscription-status-label subscription-status-label--{{ subscription_plan|lower }}">
+                    {{ subscription_plan|title }}
+                </div>
+            </div>
+            <div class="subscription-actions">
+                <div class="button-group">
+                    <div class="button-group-title">Change Plan</div>
+                    <div class="button-group-inner">
+                        {% if subscription_plan == 'Basic' %}
+                            <a href="{% url 'subscriptions:update_subscription' subscription_id 'Premium' %}"
+                               class="button button--upgrade">Upgrade to Premium</a>
+                            <a href="{% url 'subscriptions:update_subscription' subscription_id 'Enterprise' %}"
+                               class="button button--upgrade">Upgrade to Enterprise</a>
+                        {% elif subscription_plan == 'Premium' %}
+                            <a href="{% url 'subscriptions:update_subscription' subscription_id 'Basic' %}"
+                               class="button button--downgrade">Downgrade to Basic</a>
+                            <a href="{% url 'subscriptions:update_subscription' subscription_id 'Enterprise' %}"
+                               class="button button--upgrade">Upgrade to Enterprise</a>
+                        {% elif subscription_plan == 'Enterprise' %}
+                            <a href="{% url 'subscriptions:update_subscription' subscription_id 'Basic' %}"
+                               class="button button--downgrade">Downgrade to Basic</a>
+                            <a href="{% url 'subscriptions:update_subscription' subscription_id 'Premium' %}"
+                               class="button button--downgrade">Downgrade to Premium</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <div class="button-group-title">Cancel Subscription</div>
+                    <div class="button-group-inner">
+                        <a href="{% url 'subscriptions:confirm_delete_subscription' subscription_id %}"
+                           class="button button--delete">Cancel</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -46,11 +64,21 @@
 <section class="plans__container">
     <div class="plans">
         <div class="plansHero">
-            <h1 class="plansHero__title">Choose your pricing plan</h1>
-            <h3>Subscription status: {{ subscription_plan|title }}</h3>
-            <h3>No subscription</h3>
-            <br>
-            <p class="plansHero__subtitle">No contracts. No surprise fees.</p>
+            <h1 class="plansHero__title">Choose your plan</h1>
+            <p class="plansHero__subtitle">Start with any plan. No contracts, no hidden fees.</p>
+        </div>
+        <div class="subscription-card subscription-card--inactive">
+            <div class="card">
+                <div class="card__header">
+                    <h2>No Subscription</h2>
+                </div>
+                <div class="subscription-status-label subscription-status-label--none">
+                    No Subscription
+                </div>
+                <div class="card__desc">
+                    Select a plan below to unlock all features.
+                </div>
+            </div>
         </div>
     </div>
 </section>
