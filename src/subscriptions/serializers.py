@@ -1,5 +1,6 @@
-from subscriptions.models import SubscriptionPlan, UserSubscription
 from rest_framework import serializers
+
+from subscriptions.models import SubscriptionPlan, UserSubscription
 
 
 class SubscriptionPlanSerializer(serializers.ModelSerializer):
@@ -19,24 +20,24 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
 
 
 class UserSubscriptionSerializer(serializers.ModelSerializer):
-    plan_details = SubscriptionPlanSerializer(source='plan', read_only=True)
-    user_email = serializers.EmailField(source='user.email', read_only=True)
+    plan_details = SubscriptionPlanSerializer(source="plan", read_only=True)
+    user_email = serializers.EmailField(source="user.email", read_only=True)
 
     class Meta:
         model = UserSubscription
         fields = [
-            'id',
-            'user',
-            'user_email',
-            'plan',
-            'plan_details',
-            'paypal_subscription_id',
-            'is_active',
-            'create_datetime',
-            'last_update',
-            'subscriber_name',
-            'subscription_plan',
-            'subscription_cost',
-            'expiration_date',
-            'expiration_notification_sent',
+            "id",
+            "user",
+            "user_email",
+            "plan",
+            "plan_details",
+            "paypal_subscription_id",
+            "is_active",
+            "create_datetime",
+            "last_update",
+            "subscriber_name",
+            "subscription_plan",
+            "subscription_cost",
+            "expiration_date",
+            "expiration_notification_sent",
         ]
