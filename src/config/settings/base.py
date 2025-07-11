@@ -1,21 +1,15 @@
 from datetime import timedelta
 from pathlib import Path
-from typing import Any, List, Tuple, Dict
-from decouple import config
+from typing import Any, Dict, List, Tuple
 
 import sentry_sdk
+from celery.schedules import crontab
+from decouple import config
 from django.utils.translation import gettext_lazy as _
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-x*l7&fx$1@@z)fol=kj4fl6d5gg6ou$+1%x823644xoyw09d2%'
 
 
 ALLOWED_HOSTS: List[Any] = ["*", "127.0.0.1", "localhost"]
@@ -31,7 +25,7 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 }
 
@@ -39,15 +33,14 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER: str = "json"
 CELERY_TASK_SERIALIZER: str = "json"
 
-CELERY_BROKER_URL = "redis://127.0.0.1:6379"
-CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379"
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
 CELERY_BROKER_TRANSPORT = "redis"
 
 
 # Application definition
 
 INSTALLED_APPS: Tuple[str, ...] = (
-
     # Django apps
     "jet.dashboard",
     "jet",
@@ -63,7 +56,6 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "django_elasticsearch_dsl",
     "django.contrib.humanize",
     "debug_toolbar",
-
     # Custom apps
     "phonenumber_field",
     "crispy_forms",
@@ -75,8 +67,8 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "social_django",
     "cachalot",
     "rest_framework_simplejwt",
-    'djoser',
-
+    "djoser",
+    "django_celery_beat",
     # My apps
     "core",
     "subscriptions",
@@ -163,7 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CACHALOT_TIMEOUT = 60 * 60
 CACHALOT_ENABLED = True
-CACHALOT_DATABASES = ['default']
+CACHALOT_DATABASES = ["default"]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -177,9 +169,7 @@ USE_I18N = True
 USE_TZ = True
 
 ELASTICSEARCH_DSL = {
-    "default": {
-        "hosts": "http://elasticsearch:9200"
-    },
+    "default": {"hosts": "http://elasticsearch:9200"},
 }
 
 # Static files (CSS, JavaScript, Images)
@@ -200,19 +190,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SOCIAL_AUTH_URL_NAMESPACE: str = "social"
 
 DEBUG_TOOLBAR_PANELS: List[str] = [
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.logging.LoggingPanel',
-    'debug_toolbar.panels.redirects.RedirectsPanel',
-    'cachalot.panels.CachalotPanel',
+    "debug_toolbar.panels.versions.VersionsPanel",
+    "debug_toolbar.panels.timer.TimerPanel",
+    "debug_toolbar.panels.settings.SettingsPanel",
+    "debug_toolbar.panels.headers.HeadersPanel",
+    "debug_toolbar.panels.request.RequestPanel",
+    "debug_toolbar.panels.sql.SQLPanel",
+    "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+    "debug_toolbar.panels.templates.TemplatesPanel",
+    "debug_toolbar.panels.cache.CachePanel",
+    "debug_toolbar.panels.signals.SignalsPanel",
+    "debug_toolbar.panels.logging.LoggingPanel",
+    "debug_toolbar.panels.redirects.RedirectsPanel",
+    "cachalot.panels.CachalotPanel",
 ]
 
 
@@ -223,8 +213,12 @@ AUTHENTICATION_BACKENDS: List[str] = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", default="", cast=str)
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", default="", cast=str)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config(
+    "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", default="", cast=str
+)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config(
+    "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", default="", cast=str
+)
 
 
 SOCIAL_AUTH_PIPELINE: Tuple[str, ...] = (
@@ -285,16 +279,21 @@ REST_FRAMEWORK: Dict[str, ...] = {
 
 
 LOGGING = {
-    'version': 1,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
+    "loggers": {
+        "django.db.backends": {
+            "level": "DEBUG",
+            "handlers": ["console"],
         },
-    }
+    },
 }
+
+
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+SITE_URL = config("SITE_URL", default="http://localhost:8000", cast=str)
