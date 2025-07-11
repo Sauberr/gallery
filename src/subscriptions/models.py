@@ -1,11 +1,13 @@
+from datetime import timedelta
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
-from datetime import timedelta
-from django.utils.timezone import now
 from django.db import models
+from django.utils.timezone import localdate, now
 from django.utils.translation import gettext_lazy as _
+
+NOTIFICATION_DAYS_THRESHOLD: int = 7
 
 
 class SubscriptionPlan(models.Model):
@@ -13,14 +15,14 @@ class SubscriptionPlan(models.Model):
         verbose_name=_("name"),
         max_length=255,
         unique=True,
-        help_text=_("Name of the subscription plan")
+        help_text=_("Name of the subscription plan"),
     )
     description = models.TextField(
         verbose_name=_("description"),
         max_length=1024,
         null=True,
         blank=True,
-        help_text=_("Description of the subscription plan")
+        help_text=_("Description of the subscription plan"),
     )
     cost = models.DecimalField(
         verbose_name=_("cost"),
@@ -55,7 +57,7 @@ class SubscriptionPlan(models.Model):
     has_binary_link = models.BooleanField(
         verbose_name=_("has binary link"),
         default=False,
-        help_text=_("Indicates if the plan includes a binary link to the photo")
+        help_text=_("Indicates if the plan includes a binary link to the photo"),
     )
 
     class Meta:
@@ -70,6 +72,7 @@ class SubscriptionPlan(models.Model):
     def __str__(self):
         return self.name
 
+
 class UserSubscription(models.Model):
     user = models.OneToOneField(
         get_user_model(),
@@ -82,27 +85,29 @@ class UserSubscription(models.Model):
         on_delete=models.PROTECT,
         verbose_name=_("subscription plan"),
         help_text=_("Subscription plan selected by the user"),
-        )
+    )
     paypal_subscription_id = models.CharField(
         verbose_name=_("paypal subscription id"),
         max_length=300,
         null=True,
         blank=True,
         help_text=_("Unique identifier for the PayPal subscription"),
-        )
+    )
     is_active = models.BooleanField(
-        verbose_name=_("is active"), default=False, help_text=_("Indicates if the subscription is currently active")
-        )
+        verbose_name=_("is active"),
+        default=False,
+        help_text=_("Indicates if the subscription is currently active"),
+    )
     create_datetime = models.DateTimeField(
         verbose_name=_("create datetime"),
         auto_now_add=True,
         help_text=_("Timestamp when the subscription was created"),
-        )
+    )
     last_update = models.DateTimeField(
         verbose_name=_("last update"),
         auto_now=True,
         help_text=_("Timestamp when the subscription was last updated"),
-        )
+    )
     expiration_date = models.DateTimeField(
         verbose_name=_("expiration date"),
         null=True,
@@ -155,8 +160,9 @@ class UserSubscription(models.Model):
     def send_expiration_notification(self):
         if not self.expiration_date or self.expiration_notification_sent:
             return False
-        days_left = self.days_until_expiry
-        return days_left == 7
+
+        days_left = (self.expiration_date.date() - localdate()).days
+        return days_left <= NOTIFICATION_DAYS_THRESHOLD
 
     @property
     def is_expired(self) -> bool:

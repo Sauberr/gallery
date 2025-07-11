@@ -6,7 +6,7 @@ from typing import Dict
 
 import requests
 
-from subscriptions.models import UserSubscription, SubscriptionPlan
+from subscriptions.models import SubscriptionPlan, UserSubscription
 
 
 def get_paypal_headers(access_token: str) -> Dict[str, str]:
@@ -26,7 +26,9 @@ def get_access_token() -> str | None:
     url: str = f"{os.environ.get('PAYPAL_URL')}/v1/oauth2/token"
 
     try:
-        response = requests.post(url, data=data, headers=headers, auth=(client_id, secret_id))
+        response = requests.post(
+            url, data=data, headers=headers, auth=(client_id, secret_id)
+        )
         response.raise_for_status()
         return response.json()["access_token"]
     except (requests.exceptions.RequestException, KeyError) as e:
@@ -37,7 +39,9 @@ def get_access_token() -> str | None:
 def cancel_subscription_paypal(access_token, subscription_id: str) -> None:
 
     try:
-        url: str = f"{os.environ.get('PAYPAL_URL')}/v1/billing/subscriptions/{subscription_id}/cancel"
+        url: str = (
+            f"{os.environ.get('PAYPAL_URL')}/v1/billing/subscriptions/{subscription_id}/cancel"
+        )
         requests.post(url, headers=get_paypal_headers(access_token))
 
     except requests.exceptions.RequestException as e:
@@ -45,10 +49,12 @@ def cancel_subscription_paypal(access_token, subscription_id: str) -> None:
         return None
 
 
-def update_subscription_paypal(access_token, subscription_id: str, new_plan: str) -> str | None:
+def update_subscription_paypal(
+    access_token, subscription_id: str, new_plan: str
+) -> str | None:
 
     try:
-        user_subscription = UserSubscription.objects.select_related('plan').get(
+        user_subscription = UserSubscription.objects.select_related("plan").get(
             paypal_subscription_id=subscription_id
         )
         current_plan = user_subscription.plan.name
@@ -56,13 +62,19 @@ def update_subscription_paypal(access_token, subscription_id: str, new_plan: str
         new_subscription_plan = SubscriptionPlan.objects.get(name=new_plan)
         new_subscription_plan_id = new_subscription_plan.paypal_plan_id
 
-        url: str = f'{os.environ.get("PAYPAL_URL")}/v1/billing/subscriptions/{subscription_id}/revise'
+        url: str = (
+            f'{os.environ.get("PAYPAL_URL")}/v1/billing/subscriptions/{subscription_id}/revise'
+        )
 
-        revision_data: Dict[str, str] = {
+        revision_data: Dict[str, any] = {
             "plan_id": new_subscription_plan_id,
         }
 
-        response = requests.post(url, headers=get_paypal_headers(access_token), data=json.dumps(revision_data))
+        response = requests.post(
+            url,
+            headers=get_paypal_headers(access_token),
+            data=json.dumps(revision_data),
+        )
         response_data = response.json()
 
         if response.status_code == HTTPStatus.OK:
@@ -81,7 +93,9 @@ def update_subscription_paypal(access_token, subscription_id: str, new_plan: str
 
 def get_current_subscription(access_token, subscription_id: str) -> str | None:
 
-    url: str = f"{os.environ.get('PAYPAL_URL')}/v1/billing/subscriptions/{subscription_id}"
+    url: str = (
+        f"{os.environ.get('PAYPAL_URL')}/v1/billing/subscriptions/{subscription_id}"
+    )
 
     try:
         response = requests.get(url, headers=get_paypal_headers(access_token))

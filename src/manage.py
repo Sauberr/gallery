@@ -13,7 +13,11 @@ def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.dev")
     if sys.argv[1] == "test":
         print("NOTE: Running black formatter")
-        print(os.popen(f"black --config {Path(__file__).resolve().parent.parent}/.black.toml .").read())
+        print(
+            os.popen(
+                f"black --config {Path(__file__).resolve().parent.parent}/.black.toml ."
+            ).read()
+        )
         print(os.popen("isort .").read())
         print(os.popen("flake8 .").read())
     try:

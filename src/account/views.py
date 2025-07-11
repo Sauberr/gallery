@@ -13,11 +13,11 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-from django.views.generic import CreateView, RedirectView, View, UpdateView
+from django.views.generic import CreateView, RedirectView, UpdateView, View
 
 from account.forms import ProfileForm, UserLoginForm, UserRegistrationForm
-from account.tasks import send_registration_email
 from account.services.verify_2fa_otp import verify_2fa_otp
+from account.tasks import send_registration_email
 from common.mixins import TitleMixin
 from core.utils.token_generator import TokenGenerator
 
@@ -42,7 +42,11 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
         user = form.get_user()
         if user is not None:
             if user.mfa_enabled:
-                return render(self.request, "registration/2FA/otp_verify.html", {"user_id": user.id})
+                return render(
+                    self.request,
+                    "registration/2FA/otp_verify.html",
+                    {"user_id": user.id},
+                )
             login(self.request, user)
             messages.success(self.request, "Login successful!")
             return redirect("account:profile")
@@ -87,7 +91,11 @@ class ActivateUser(RedirectView):
         if current_user and TokenGenerator().check_token(current_user, token):
             current_user.is_active = True
             current_user.save()
-            login(request, current_user, backend="django.contrib.auth.backends.ModelBackend")
+            login(
+                request,
+                current_user,
+                backend="django.contrib.auth.backends.ModelBackend",
+            )
 
             return super().get(request, *args, **kwargs)
 
@@ -109,9 +117,9 @@ class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
 
 
 class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
-    template_name: str = 'registration/profile.html'
+    template_name: str = "registration/profile.html"
     form_class = ProfileForm
-    success_url = reverse_lazy('account:profile')
+    success_url = reverse_lazy("account:profile")
     title: str = "Profile"
 
     def get_object(self):
@@ -122,27 +130,32 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
         profile = user.profile
         return {
             **{
-                field: (user.format_phone_number() if field == 'phone_number' else getattr(user, field))
-                for field in ['first_name', 'last_name', 'email', 'phone_number']
+                field: (
+                    user.format_phone_number()
+                    if field == "phone_number"
+                    else getattr(user, field)
+                )
+                for field in ["first_name", "last_name", "email", "phone_number"]
             },
             **{
                 field: getattr(profile, field)
-                for field in ['birth_date', 'sex', 'location', 'status']
-            }
+                for field in ["birth_date", "sex", "location", "status"]
+            },
         }
+
     def _update_profile(self, form):
         user = form.save(commit=False)
         profile = user.profile
 
-        for field in ['first_name', 'last_name', 'phone_number']:
+        for field in ["first_name", "last_name", "phone_number"]:
             setattr(user, field, form.cleaned_data[field])
         user.save()
 
-        for field in ['birth_date', 'sex', 'location', 'status']:
+        for field in ["birth_date", "sex", "location", "status"]:
             setattr(profile, field, form.cleaned_data[field])
 
-        if 'avatar' in self.request.FILES:
-            profile.avatar = self.request.FILES['avatar']
+        if "avatar" in self.request.FILES:
+            profile.avatar = self.request.FILES["avatar"]
 
         profile.save()
 
@@ -151,22 +164,22 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
 
         user_changed = any(
             form.cleaned_data[field] != getattr(user, field)
-            for field in ['first_name', 'last_name', 'phone_number']
+            for field in ["first_name", "last_name", "phone_number"]
         )
 
         profile_changed = any(
             form.cleaned_data[field] != getattr(profile, field)
-            for field in ['birth_date', 'sex', 'location', 'status']
+            for field in ["birth_date", "sex", "location", "status"]
         )
 
-        avatar_changed = 'avatar' in self.request.FILES
+        avatar_changed = "avatar" in self.request.FILES
 
         return user_changed or profile_changed or avatar_changed
 
     def form_valid(self, form):
         if self._has_changes(form, self.request.user):
             self._update_profile(form)
-            messages.success(self.request, 'Profile updated successfully')
+            messages.success(self.request, "Profile updated successfully")
         return super().form_valid(form)
 
     def _generate_qr_code(self):
@@ -176,8 +189,7 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
             user.save()
 
         otp_uri = pyotp.totp.TOTP(user.mfa_secret).provisioning_uri(
-            name=user.email,
-            issuer_name="Test Assignment"
+            name=user.email, issuer_name="Test Assignment"
         )
 
         qr = qrcode.make(otp_uri)

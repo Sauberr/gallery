@@ -5,7 +5,14 @@ from subscriptions.models import SubscriptionPlan, UserSubscription
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
-    list_display = ("name", "cost", "has_thumbnail_200px", "has_thumbnail_400px", "has_original_photo", "has_binary_link")
+    list_display = (
+        "name",
+        "cost",
+        "has_thumbnail_200px",
+        "has_thumbnail_400px",
+        "has_original_photo",
+        "has_binary_link",
+    )
     list_display_links = ("name", "cost")
     search_fields = ("name", "cost")
     ordering = ("cost",)
@@ -13,7 +20,15 @@ class SubscriptionPlanAdmin(admin.ModelAdmin):
 
 @admin.register(UserSubscription)
 class UserSubscriptionAdmin(admin.ModelAdmin):
-    list_display = ("user", "plan", "paypal_subscription_id", "is_active", "create_datetime", "last_update", "expiration_date")
+    list_display = (
+        "user",
+        "plan",
+        "paypal_subscription_id",
+        "is_active",
+        "create_datetime",
+        "last_update",
+        "expiration_date",
+    )
     list_display_links = ("user", "plan")
     search_fields = ("user", "plan")
     ordering = ("plan",)

@@ -1,11 +1,10 @@
-from api.views import CategoryModelViewSet, OrderModelViewSet, ProductModelViewSet
 from django.urls import include, path
 from rest_framework import routers
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
+from rest_framework_simplejwt.views import (TokenObtainPairView,
+                                            TokenRefreshView, TokenVerifyView)
+
+from api.views import (CategoryModelViewSet, OrderModelViewSet,
+                       ProductModelViewSet)
 
 app_name = "api"
 

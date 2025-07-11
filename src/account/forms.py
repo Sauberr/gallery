@@ -5,11 +5,10 @@ from django.contrib.auth.forms import (AuthenticationForm, UserChangeForm,
 from django.core.exceptions import ValidationError
 from django_recaptcha.fields import ReCaptchaField
 from phonenumber_field.formfields import PhoneNumberField
+
+from account.models import (COUNTRY_CHOICES, SEX_CHOICES, STATUS_CHOICES,
+                            Profile)
 from account.tasks import send_registration_email
-
-from account.models import Profile
-
-from account.models import STATUS_CHOICES, SEX_CHOICES, COUNTRY_CHOICES
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -23,8 +22,15 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        fields = ("email", "first_name", "last_name", "phone_number", "password1", "password2", "captcha")
-
+        fields = (
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "password1",
+            "password2",
+            "captcha",
+        )
 
     def save(self, commit=True):
         user = super(UserRegistrationForm, self).save(commit=True)
@@ -40,9 +46,13 @@ class UserRegistrationForm(UserCreationForm):
         has_capital = any(char in capitalize_letters for char in password1)
 
         if not has_special and not has_capital:
-            raise ValidationError("Password must contain at least one special character and one uppercase letter")
+            raise ValidationError(
+                "Password must contain at least one special character and one uppercase letter"
+            )
         elif not has_special:
-            raise ValidationError("Password must contain at least one special character")
+            raise ValidationError(
+                "Password must contain at least one special character"
+            )
         elif not has_capital:
             raise ValidationError("Password must contain at least one uppercase letter")
 
@@ -54,13 +64,15 @@ class UserLoginForm(AuthenticationForm):
     phone_number = PhoneNumberField(max_length=15, required=False)
     password = forms.CharField(widget=forms.PasswordInput())
     remember_me = forms.BooleanField(
-        required=False, widget=forms.CheckboxInput(attrs={"class": "form-check-input", "id": "remember_me"})
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={"class": "form-check-input", "id": "remember_me"}
+        ),
     )
 
     class Meta:
         model = get_user_model()
         fields = ("email", "phone_number", "password", "remember_me")
-
 
 
 class ProfileForm(forms.ModelForm):
@@ -87,34 +99,31 @@ class ProfileForm(forms.ModelForm):
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "Enter phone number"}
         ),
-        required=False
+        required=False,
     )
     birth_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={"class": "form-control", "type": "date"}
-        ),
-        required=False
+        widget=forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+        required=False,
     )
     sex = forms.ChoiceField(
         choices=SEX_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"}),
-        required=False
+        required=False,
     )
     location = forms.ChoiceField(
         choices=COUNTRY_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"}),
-        required=False
+        required=False,
     )
     status = forms.ChoiceField(
         choices=STATUS_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"}),
-        required=False
+        required=False,
     )
     avatar = forms.ImageField(
-        required=False,
-        widget=forms.FileInput(attrs={"class": "custom-file-input"})
+        required=False, widget=forms.FileInput(attrs={"class": "custom-file-input"})
     )
 
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'email', 'phone_number')
+        fields = ("first_name", "last_name", "email", "phone_number")

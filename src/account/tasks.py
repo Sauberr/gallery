@@ -1,3 +1,5 @@
+from celery import shared_task
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -5,12 +7,9 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from core.utils.token_generator import TokenGenerator
-from django.conf import settings
-
-from config.celery_app import app
 
 
-@app.task
+@shared_task
 def send_registration_email(user_id: int) -> None:
     try:
         User = get_user_model()

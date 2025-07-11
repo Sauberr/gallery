@@ -50,7 +50,9 @@ class Migration(migrations.Migration):
                         expression=django.db.models.expressions.CombinedExpression(
                             models.F("quantity"), "*", models.F("price")
                         ),
-                        output_field=models.DecimalField(decimal_places=2, max_digits=10),
+                        output_field=models.DecimalField(
+                            decimal_places=2, max_digits=10
+                        ),
                     ),
                 ),
             ],

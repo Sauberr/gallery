@@ -13,7 +13,16 @@ class ProfileAdmin(admin.StackedInline):
 @admin.register(get_user_model())
 class UserAdmin(admin.ModelAdmin):
     inlines = [ProfileAdmin]
-    fields = ("first_name", "last_name", "password", "email", "phone_number", "is_active", "mfa_enabled", "mfa_secret")
+    fields = (
+        "first_name",
+        "last_name",
+        "password",
+        "email",
+        "phone_number",
+        "is_active",
+        "mfa_enabled",
+        "mfa_secret",
+    )
     list_display = ("first_name", "last_name", "email", "is_active")
     list_display_links = ("first_name", "last_name", "email")
     fieldsets = None

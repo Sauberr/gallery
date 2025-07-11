@@ -1,3 +1,5 @@
+from typing import Sequence
+
 import pycountry
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
@@ -8,11 +10,9 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from faker import Faker
 from phonenumber_field.modelfields import PhoneNumberField
-from phonenumbers import format_number, PhoneNumberFormat, parse
-from typing import Sequence
+from phonenumbers import PhoneNumberFormat, format_number, parse
 
 from account.managers import CustomerManager, PeopleManager
-
 
 STATUS_CHOICES: Sequence[tuple[str, str]] = (
     ("Unmarried", "Unmarried"),
@@ -25,7 +25,9 @@ SEX_CHOICES: Sequence[tuple[str, str]] = (
     ("Undefined", "I don't want to tell"),
 )
 
-COUNTRY_CHOICES = [(f"{country.name}", f"{country.name}") for country in pycountry.countries]
+COUNTRY_CHOICES = [
+    (f"{country.name}", f"{country.name}") for country in pycountry.countries
+]
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -35,7 +37,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_("name"), max_length=150, blank=True)
     last_name = models.CharField(_("surname"), max_length=150, blank=True)
     email = models.EmailField(_("email address"), blank=True, null=True, unique=True)
-    phone_number = PhoneNumberField(_("phone number"), blank=True, null=True, unique=True)
+    phone_number = PhoneNumberField(
+        _("phone number"), blank=True, null=True, unique=True
+    )
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
@@ -45,7 +49,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("active"),
         default=False,
         help_text=_(
-            "Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts."
+            "Designates whether this user should be treated as active. "
+            "Unselect this instead of deleting accounts."
         ),
     )
     mfa_secret = models.CharField(max_length=32, blank=True, null=True)
@@ -118,10 +123,14 @@ class ProxyUser(get_user_model()):
 
 class Profile(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    location = models.CharField(max_length=44, choices=COUNTRY_CHOICES, default="Undefined")
+    location = models.CharField(
+        max_length=44, choices=COUNTRY_CHOICES, default="Undefined"
+    )
     avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True, null=True)
     sex = models.CharField(max_length=9, choices=SEX_CHOICES, default="Undefined")
-    status = models.CharField(max_length=25, choices=STATUS_CHOICES, default="Unmarried")
+    status = models.CharField(
+        max_length=25, choices=STATUS_CHOICES, default="Unmarried"
+    )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
     birth_date = models.DateField(_("birth date"), blank=True, null=True)
 

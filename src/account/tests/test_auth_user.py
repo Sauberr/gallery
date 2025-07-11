@@ -12,11 +12,17 @@ def create_user_with_email(email="user@example.com", password="TestPassword123!"
     return get_user_model().objects.create_user(email=email, password=password)
 
 
-def create_admin_user_with_email(email="admin@example.com", password="TestPassword123!", is_staff=True):
-    return get_user_model().objects.create_superuser(email=email, password=password, is_staff=is_staff)
+def create_admin_user_with_email(
+    email="admin@example.com", password="TestPassword123!", is_staff=True
+):
+    return get_user_model().objects.create_superuser(
+        email=email, password=password, is_staff=is_staff
+    )
 
 
-def create_user_with_phone_number(phone_number="+12125552368", password="TestPassword123!"):
+def create_user_with_phone_number(
+    phone_number="+12125552368", password="TestPassword123!"
+):
     return get_user_model().objects.create_user(
         email=f"user_{phone_number}@example.com",
         phone_number=phone_number,
@@ -24,7 +30,9 @@ def create_user_with_phone_number(phone_number="+12125552368", password="TestPas
     )
 
 
-def create_admin_user_with_phone_number(phone_number="+12125552367", password="TestPassword123!", is_staff=True):
+def create_admin_user_with_phone_number(
+    phone_number="+12125552367", password="TestPassword123!", is_staff=True
+):
     return get_user_model().objects.create_superuser(
         email=f"admin_{phone_number}@example.com",
         phone_number=phone_number,
@@ -50,25 +58,33 @@ class TestAuthUser(CommonTest):
         self.common_test()
 
     def test_login_with_invalid_email(self):
-        response = self.client.post(self.path, {"username": "user@example.com", "password": "testpassword"})
+        response = self.client.post(
+            self.path, {"username": "user@example.com", "password": "testpassword"}
+        )
         self.assertEqual(response.status_code, HTTPStatus.OK)
         user = auth.get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
     def test_login_with_valid_email(self):  # 1
-        response = self.client.post(self.path, {"username": "user@example.com", "password": "TestPassword123!"})
+        response = self.client.post(
+            self.path, {"username": "user@example.com", "password": "TestPassword123!"}
+        )
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
 
     def test_login_with_invalid_phone_number(self):
-        response = self.client.post(self.path, {"username": "+12125552368", "password": "testpassword"})
+        response = self.client.post(
+            self.path, {"username": "+12125552368", "password": "testpassword"}
+        )
         self.assertEqual(response.status_code, HTTPStatus.OK)
         user = auth.get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
     def test_login_with_valid_phone_number(self):  # 2
-        response = self.client.post(self.path, {"username": "+12125552368", "password": "TestPassword123!"})
+        response = self.client.post(
+            self.path, {"username": "+12125552368", "password": "TestPassword123!"}
+        )
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)

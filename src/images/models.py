@@ -1,11 +1,10 @@
 from typing import List, Tuple
-from django.urls import reverse
-
 
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
-from faker import Faker
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from faker import Faker
 
 SUBSCRIPTION_PLANS: List[Tuple[str, str]] = [
     ("Basic", "Basic Plan"),
@@ -19,7 +18,7 @@ class Images(models.Model):
         verbose_name=_("title"),
         max_length=200,
         unique=True,
-        help_text=_("Title of the image")
+        help_text=_("Title of the image"),
     )
     image = models.ImageField(
         verbose_name=_("image"),
@@ -30,24 +29,22 @@ class Images(models.Model):
     created_at = models.DateTimeField(
         verbose_name=_("created at"),
         auto_now_add=True,
-        help_text=_("Timestamp when the image was created")
+        help_text=_("Timestamp when the image was created"),
     )
     updated_at = models.DateTimeField(
         verbose_name=_("updated at"),
         auto_now=True,
-        help_text=_("Timestamp when the image was last updated")
+        help_text=_("Timestamp when the image was last updated"),
     )
     author = models.CharField(
-        verbose_name=_("author"),
-        max_length=200,
-        help_text=_("Author of the image")
+        verbose_name=_("author"), max_length=200, help_text=_("Author of the image")
     )
     description = models.TextField(
         verbose_name=_("description"),
         max_length=1024,
         null=True,
         blank=True,
-        help_text=_("Description of the image")
+        help_text=_("Description of the image"),
     )
     subscription_plans = models.CharField(
         verbose_name=_("subscription plans"),
@@ -61,13 +58,13 @@ class Images(models.Model):
         default=0.00,
         max_digits=10,
         decimal_places=2,
-        help_text=_("Price of the image in USD")
+        help_text=_("Price of the image in USD"),
     )
     quantity = models.PositiveIntegerField(
         verbose_name=_("quantity"),
         default=0,
         validators=[MinValueValidator(0)],
-        help_text=_("Quantity of the image available")
+        help_text=_("Quantity of the image available"),
     )
     total_quantity = models.GeneratedField(
         expression=models.F("quantity") * models.F("price"),

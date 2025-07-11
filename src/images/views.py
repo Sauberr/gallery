@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView, ListView
 
 from common.mixins import CacheMixin, TitleMixin
 from core.utils.paginator import paginator
@@ -27,9 +27,8 @@ class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
 
         try:
             user_subscription = (
-                UserSubscription.objects
-                .select_related('plan')
-                .only('plan__name')
+                UserSubscription.objects.select_related("plan")
+                .only("plan__name")
                 .get(user=self.request.user)
             )
             user_subscription_plan = user_subscription.plan.name
@@ -46,6 +45,7 @@ class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
         context["images"] = self.set_get_cache(images, "images", 15)
 
         return context
+
 
 class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
     template_name: str = "images/image-detail.html"
@@ -66,9 +66,8 @@ class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
 
         try:
             user_subscription = (
-                UserSubscription.objects
-                .select_related('plan')
-                .only('plan__name')
+                UserSubscription.objects.select_related("plan")
+                .only("plan__name")
                 .get(user=self.request.user)
             )
             user_subscription_plan = user_subscription.plan.name
