@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Subscription Expiring Soon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .content {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Hello {{ user.get_full_name|default:user.email }}!</h2>
+    </div>
+
+    <div class="content">
+        <div class="warning">
+            <strong>⚠️ Important Notice:</strong> Your subscription is expiring soon!
+        </div>
+
+        <p>We wanted to remind you that your <strong>{{ subscription.plan.name }}</strong> subscription will expire in <strong>{{ days_left }} day{{ days_left|pluralize }}</strong>.</p>
+
+        <p><strong>Subscription Details:</strong></p>
+        <ul>
+            <li><strong>Plan:</strong> {{ subscription.plan.name }}</li>
+            <li><strong>Cost:</strong> ${{ subscription.plan.cost }}</li>
+            <li><strong>Days remaining:</strong> {{ days_left }}</li>
+        </ul>
+
+        <p>To continue enjoying all the benefits of your subscription, please renew before it expires.</p>
+
+        <a href="http://{{ domain }}/pricing/" class="button">Renew Subscription</a>
+
+        <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
+
+        <p>Thank you for being our valued customer!</p>
+
+        <p>Best regards,<br>The Team</p>
+    </div>
+
+    <div class="footer">
+        <p>This is an automated message. Please do not reply to this email.</p>
+        <p>If you no longer wish to receive these notifications, you can update your preferences in your account settings.</p>
+    </div>
+</body>
+</html>
