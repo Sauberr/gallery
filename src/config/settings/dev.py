@@ -1,6 +1,6 @@
-from config.settings.base import *  # noqa
 from decouple import config
 
+from config.settings.base import *  # noqa
 
 DEBUG = True
 
@@ -48,7 +48,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend", cast=str)
-EMAIL_HOST = config("EMAIL_HOST", default="smtp.gmail.com", cast=str)
+EMAIL_HOST = config("EMAIL_HOST", default="localhost", cast=str)
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="", cast=str)
@@ -57,3 +57,14 @@ EMAIL_FAIL_SILENTLY = config("EMAIL_FAIL_SILENTLY", default=False, cast=bool)
 
 RECAPTCHA_PUBLIC_KEY = config("RECAPTCHA_PUBLIC_KEY", default="", cast=str)
 RECAPTCHA_PRIVATE_KEY = config("RECAPTCHA_PRIVATE_KEY", default="", cast=str)
+
+CELERY_BEAT_SCHEDULE = {
+    "process-expired-subscriptions": {
+        "task": "subscriptions.tasks.process_expired_subscriptions",
+        "schedule": crontab(minute="*/2"),
+    },
+    "check-subscriptions-for-notification": {
+        "task": "subscriptions.tasks.check_subscriptions_for_notification",
+        "schedule": crontab(minute="*/2"),
+    },
+}
