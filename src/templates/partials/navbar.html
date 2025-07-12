@@ -24,6 +24,8 @@
                 <span>|</span>
                 <li><a href="{% url 'core:pricing' %}"> Pricing </a></li>
                 <span>|</span>
+                <li><a href="{% url 'images:image_feature' %}"> Feature </a></li>
+                <span>|</span>
                 <li><a href="{% url 'core:contact' %}"> Contact Us </a></li>
                 {% if user.is_authenticated %}
                     <span>|</span>
@@ -63,6 +65,7 @@
             <li><a href="{% url 'core:index' %}"> Home </a></li>
             <li><a href="{% url 'images:images' %}"> Images </a></li>
             <li><a href="{% url 'core:pricing' %}"> Pricing </a></li>
+            <li><a href="{% url 'images:image_feature' %}"> Feature </a></li>
             <li><a href="{% url 'core:contact' %}"> Contact Us </a></li>
             {% if user.is_authenticated %}
                 <li class="dropdown">
