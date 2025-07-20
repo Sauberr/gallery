@@ -25,9 +25,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="images",
             name="quantity",
-            field=models.PositiveIntegerField(
-                default=0, validators=[django.core.validators.MinValueValidator(0)]
-            ),
+            field=models.PositiveIntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)]),
         ),
         migrations.AddField(
             model_name="images",

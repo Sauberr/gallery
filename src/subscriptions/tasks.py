@@ -13,9 +13,7 @@ from subscriptions.models import NOTIFICATION_DAYS_THRESHOLD, UserSubscription
 def process_expired_subscriptions():
     try:
         with transaction.atomic():
-            expired_count = UserSubscription.objects.filter(
-                is_active=True, expiration_date__lte=timezone.now()
-            ).update(
+            expired_count = UserSubscription.objects.filter(is_active=True, expiration_date__lte=timezone.now()).update(
                 is_active=False,
                 paypal_subscription_id=None,
                 expiration_notification_sent=False,
@@ -31,14 +29,10 @@ def process_expired_subscriptions():
 @shared_task
 def send_subscription_expiring_email(user_subscription_id: int):
     try:
-        user_subscription = UserSubscription.objects.select_related("user", "plan").get(
-            id=user_subscription_id
-        )
+        user_subscription = UserSubscription.objects.select_related("user", "plan").get(id=user_subscription_id)
 
         if user_subscription.expiration_notification_sent:
-            return _(
-                f"Expiration notification already sent for {user_subscription.user.email}"
-            )
+            return _(f"Expiration notification already sent for {user_subscription.user.email}")
 
         user = user_subscription.user
         days_left = user_subscription.days_until_expiry
@@ -77,9 +71,7 @@ def send_subscription_expiring_email(user_subscription_id: int):
         return _("User subscription not found.")
 
     except Exception as e:
-        return _(
-            f"An error occurred while sending the expiration notification: {str(e)}"
-        )
+        return _(f"An error occurred while sending the expiration notification: {str(e)}")
 
 
 @shared_task

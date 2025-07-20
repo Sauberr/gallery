@@ -25,9 +25,7 @@ SEX_CHOICES: Sequence[tuple[str, str]] = (
     ("Undefined", "I don't want to tell"),
 )
 
-COUNTRY_CHOICES = [
-    (f"{country.name}", f"{country.name}") for country in pycountry.countries
-]
+COUNTRY_CHOICES = [(f"{country.name}", f"{country.name}") for country in pycountry.countries]
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -37,9 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_("name"), max_length=150, blank=True)
     last_name = models.CharField(_("surname"), max_length=150, blank=True)
     email = models.EmailField(_("email address"), blank=True, null=True, unique=True)
-    phone_number = PhoneNumberField(
-        _("phone number"), blank=True, null=True, unique=True
-    )
+    phone_number = PhoneNumberField(_("phone number"), blank=True, null=True, unique=True)
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,
@@ -49,14 +45,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("active"),
         default=False,
         help_text=_(
-            "Designates whether this user should be treated as active. "
-            "Unselect this instead of deleting accounts."
+            "Designates whether this user should be treated as active. " "Unselect this instead of deleting accounts."
         ),
     )
     mfa_secret = models.CharField(max_length=32, blank=True, null=True)
     mfa_enabled = models.BooleanField(default=False)
 
-    objects = CustomerManager()
+    objects: CustomerManager = CustomerManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -73,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.first_name}_{self.last_name}"
 
     @classmethod
-    def generate_instances(cls, count) -> None:
+    def generate_instances(cls, count: int) -> None:
         faker = Faker()
         for _ in range(count):
             user = cls.objects.create(  # noqa
@@ -112,25 +107,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class ProxyUser(get_user_model()):
-    people = PeopleManager()
+    people: PeopleManager = PeopleManager()
 
     class Meta:
         proxy = True
         ordering = ("-pk",)
-        verbose_name: str = _("Proxy User")
-        verbose_name_plural: str = _("Proxy Users")
+        verbose_name = _("Proxy User")
+        verbose_name_plural = _("Proxy Users")
 
 
 class Profile(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    location = models.CharField(
-        max_length=44, choices=COUNTRY_CHOICES, default="Undefined"
-    )
+    location = models.CharField(max_length=44, choices=COUNTRY_CHOICES, default="Undefined")
     avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True, null=True)
     sex = models.CharField(max_length=9, choices=SEX_CHOICES, default="Undefined")
-    status = models.CharField(
-        max_length=25, choices=STATUS_CHOICES, default="Unmarried"
-    )
+    status = models.CharField(max_length=25, choices=STATUS_CHOICES, default="Unmarried")
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
     birth_date = models.DateField(_("birth date"), blank=True, null=True)
 
@@ -143,5 +134,5 @@ class Profile(models.Model):
             raise ValueError("Birth date cannot be in the future")
 
     class Meta:
-        verbose_name: str = _("User Profile")
-        verbose_name_plural: str = _("User Profiles")
+        verbose_name = _("User Profile")
+        verbose_name_plural = _("User Profiles")

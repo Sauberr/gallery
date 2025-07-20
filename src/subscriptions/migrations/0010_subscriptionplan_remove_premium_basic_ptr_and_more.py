@@ -119,8 +119,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="usersubscription",
-            index=models.Index(
-                fields=["paypal_subscription_id"], name="subscriptio_paypal__67b292_idx"
-            ),
+            index=models.Index(fields=["paypal_subscription_id"], name="subscriptio_paypal__67b292_idx"),
         ),
     ]

@@ -20,9 +20,7 @@ class CreateSubscription(LoginRequiredMixin, TitleMixin, View):
 
     def get(self, request, subscription_id: str, plan: str) -> HttpResponse:
         if UserSubscription.objects.filter(user=request.user, is_active=True).exists():
-            return HttpResponse(
-                "You already have an active subscription", status=HTTPStatus.BAD_REQUEST
-            )
+            return HttpResponse("You already have an active subscription", status=HTTPStatus.BAD_REQUEST)
 
         subscription_plan = get_object_or_404(SubscriptionPlan, name=plan)
 
@@ -60,9 +58,7 @@ class DeleteSubscription(LoginRequiredMixin, TitleMixin, View):
         access_token = get_access_token()
         cancel_subscription_paypal(access_token, subscription_id)
 
-        subscription = get_object_or_404(
-            UserSubscription, user=request.user, paypal_subscription_id=subscription_id
-        )
+        subscription = get_object_or_404(UserSubscription, user=request.user, paypal_subscription_id=subscription_id)
         subscription.delete()
 
         context = {"title": "Subscription Deleted"}
@@ -81,24 +77,18 @@ class UpdateSubscription(LoginRequiredMixin, View):
         )
 
         access_token = get_access_token()
-        approve_link = update_subscription_paypal(
-            access_token, subscription_id, new_plan
-        )
+        approve_link = update_subscription_paypal(access_token, subscription_id, new_plan)
 
         if approve_link:
             return redirect(approve_link)
-        return HttpResponse(
-            "Unable to obtain the approval link. Please try again later."
-        )
+        return HttpResponse("Unable to obtain the approval link. Please try again later.")
 
 
 class PaypalUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         try:
-            subscription = get_object_or_404(
-                UserSubscription, user=request.user, is_active=True
-            )
+            subscription = get_object_or_404(UserSubscription, user=request.user, is_active=True)
             context = {"subscription_id": subscription.paypal_subscription_id}
             return render(
                 request,
@@ -106,9 +96,7 @@ class PaypalUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
                 context,
             )
         except UserSubscription.DoesNotExist:
-            return render(
-                request, "subscriptions/paypal_update_subscription_confirmed.html"
-            )
+            return render(request, "subscriptions/paypal_update_subscription_confirmed.html")
 
 
 class DjangoUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
@@ -118,22 +106,16 @@ class DjangoUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
             access_token = get_access_token()
             current_plan_id = get_current_subscription(access_token, subscription_id)
 
-            subscription_plan = get_object_or_404(
-                SubscriptionPlan, paypal_plan_id=current_plan_id
-            )
+            subscription_plan = get_object_or_404(SubscriptionPlan, paypal_plan_id=current_plan_id)
 
-            updated = UserSubscription.objects.filter(
-                user=request.user, paypal_subscription_id=subscription_id
-            ).update(plan=subscription_plan, is_active=True)
+            updated = UserSubscription.objects.filter(user=request.user, paypal_subscription_id=subscription_id).update(
+                plan=subscription_plan, is_active=True
+            )
 
             if not updated:
-                return HttpResponse(
-                    "Subscription not found", status=HTTPStatus.NOT_FOUND
-                )
+                return HttpResponse("Subscription not found", status=HTTPStatus.NOT_FOUND)
 
-            return render(
-                request, "subscriptions/django_update_subscription_confirmed.html"
-            )
+            return render(request, "subscriptions/django_update_subscription_confirmed.html")
 
         except UserSubscription.DoesNotExist:
             return HttpResponse("Subscription not found", status=HTTPStatus.NOT_FOUND)

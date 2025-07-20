@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls.base import reverse_lazy
 from django.views.generic import DetailView, ListView
@@ -8,7 +9,6 @@ from core.utils.paginator import paginator
 from images.forms import ImageCreateForm
 from images.models import Images
 from subscriptions.models import UserSubscription
-from django.contrib import messages
 
 
 class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
@@ -31,9 +31,7 @@ class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
 
         try:
             user_subscription = (
-                UserSubscription.objects.select_related("plan")
-                .only("plan__name")
-                .get(user=self.request.user)
+                UserSubscription.objects.select_related("plan").only("plan__name").get(user=self.request.user)
             )
             user_subscription_plan = user_subscription.plan.name
             allowed_plans = self.ALLOWED_PLANS
@@ -70,9 +68,7 @@ class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
 
         try:
             user_subscription = (
-                UserSubscription.objects.select_related("plan")
-                .only("plan__name")
-                .get(user=self.request.user)
+                UserSubscription.objects.select_related("plan").only("plan__name").get(user=self.request.user)
             )
             user_subscription_plan = user_subscription.plan.name
             allowed_plans = self.ALLOWED_PLANS
@@ -97,5 +93,5 @@ class ImageCreateView(LoginRequiredMixin, TitleMixin, CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Please correct the errors below.')
+        messages.error(self.request, "Please correct the errors below.")
         return super().form_invalid(form)

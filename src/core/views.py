@@ -98,12 +98,8 @@ class ImageList(TitleMixin, ListView):
 
 class SubscriptionPlansView(CacheMixin, LoginRequiredMixin, View):
     def get(self, request):
-        basic_plan = self.set_get_cache(
-            SubscriptionPlan.objects.filter(name="Basic").first(), "basic_plan", 600
-        )
-        premium_plan = self.set_get_cache(
-            SubscriptionPlan.objects.filter(name="Premium").first(), "premium_plan", 600
-        )
+        basic_plan = self.set_get_cache(SubscriptionPlan.objects.filter(name="Basic").first(), "basic_plan", 600)
+        premium_plan = self.set_get_cache(SubscriptionPlan.objects.filter(name="Premium").first(), "premium_plan", 600)
         enterprise_plan = self.set_get_cache(
             SubscriptionPlan.objects.filter(name="Enterprise").first(),
             "enterprise_plan",
@@ -111,9 +107,7 @@ class SubscriptionPlansView(CacheMixin, LoginRequiredMixin, View):
         )
 
         try:
-            user_subscription = UserSubscription.objects.select_related("plan").get(
-                user=request.user
-            )
+            user_subscription = UserSubscription.objects.select_related("plan").get(user=request.user)
             subscription_id = user_subscription.paypal_subscription_id
             subscription_plan = user_subscription.plan.name
         except UserSubscription.DoesNotExist:
@@ -149,9 +143,7 @@ def ajax_contact_form(request):
             data = {"bool": False}
             return JsonResponse({"data": data})
 
-        contact = ContactUs.objects.create(
-            name=name, email=email, message=message, created_at=timezone.now()
-        )
+        contact = ContactUs.objects.create(name=name, email=email, message=message, created_at=timezone.now())
 
         data = {"bool": True, "message": "<i class='fa fa-exclamation-triangle'></i>"}
         return JsonResponse({"data": data, "title": "Contact Us"})

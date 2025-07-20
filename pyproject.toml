@@ -109,6 +109,9 @@ vine = "5.1.0"
 wcwidth = "0.2.13"
 django-cors-headers = "^4.7.0"
 django-celery-beat = "^2.8.1"
+mypy = "^1.17.0"
+django-stubs = "^5.2.2"
+python-decouple = "^3.8"
 
 
 [build-system]

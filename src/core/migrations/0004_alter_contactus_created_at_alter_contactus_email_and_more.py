@@ -27,20 +27,14 @@ class Migration(migrations.Migration):
                 db_index=True,
                 help_text="Email address for contact",
                 max_length=255,
-                validators=[
-                    django.core.validators.EmailValidator(
-                        message="Invalid email address"
-                    )
-                ],
+                validators=[django.core.validators.EmailValidator(message="Invalid email address")],
                 verbose_name="email",
             ),
         ),
         migrations.AlterField(
             model_name="contactus",
             name="message",
-            field=models.TextField(
-                help_text="Message content", max_length=1024, verbose_name="message"
-            ),
+            field=models.TextField(help_text="Message content", max_length=1024, verbose_name="message"),
         ),
         migrations.AlterField(
             model_name="contactus",

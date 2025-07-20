@@ -46,13 +46,9 @@ class UserRegistrationForm(UserCreationForm):
         has_capital = any(char in capitalize_letters for char in password1)
 
         if not has_special and not has_capital:
-            raise ValidationError(
-                "Password must contain at least one special character and one uppercase letter"
-            )
+            raise ValidationError("Password must contain at least one special character and one uppercase letter")
         elif not has_special:
-            raise ValidationError(
-                "Password must contain at least one special character"
-            )
+            raise ValidationError("Password must contain at least one special character")
         elif not has_capital:
             raise ValidationError("Password must contain at least one uppercase letter")
 
@@ -65,9 +61,7 @@ class UserLoginForm(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput())
     remember_me = forms.BooleanField(
         required=False,
-        widget=forms.CheckboxInput(
-            attrs={"class": "form-check-input", "id": "remember_me"}
-        ),
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input", "id": "remember_me"}),
     )
 
     class Meta:
@@ -77,14 +71,10 @@ class UserLoginForm(AuthenticationForm):
 
 class ProfileForm(forms.ModelForm):
     first_name = forms.CharField(
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Enter first name"}
-        )
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter first name"})
     )
     last_name = forms.CharField(
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Enter last name"}
-        )
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter last name"})
     )
     email = forms.EmailField(
         widget=forms.EmailInput(
@@ -96,9 +86,7 @@ class ProfileForm(forms.ModelForm):
         )
     )
     phone_number = PhoneNumberField(
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Enter phone number"}
-        ),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Enter phone number"}),
         required=False,
     )
     birth_date = forms.DateField(
@@ -120,9 +108,7 @@ class ProfileForm(forms.ModelForm):
         widget=forms.Select(attrs={"class": "form-control"}),
         required=False,
     )
-    avatar = forms.ImageField(
-        required=False, widget=forms.FileInput(attrs={"class": "custom-file-input"})
-    )
+    avatar = forms.ImageField(required=False, widget=forms.FileInput(attrs={"class": "custom-file-input"}))
 
     class Meta:
         model = Profile

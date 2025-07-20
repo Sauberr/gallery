@@ -11,7 +11,6 @@ from django.utils.translation import gettext_lazy as _
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
-
 ALLOWED_HOSTS: List[Any] = ["*", "127.0.0.1", "localhost"]
 
 INTERNAL_IPS: List[str] = [
@@ -213,12 +212,8 @@ AUTHENTICATION_BACKENDS: List[str] = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config(
-    "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", default="", cast=str
-)
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config(
-    "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", default="", cast=str
-)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", default="", cast=str)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", default="", cast=str)
 
 
 SOCIAL_AUTH_PIPELINE: Tuple[str, ...] = (
@@ -259,7 +254,7 @@ DJOSER: Dict[str, str | bool] = {
     "PASSWORD_RESET_CONFIRM_URL": "auth/password-reset/{uid}/{token}",
 }
 
-REST_FRAMEWORK: Dict[str, ...] = {
+REST_FRAMEWORK: Dict[str, Any] = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 3,
     "DEFAULT_RENDERER_CLASSES": [

@@ -26,9 +26,7 @@ class ContactUs(models.Model):
         validators=[EmailValidator(message=_("Invalid email address"))],
         help_text=_("Email address for contact"),
     )
-    message = models.TextField(
-        verbose_name=_("message"), max_length=1024, help_text=_("Message content")
-    )
+    message = models.TextField(verbose_name=_("message"), max_length=1024, help_text=_("Message content"))
     created_at = models.DateTimeField(
         verbose_name=_("created at"),
         auto_now_add=True,
@@ -36,17 +34,17 @@ class ContactUs(models.Model):
     )
 
     class Meta:
-        verbose_name: str = _("Contact Us")
-        verbose_name_plural: str = _("Contact Us")
+        verbose_name = _("Contact Us")
+        verbose_name_plural = _("Contact Us")
 
     def __str__(self):
         return self.name
 
     @classmethod
-    def generate_instances(cls, count) -> None:
+    def generate_instances(cls, count: int) -> None:
         faker = Faker()
         for _ in range(count):
-            cls.objects.create(
+            cls.objects.create(  # type: ignore
                 name=faker.name(),
                 email=faker.email(),
                 message=faker.text(),

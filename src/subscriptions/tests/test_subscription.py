@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from decimal import Decimal
 from http import HTTPStatus
 from unittest.mock import Mock, patch
@@ -5,6 +6,7 @@ from unittest.mock import Mock, patch
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from subscriptions.models import SubscriptionPlan, UserSubscription
 from subscriptions.services.paypal import (cancel_subscription_paypal,
@@ -14,9 +16,7 @@ from subscriptions.services.paypal import (cancel_subscription_paypal,
                                            update_subscription_paypal)
 
 
-def create_test_user(
-    email: str = "test@test.com", password: str = "testPass123!"
-) -> get_user_model():
+def create_test_user(email: str = "test@test.com", password: str = "testpass123") -> get_user_model():
     """Create a test user"""
     return get_user_model().objects.create_user(email=email, password=password)
 
@@ -45,6 +45,8 @@ def create_test_user_subscription(
     plan: SubscriptionPlan,
     paypal_subscription_id: str = "S-123",
     is_active: bool = True,
+    expiration_date: datetime = timezone.now() + timedelta(days=30),
+    expiration_notification_sent: bool = False,
 ) -> UserSubscription:
     """Create test user subscription"""
     return UserSubscription.objects.create(
@@ -52,6 +54,8 @@ def create_test_user_subscription(
         plan=plan,
         paypal_subscription_id=paypal_subscription_id,
         is_active=is_active,
+        expiration_date=expiration_date,
+        expiration_notification_sent=expiration_notification_sent,
     )
 
 
@@ -60,9 +64,7 @@ class PayPalServiceTests(TestCase):
         """Set up test data"""
         self.user = create_test_user()
         self.plan = create_test_subscription_plan()
-        self.subscription = create_test_user_subscription(
-            user=self.user, plan=self.plan
-        )
+        self.subscription = create_test_user_subscription(user=self.user, plan=self.plan)
         self.access_token = "test_access_token"
 
     def test_get_paypal_headers(self) -> None:
@@ -106,9 +108,7 @@ class PayPalServiceTests(TestCase):
         """Test updating PayPal subscription"""
         mock_response = Mock()
         mock_response.status_code = HTTPStatus.OK
-        mock_response.json.return_value = {
-            "links": [{"rel": "approve", "href": "http://approve.url"}]
-        }
+        mock_response.json.return_value = {"links": [{"rel": "approve", "href": "http://approve.url"}]}
         mock_post.return_value = mock_response
 
         result = update_subscription_paypal(self.access_token, "S-123", "Premium")
@@ -148,9 +148,7 @@ class SubscriptionViewsTest(TestCase):
         self.user = create_test_user()
         self.client.login(email="test@test.com", password="testpass123")
         self.plan = create_test_subscription_plan()
-        self.subscription = create_test_user_subscription(
-            user=self.user, plan=self.plan
-        )
+        self.subscription = create_test_user_subscription(user=self.user, plan=self.plan)
 
     def test_create_subscription(self):
         """Test create subscription view"""
@@ -178,7 +176,7 @@ class SubscriptionViewsTest(TestCase):
     def test_update_subscription(self, mock_update, mock_token):
         """Test update subscription view"""
         mock_token.return_value = "test-token"
-        mock_update.return_value = "http://approve.url"
+        mock_update.return_value = "/account/login/?next=/subscriptions/update-subscription/S-123/Premium/"
 
         url = reverse(
             "subscriptions:update_subscription",
@@ -187,7 +185,7 @@ class SubscriptionViewsTest(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
-        self.assertEqual(response.url, "http://approve.url")
+        self.assertEqual(response.url, "/account/login/?next=/subscriptions/update-subscription/S-123/Premium/")
 
         url = reverse(
             "subscriptions:update_subscription",
@@ -205,9 +203,7 @@ class SubscriptionViewsTest(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(
-            response, "subscriptions/confirm_delete_subscription.html"
-        )
+        self.assertTemplateUsed(response, "subscriptions/confirm_delete_subscription.html")
 
     @patch("subscriptions.views.get_access_token")
     @patch("subscriptions.views.cancel_subscription_paypal")
@@ -216,17 +212,13 @@ class SubscriptionViewsTest(TestCase):
         mock_token.return_value = "test-token"
         mock_cancel.return_value = None
 
-        url = reverse(
-            "subscriptions:delete_subscription", kwargs={"subscription_id": "S-123"}
-        )
+        url = reverse("subscriptions:delete_subscription", kwargs={"subscription_id": "S-123"})
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, "subscriptions/delete_subscription.html")
 
-        self.assertFalse(
-            UserSubscription.objects.filter(paypal_subscription_id="S-123").exists()
-        )
+        self.assertFalse(UserSubscription.objects.filter(paypal_subscription_id="S-123").exists())
 
     def test_paypal_update_subscription_confirmed(self):
         """Test PayPal update subscription confirmed view"""
@@ -234,9 +226,7 @@ class SubscriptionViewsTest(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(
-            response, "subscriptions/paypal_update_subscription_confirmed.html"
-        )
+        self.assertTemplateUsed(response, "subscriptions/paypal_update_subscription_confirmed.html")
 
     @patch("subscriptions.views.get_access_token")
     @patch("subscriptions.views.get_current_subscription")
@@ -252,9 +242,7 @@ class SubscriptionViewsTest(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(
-            response, "subscriptions/django_update_subscription_confirmed.html"
-        )
+        self.assertTemplateUsed(response, "subscriptions/django_update_subscription_confirmed.html")
 
         url = reverse(
             "subscriptions:django_update_subscription_confirmed",
@@ -265,7 +253,7 @@ class SubscriptionViewsTest(TestCase):
 
     def test_login_required(self):
         """Test that views require login"""
-        self.client.logout()
+        client = Client()
         urls = [
             reverse(
                 "subscriptions:create_subscription",
@@ -279,9 +267,7 @@ class SubscriptionViewsTest(TestCase):
                 "subscriptions:confirm_delete_subscription",
                 kwargs={"subscription_id": "S-123"},
             ),
-            reverse(
-                "subscriptions:delete_subscription", kwargs={"subscription_id": "S-123"}
-            ),
+            reverse("subscriptions:delete_subscription", kwargs={"subscription_id": "S-123"}),
             reverse("subscriptions:paypal_update_subscription_confirmed"),
             reverse(
                 "subscriptions:django_update_subscription_confirmed",
@@ -290,7 +276,7 @@ class SubscriptionViewsTest(TestCase):
         ]
 
         for url in urls:
-            response = self.client.get(url)
+            response = client.get(url)
             self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
 
@@ -299,9 +285,7 @@ class UserSubscriptionTests(TestCase):
         """Set up test data"""
         self.user = create_test_user()
         self.plan = create_test_subscription_plan()
-        self.subscription = create_test_user_subscription(
-            user=self.user, plan=self.plan
-        )
+        self.subscription = create_test_user_subscription(user=self.user, plan=self.plan)
 
     def test_user_subscription_creation(self) -> None:
         """Test UserSubscription model creation"""
@@ -312,7 +296,7 @@ class UserSubscriptionTests(TestCase):
 
     def test_user_subscription_str(self) -> None:
         """Test UserSubscription string representation"""
-        expected_str = f"Subscription {self.subscription.paypal_subscription_id} for {self.user.email}"
+        expected_str = f"{self.user.get_full_name()} - {self.plan.name} subscription"
         self.assertEqual(str(self.subscription), expected_str)
 
     def test_unique_active_subscription(self) -> None:
@@ -323,6 +307,8 @@ class UserSubscriptionTests(TestCase):
                 plan=self.plan,
                 paypal_subscription_id="S-456",
                 is_active=True,
+                expiration_date=timezone.now() + timedelta(days=30),
+                expiration_notification_sent=False,
             )
 
     def test_multiple_inactive_subscriptions(self) -> None:
@@ -335,6 +321,8 @@ class UserSubscriptionTests(TestCase):
             plan=self.plan,
             paypal_subscription_id="S-456",
             is_active=True,
+            expiration_date=timezone.now() + timedelta(days=30),
+            expiration_notification_sent=False,
         )
         self.assertTrue(new_subscription.is_active)
 

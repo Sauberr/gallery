@@ -19,8 +19,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="images",
             name="title",
-            field=models.CharField(
-                max_length=200, validators=[django.core.validators.MinValueValidator(3)]
-            ),
+            field=models.CharField(max_length=200, validators=[django.core.validators.MinValueValidator(3)]),
         ),
     ]

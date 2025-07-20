@@ -28,7 +28,7 @@ class TestRegistrationUser(CommonTest):
     def test_common(self):
         self.common_test()
 
-    def test_user_registration_post_success(self):  # 3
+    def test_user_registration_post_success(self):
         response = self.client.post(self.path, self.data)
         email = self.data["email"]
         self.assertFalse(get_user_model().objects.filter(email=email).exists())
@@ -40,6 +40,4 @@ class TestRegistrationUser(CommonTest):
         user = get_user_model().objects.create(email=self.data["email"])
         response = self.client.post(self.path, self.data)
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertContains(
-            response, "User with this Email address already exists.", html=True
-        )
+        self.assertContains(response, "User with this Email address already exists.", html=True)

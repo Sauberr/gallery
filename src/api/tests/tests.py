@@ -17,13 +17,9 @@ def create_test_user(email="test@example.com", password="TestPass123!"):
     )
 
 
-def create_test_admin(
-    email="admin@example.com", password="AdminPass123!", is_staff=True
-):
+def create_test_admin(email="admin@example.com", password="AdminPass123!", is_staff=True):
     """Create a test admin user"""
-    return get_user_model().objects.create_superuser(
-        email=email, password=password, is_staff=is_staff
-    )
+    return get_user_model().objects.create_superuser(email=email, password=password, is_staff=is_staff)
 
 
 def create_test_subscription_plan(
@@ -213,9 +209,7 @@ class APITests(APITestCase):
     def test_user_subscriptions_viewset(self):
         """Test user subscriptions ViewSet"""
         list_url = reverse("api:user-subscriptions-list")
-        detail_url = reverse(
-            "api:user-subscriptions-detail", kwargs={"pk": self.subscription.pk}
-        )
+        detail_url = reverse("api:user-subscriptions-detail", kwargs={"pk": self.subscription.pk})
 
         # Test without authentication
         self.client.credentials()
@@ -245,9 +239,7 @@ class APITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Test POST method (should be forbidden)
-        response = self.client.post(
-            list_url, {"user": self.user.id, "plan": self.plan.id}
-        )
+        response = self.client.post(list_url, {"user": self.user.id, "plan": self.plan.id})
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
         # Test PUT method (should be forbidden)
@@ -285,15 +277,11 @@ class APITests(APITestCase):
 
         # Test token refresh
         refresh_token = response.data["refresh"]
-        response = self.client.post(
-            reverse("api:token_refresh"), {"refresh": refresh_token}
-        )
+        response = self.client.post(reverse("api:token_refresh"), {"refresh": refresh_token})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("access", response.data)
 
         # Test token verify
         access_token = response.data["access"]
-        response = self.client.post(
-            reverse("api:token_verify"), {"token": access_token}
-        )
+        response = self.client.post(reverse("api:token_verify"), {"token": access_token})
         self.assertEqual(response.status_code, status.HTTP_200_OK)

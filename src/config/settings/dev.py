@@ -6,7 +6,7 @@ DEBUG = True
 
 SECRET_KEY = "django-secret-key"
 
-ALLOWED_HOSTS: list[Any] = ["*", "127.0.0.1"]
+ALLOWED_HOSTS: list = ["*", "127.0.0.1"]
 
 CORS_ALLOW_ALL_ORIGINS: bool = True
 CORS_ALLOW_CREDENTIALS: bool = True

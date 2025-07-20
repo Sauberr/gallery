@@ -1,9 +1,7 @@
 from typing import Dict
 
 
-def cleanup_social_account(
-    backend, uid, user=None, *args, **kwargs
-) -> Dict[str, object]:
+def cleanup_social_account(backend, uid, user=None, *args, **kwargs) -> Dict[str, object]:
     user.avatar = kwargs["response"]["picture"]
     user.save()
     return {"user": user}

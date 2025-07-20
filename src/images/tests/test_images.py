@@ -17,12 +17,8 @@ def create_user_with_email(email="user@example.com", password="TestPassword123!"
     return get_user_model().objects.create_user(email=email, password=password)
 
 
-def create_admin_user_with_email(
-    email="admin@example.com", password="TestPassword123!", is_staff=True
-):
-    return get_user_model().objects.create_superuser(
-        email=email, password=password, is_staff=is_staff
-    )
+def create_admin_user_with_email(email="admin@example.com", password="TestPassword123!", is_staff=True):
+    return get_user_model().objects.create_superuser(email=email, password=password, is_staff=is_staff)
 
 
 def create_subscription_plan(
@@ -43,9 +39,7 @@ def create_subscription_plan(
     )
 
 
-def create_user_subscription(
-    user, plan, paypal_subscription_id="S-123", is_active=True
-):
+def create_user_subscription(user, plan, paypal_subscription_id="S-123", is_active=True):
     return UserSubscription.objects.create(
         user=user,
         plan=plan,
@@ -82,9 +76,7 @@ class ImagesListTests(CommonTest):
         self.user = create_user_with_email()
         self.admin_user = create_admin_user_with_email()
         self.subscription_plan = create_subscription_plan()
-        self.user_subscription = create_user_subscription(
-            user=self.user, plan=self.subscription_plan
-        )
+        self.user_subscription = create_user_subscription(user=self.user, plan=self.subscription_plan)
         self.image1 = create_images(
             title="Image 1",
             author="Author 1",
@@ -125,23 +117,17 @@ class ImagesListTests(CommonTest):
         response = self.client.get(IMAGES_URL)
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertIn("custom_range", response.context_data)
-        self.assertEqual(
-            list(response.context_data["object_list"]), list(self.images[:2])
-        )
+        self.assertEqual(list(response.context_data["object_list"]), list(self.images[:2]))
 
     def test_images_cache(self):
         self.client.force_login(self.user)
         response = self.client.get(IMAGES_URL)
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertIn("images", response.context_data)
-        self.assertEqual(
-            list(response.context_data["object_list"]), list([self.image1, self.image2])
-        )
+        self.assertEqual(list(response.context_data["object_list"]), list([self.image1, self.image2]))
 
     def test_user_subscription_properties(self):
-        self.assertEqual(
-            self.user_subscription.subscriber_name, self.user.get_full_name()
-        )
+        self.assertEqual(self.user_subscription.subscriber_name, self.user.get_full_name())
         self.assertEqual(self.user_subscription.subscription_plan, "Premium")
         self.assertEqual(self.user_subscription.subscription_cost, Decimal("9.99"))
 
@@ -170,9 +156,7 @@ class ImagesListTests(CommonTest):
 
         # Check pagination data
         self.assertEqual(len(response.context_data["images"]), 4)  # 4 items per page
-        self.assertEqual(
-            response.context_data["custom_range"], range(1, 2)
-        )  # Only page 1
+        self.assertEqual(response.context_data["custom_range"], range(1, 2))  # Only page 1
         self.assertTrue(response.context_data["images"].has_next())
         self.assertFalse(response.context_data["images"].has_previous())
 
@@ -215,9 +199,7 @@ class ImagesListTests(CommonTest):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         # Check last page data
-        self.assertEqual(
-            len(response.context_data["images"]), 2
-        )  # Last page with remaining items
+        self.assertEqual(len(response.context_data["images"]), 2)  # Last page with remaining items
         self.assertEqual(response.context_data["custom_range"], range(1, 3))
         self.assertFalse(response.context_data["images"].has_next())
         self.assertTrue(response.context_data["images"].has_previous())
@@ -230,9 +212,7 @@ class ImagesListTests(CommonTest):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         # Should return last available page
-        self.assertEqual(
-            len(response.context_data["images"]), 2
-        )  # Only 2 images in setup
+        self.assertEqual(len(response.context_data["images"]), 2)  # Only 2 images in setup
         self.assertEqual(response.context_data["custom_range"], range(1, 2))
 
     def test_pagination_non_numeric_page(self):
@@ -252,9 +232,7 @@ class ImagesListTests(CommonTest):
         self.client.force_login(self.user)
         response = self.client.get(IMAGES_URL)
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            response.context_data["allowed_plans"]["Premium"], ["Basic", "Premium"]
-        )
+        self.assertEqual(response.context_data["allowed_plans"]["Premium"], ["Basic", "Premium"])
 
         # Test Basic subscription
         basic_plan = create_subscription_plan(
@@ -304,9 +282,7 @@ class ImageDetailTests(CommonTest):
         self.client = Client()
         self.user = create_user_with_email()
         self.subscription_plan = create_subscription_plan()
-        self.user_subscription = create_user_subscription(
-            user=self.user, plan=self.subscription_plan
-        )
+        self.user_subscription = create_user_subscription(user=self.user, plan=self.subscription_plan)
         self.image = create_images()
         # Переопределяем path для detail view, так как нужен pk
         self.path = reverse(self.path_name, kwargs={"pk": self.image.pk})
@@ -334,9 +310,7 @@ class ImageDetailTests(CommonTest):
         self.client.force_login(self.user)
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(
-            response.context_data["allowed_plans"]["Premium"], ["Basic", "Premium"]
-        )
+        self.assertEqual(response.context_data["allowed_plans"]["Premium"], ["Basic", "Premium"])
 
     def test_image_detail_invalid_id(self):
         """Test image detail view with invalid image id"""

@@ -20,8 +20,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="images",
-            index=models.Index(
-                fields=["title", "author"], name="images_imag_title_162072_idx"
-            ),
+            index=models.Index(fields=["title", "author"], name="images_imag_title_162072_idx"),
         ),
     ]

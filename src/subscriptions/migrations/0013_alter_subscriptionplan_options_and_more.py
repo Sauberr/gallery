@@ -189,8 +189,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="usersubscription",
-            index=models.Index(
-                fields=["is_active"], name="subscriptio_is_acti_9ca025_idx"
-            ),
+            index=models.Index(fields=["is_active"], name="subscriptio_is_acti_9ca025_idx"),
         ),
     ]

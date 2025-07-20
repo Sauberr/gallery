@@ -65,8 +65,8 @@ class SubscriptionPlan(models.Model):
             models.Index(fields=["cost"]),
             models.Index(fields=["name"]),
         ]
-        verbose_name: str = _("Subscription Plan")
-        verbose_name_plural: str = _("Subscription Plans")
+        verbose_name = _("Subscription Plan")
+        verbose_name_plural = _("Subscription Plans")
         ordering = ["cost", "name"]
 
     def __str__(self):
@@ -121,8 +121,8 @@ class UserSubscription(models.Model):
     )
 
     class Meta:
-        verbose_name: str = _("User Subscription")
-        verbose_name_plural: str = _("User Subscriptions")
+        verbose_name = _("User Subscription")
+        verbose_name_plural = _("User Subscriptions")
         indexes = [
             models.Index(fields=["paypal_subscription_id"]),
             models.Index(fields=["user"]),
@@ -157,7 +157,7 @@ class UserSubscription(models.Model):
         return (self.expiration_date - now()).days
 
     @property
-    def send_expiration_notification(self):
+    def send_expiration_notification(self) -> bool:
         if not self.expiration_date or self.expiration_notification_sent:
             return False
 

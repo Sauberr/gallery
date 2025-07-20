@@ -1,6 +1,6 @@
 from django.urls import path
 
-from images.views import ImageDetail, ImagesList, ImageCreateView
+from images.views import ImageCreateView, ImageDetail, ImagesList
 
 app_name: str = "images"
 

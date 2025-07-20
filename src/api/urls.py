@@ -31,9 +31,7 @@ router = routers.DefaultRouter()
 
 router.register(r"images", ImagesViewSet, basename="images")
 router.register(r"subscriptions", SubscriptionPlanView, basename="subscriptions")
-router.register(
-    r"user-subscriptions", UserSubscriptionView, basename="user-subscriptions"
-)
+router.register(r"user-subscriptions", UserSubscriptionView, basename="user-subscriptions")
 
 urlpatterns = [
     path("", include(router.urls)),

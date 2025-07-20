@@ -36,9 +36,7 @@ class Images(models.Model):
         auto_now=True,
         help_text=_("Timestamp when the image was last updated"),
     )
-    author = models.CharField(
-        verbose_name=_("author"), max_length=200, help_text=_("Author of the image")
-    )
+    author = models.CharField(verbose_name=_("author"), max_length=200, help_text=_("Author of the image"))
     description = models.TextField(
         verbose_name=_("description"),
         max_length=1024,
@@ -75,8 +73,8 @@ class Images(models.Model):
     )
 
     class Meta:
-        verbose_name: str = _("Image")
-        verbose_name_plural: str = _("Images")
+        verbose_name = _("Image")
+        verbose_name_plural = _("Images")
         ordering = ["-created_at", "updated_at"]
         indexes = [models.Index(fields=["title", "author"])]
 
@@ -84,13 +82,13 @@ class Images(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("images:image-list", args=[self.id])
+        return reverse("images:image-list", args=[self.id])  # type: ignore
 
     @classmethod
     def generate_instances(cls, count) -> None:
         faker = Faker()
         for _ in range(count):
-            cls.objects.create(
+            cls.objects.create(  # type: ignore
                 title=faker.sentence(),
                 image=faker.image_url(),
                 author=faker.name(),

@@ -15,9 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="images",
             name="author",
-            field=models.CharField(
-                help_text="Author of the image", max_length=200, verbose_name="author"
-            ),
+            field=models.CharField(help_text="Author of the image", max_length=200, verbose_name="author"),
         ),
         migrations.AlterField(
             model_name="images",
@@ -45,11 +43,7 @@ class Migration(migrations.Migration):
             field=models.ImageField(
                 help_text="Image file to be uploaded",
                 upload_to="images/",
-                validators=[
-                    django.core.validators.FileExtensionValidator(
-                        ["png", "jpg", "jpeg", "gif"]
-                    )
-                ],
+                validators=[django.core.validators.FileExtensionValidator(["png", "jpg", "jpeg", "gif"])],
                 verbose_name="image",
             ),
         ),

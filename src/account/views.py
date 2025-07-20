@@ -130,17 +130,10 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
         profile = user.profile
         return {
             **{
-                field: (
-                    user.format_phone_number()
-                    if field == "phone_number"
-                    else getattr(user, field)
-                )
+                field: (user.format_phone_number() if field == "phone_number" else getattr(user, field))
                 for field in ["first_name", "last_name", "email", "phone_number"]
             },
-            **{
-                field: getattr(profile, field)
-                for field in ["birth_date", "sex", "location", "status"]
-            },
+            **{field: getattr(profile, field) for field in ["birth_date", "sex", "location", "status"]},
         }
 
     def _update_profile(self, form):
@@ -163,13 +156,11 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
         profile = user.profile
 
         user_changed = any(
-            form.cleaned_data[field] != getattr(user, field)
-            for field in ["first_name", "last_name", "phone_number"]
+            form.cleaned_data[field] != getattr(user, field) for field in ["first_name", "last_name", "phone_number"]
         )
 
         profile_changed = any(
-            form.cleaned_data[field] != getattr(profile, field)
-            for field in ["birth_date", "sex", "location", "status"]
+            form.cleaned_data[field] != getattr(profile, field) for field in ["birth_date", "sex", "location", "status"]
         )
 
         avatar_changed = "avatar" in self.request.FILES
@@ -188,9 +179,7 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
             user.mfa_secret = pyotp.random_base32()
             user.save()
 
-        otp_uri = pyotp.totp.TOTP(user.mfa_secret).provisioning_uri(
-            name=user.email, issuer_name="Test Assignment"
-        )
+        otp_uri = pyotp.totp.TOTP(user.mfa_secret).provisioning_uri(name=user.email, issuer_name="Test Assignment")
 
         qr = qrcode.make(otp_uri)
         buffer = io.BytesIO()

@@ -42,11 +42,7 @@ class Migration(migrations.Migration):
                     models.EmailField(
                         db_index=True,
                         max_length=255,
-                        validators=[
-                            django.core.validators.EmailValidator(
-                                message="Invalid email address"
-                            )
-                        ],
+                        validators=[django.core.validators.EmailValidator(message="Invalid email address")],
                     ),
                 ),
                 ("message", models.TextField(max_length=1024)),
