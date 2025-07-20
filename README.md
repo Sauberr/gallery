@@ -11,6 +11,7 @@ Additionally, small JavaScript scripts have been developed for features such as 
 ## Stack:
 
 - [Python](https://www.python.org/downloads/)
+- [Django](https://www.djangoproject.com/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Redis](https://redis.io/)
 - [Celery](https://docs.celeryq.dev/en/stable/)
