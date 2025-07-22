@@ -71,18 +71,16 @@ def create_test_image(
 class APITests(APITestCase):
     def setUp(self):
         """Set up test data"""
-        # Create users
+
         self.user = create_test_user()
         self.admin = create_test_admin()
 
-        # Get user token
         response = self.client.post(
             reverse("api:token_obtain_pair"),
             {"email": "test@example.com", "password": "TestPass123!"},
         )
         self.token = response.data["access"]
 
-        # Get admin token
         response = self.client.post(
             reverse("api:token_obtain_pair"),
             {"email": "admin@example.com", "password": "AdminPass123!"},
@@ -91,7 +89,6 @@ class APITests(APITestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
-        # Create test data
         self.plan = create_test_subscription_plan()
         self.subscription = create_test_user_subscription(self.user, self.plan)
         self.image = create_test_image()
@@ -101,34 +98,28 @@ class APITests(APITestCase):
         list_url = reverse("api:images-list")
         detail_url = reverse("api:images-detail", kwargs={"pk": self.image.pk})
 
-        # Test without authentication
         self.client.credentials()
         response = self.client.get(list_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # Test with user authentication
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
         response = self.client.get(list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(len(response.data) > 0)
 
-        # Test detail view
         response = self.client.get(detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["title"], self.image.title)
 
-        # Test search
         search_url = f"{list_url}?search={self.image.title}"
         response = self.client.get(search_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(len(response.data) > 0)
 
-        # Test ordering
         ordering_url = f"{list_url}?ordering=title"
         response = self.client.get(ordering_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Test POST method (should be forbidden)
         response = self.client.post(
             list_url,
             {
@@ -141,15 +132,12 @@ class APITests(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # Test PUT method (should be forbidden)
         response = self.client.put(detail_url, {"title": "Updated Title"})
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # Test DELETE method (should be forbidden)
         response = self.client.delete(detail_url)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # Test with admin token
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.admin_token}")
         response = self.client.get(list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -159,49 +147,40 @@ class APITests(APITestCase):
         list_url = reverse("api:subscriptions-list")
         detail_url = reverse("api:subscriptions-detail", kwargs={"pk": self.plan.pk})
 
-        # Test without authentication
         self.client.credentials()
         response = self.client.get(list_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # Test with user authentication
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
         response = self.client.get(list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(len(response.data) > 0)
 
-        # Test detail view
         response = self.client.get(detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], self.plan.name)
 
-        # Test search
         search_url = f"{list_url}?search={self.plan.name}"
         response = self.client.get(search_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(len(response.data) > 0)
 
-        # Test ordering
         ordering_url = f"{list_url}?ordering=cost"
         response = self.client.get(ordering_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Test POST method (should be forbidden)
         response = self.client.post(
             list_url,
             {"name": "New Plan", "description": "New Description", "cost": "19.99"},
         )
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # Test PUT method (should be forbidden)
         response = self.client.put(detail_url, {"name": "Updated Plan"})
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # Test DELETE method (should be forbidden)
         response = self.client.delete(detail_url)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # Test with admin token
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.admin_token}")
         response = self.client.get(list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -211,46 +190,37 @@ class APITests(APITestCase):
         list_url = reverse("api:user-subscriptions-list")
         detail_url = reverse("api:user-subscriptions-detail", kwargs={"pk": self.subscription.pk})
 
-        # Test without authentication
         self.client.credentials()
         response = self.client.get(list_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # Test with user authentication
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token}")
         response = self.client.get(list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(len(response.data) > 0)
 
-        # Test detail view
         response = self.client.get(detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["user"]["email"], self.user.email)
 
-        # Test search
         search_url = f"{list_url}?search={self.user.email}"
         response = self.client.get(search_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(len(response.data) > 0)
 
-        # Test ordering
         ordering_url = f"{list_url}?ordering=create_datetime"
         response = self.client.get(ordering_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Test POST method (should be forbidden)
         response = self.client.post(list_url, {"user": self.user.id, "plan": self.plan.id})
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # Test PUT method (should be forbidden)
         response = self.client.put(detail_url, {"is_active": False})
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # Test DELETE method (should be forbidden)
         response = self.client.delete(detail_url)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # Test with admin token
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.admin_token}")
         response = self.client.get(list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -266,7 +236,6 @@ class APITests(APITestCase):
 
     def test_token_endpoints(self):
         """Test JWT token endpoints"""
-        # Test token obtain
         response = self.client.post(
             reverse("api:token_obtain_pair"),
             {"email": "test@example.com", "password": "TestPass123!"},
@@ -275,13 +244,11 @@ class APITests(APITestCase):
         self.assertIn("access", response.data)
         self.assertIn("refresh", response.data)
 
-        # Test token refresh
         refresh_token = response.data["refresh"]
         response = self.client.post(reverse("api:token_refresh"), {"refresh": refresh_token})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("access", response.data)
 
-        # Test token verify
         access_token = response.data["access"]
         response = self.client.post(reverse("api:token_verify"), {"token": access_token})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
