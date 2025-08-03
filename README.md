@@ -31,6 +31,7 @@ This project exemplifies modern web development practices with a robust CI/CD pi
 ## Stack:
 
  - **Backend**: [**`Python 3.12+`**](https://python.org/)
+ - **Frontent**: HTML, CSS, JavaScript with AJAX for seamless interaction
  - **Framework**: [**`Django 4.2+`**](https://djangoproject.com/)
  - **Database**: [**`PostgreSQL`**](https://postgresql.org/)
  - **Search Engine**: [**`Elasticsearch 8.0+`**](https://elastic.co/elasticsearch)
@@ -38,52 +39,44 @@ This project exemplifies modern web development practices with a robust CI/CD pi
  - **Task Queue**: [**`Celery`**](https://docs.celeryq.dev/en/stable/)
  - **API**: [**`Django REST Framework`**](https://django-rest-framework.org/)
  - **Deployment**: [**`Docker`**](https://docker.com/)
+ - **Web Server**: [**`Nginx`**](https://nginx.org/) & [**`Gunicorn`**](https://gunicorn.org/)
+
+<div align="center">
+
+<img src="demonstration/1.png" width="800">
+  
+<img src="demonstration/2.png" width="800">
+<img src="demonstration/3.png" width="800">
+
+<img src="demonstration/4.png" width="800">
+<img src="demonstration/5.png" width="800">
+
+<img src="demonstration/6.png" width="800">
+<img src="demonstration/7.png" width="800">
+
+<img src="demonstration/8.png" width="800"> 
+
+</div>
 
 ## 🚀 Features
 
-### User Experience
-* Three-tier subscription system (Basic, Premium, Enterprise)
-* Secure PayPal payment integration
-* Advanced artwork search powered by Elasticsearch
-* High-resolution artwork downloads
-* Personalized user profiles and galleries
-* Social media authentication (Google, GitHub, Facebook)
-* Two-factor authentication (2FA) for enhanced security
-* Email and phone number verification
-* Password recovery and reset functionality
-
-### Content Management
-* Comprehensive artwork catalog with advanced filtering
-* Artist profiles and portfolio management
-* Artwork categorization and tagging system
-* High-quality image processing and optimization
-* Batch download capabilities for premium users
-* Favorites and wishlist functionality
-
-### Performance & Scalability
-* Redis caching with Django-Cachalot for global optimization
-* Elasticsearch integration for lightning-fast search
-* SQL query optimization with select_related techniques
-* Background task processing with Celery
-* Responsive design for all devices
-* Progressive web app (PWA) capabilities
-
-### Development Features
-* Comprehensive REST API with JWT authentication
-* 85% test coverage with unit and API tests
-* CI/CD pipeline for automated deployment
-* Code quality tools (Flake8, Ruff, isort, Black)
-* Type safety with Django-Stubs
-* Faker library for realistic test data generation
-* Custom JavaScript utilities for enhanced UX
-
-### Administrative Tools
-* Powerful Django admin panel for content management
-* User subscription and payment tracking
-* Artist onboarding and content approval workflow
-* Analytics dashboard with subscription metrics
-* Content moderation and quality control
-* Email notification management system
+* **User Registration**: Sign up with email or phone verification; all users start with the Basic plan.
+* **Authentication**: Social media login (Google, GitHub), two-factor authentication (2FA), JWT tokens, custom email/phone login.
+* **Artwork Download**: Download unique artworks through subscription plans with PayPal payment processing.
+* **Subscription Plans**:
+  * **Basic**: Access to limited artwork collection.
+  * **Premium**: Access to premium artwork collection + additional features.
+  * **Enterprise**: All Premium features + exclusive enterprise content.
+* **Search**: Elasticsearch integration for fast and efficient artwork search and filtering.
+* **Frontend**: Responsive interface (HTML, CSS, JS) with custom JavaScript for photo downloads and timer-based messages.
+* **Performance**: Optimized with Redis caching and Django-Cachalot for global caching, Celery for background tasks.
+* **Testing**: 85% test coverage with comprehensive unit and API tests using pytest and Faker for test data.
+* **Admin Interface**: Manage users, subscriptions, artworks, and artist content via Django Admin.
+* **API**: Fully functional REST API with JWT authentication, filters, and search capabilities.
+* **Code Quality**: Maintained with Flake8, Ruff, isort, Black, and Django-Stubs for enhanced type safety.
+* **Database Optimization**: SQL query performance optimization using select_related and Redis caching.
+* **Payment Processing**: Secure PayPal integration for subscription management.
+* **CI/CD Pipeline**: Automated deployment and quality control with robust testing.
 
 ## 🛠️ Local Development
 
@@ -125,32 +118,7 @@ This project exemplifies modern web development practices with a robust CI/CD pi
    DATABASE_HOST=localhost
    DATABASE_PORT=5432
    
-   # Redis Configuration
-   REDIS_HOST=localhost
-   REDIS_PORT=6379
-   REDIS_DB=1
-   
-   # Elasticsearch Configuration
-   ELASTICSEARCH_HOST=localhost
-   ELASTICSEARCH_PORT=9200
-   
-   # PayPal Configuration
-   PAYPAL_CLIENT_ID=your_paypal_client_id
-   PAYPAL_CLIENT_SECRET=your_paypal_client_secret
-   PAYPAL_MODE=sandbox  # or 'live' for production
-   
-   # Email Configuration
-   EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-   EMAIL_HOST=smtp.gmail.com
-   EMAIL_PORT=587
-   EMAIL_USE_TLS=True
-   EMAIL_HOST_USER=your_email@gmail.com
-   EMAIL_HOST_PASSWORD=your_app_password_here
-   
-   # JWT Configuration
-   JWT_SECRET_KEY=your_jwt_secret_key
-   JWT_ALGORITHM=HS256
-   JWT_EXPIRATION_DELTA=3600
+   # Other required variables...
    ```
 
 5. **Set up database:**
@@ -266,45 +234,6 @@ The application provides a comprehensive REST API with JWT authentication:
 - **Artists**: `/api/artists/` - Artist profiles and portfolios
 
 Full API documentation with interactive testing is available at `/api/docs/` when running the development server.
-
-## 🔧 Code Quality
-
-The project uses several tools to maintain high code quality:
-
-```bash
-# Format code
-black .
-isort .
-
-# Lint code
-flake8 .
-ruff check .
-
-# Type checking
-mypy .
-```
-
-## 📈 Performance Optimization
-
-- **Database**: Optimized queries using `select_related` and `prefetch_related`
-- **Caching**: Multi-layer caching with Redis and Django-Cachalot
-- **Search**: Elasticsearch for fast full-text search capabilities
-- **Images**: Optimized image processing and CDN integration
-- **Background Tasks**: Celery for heavy operations like image processing
-
-## 🚀 Deployment
-
-### Production Environment
-- Docker containerization for consistent deployments
-- CI/CD pipeline with automated testing and deployment
-- Environment-specific configuration management
-- Health checks and monitoring integration
-- Automated database migrations
-- Static file optimization and CDN integration
-
-## 📄 License
-
-This project uses the [MIT License](https://github.com/Sauberr/gallery/blob/master/LICENSE)
 
 ## 📞 Contact 
 
