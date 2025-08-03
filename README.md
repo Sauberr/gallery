@@ -55,6 +55,7 @@ This project exemplifies modern web development practices with a robust CI/CD pi
 <img src="demonstration/7.png" width="800">
 
 <img src="demonstration/8.png" width="800"> 
+<img src="demonstration/9.png" width="800"> 
 
 </div>
 
