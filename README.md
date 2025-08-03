@@ -209,17 +209,6 @@ docker-compose exec web python manage.py loaddata <path_to_fixture_files>
 docker-compose exec web python manage.py test
 ```
 
-## 🌐 API Endpoints
-
-The application provides a comprehensive REST API with JWT authentication:
-
-- **Authentication**: `/api/auth/` - User registration, login, token refresh
-- **Users**: `/api/users/` - User profiles and management
-- **Artworks**: `/api/artworks/` - Browse and search artworks
-- **Subscriptions**: `/api/subscriptions/` - Manage subscription plans
-- **Downloads**: `/api/downloads/` - Track and manage downloads
-- **Artists**: `/api/artists/` - Artist profiles and portfolios
-
 Full API documentation with interactive testing is available at `/api/docs/` when running the development server.
 
 ## 📞 Contact 
