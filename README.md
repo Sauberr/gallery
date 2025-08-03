@@ -179,7 +179,6 @@ This project exemplifies modern web development practices with a robust CI/CD pi
     - **Main site**: http://localhost:8000
     - **Admin panel**: http://localhost:8000/admin
     - **API documentation**: http://localhost:8000/api/docs/
-    - **Elasticsearch**: http://localhost:9200
 
 ## 🐳 Docker Deployment
 
@@ -208,20 +207,6 @@ docker-compose exec web python manage.py loaddata <path_to_fixture_files>
 ### Run tests via Docker
 ```bash
 docker-compose exec web python manage.py test
-```
-
-## 🧪 Testing
-
-The project maintains 85% test coverage with comprehensive unit and API tests:
-
-```bash
-# Run all tests
-./manage.py test
-
-# Run tests with coverage report
-coverage run --source='.' manage.py test
-coverage report
-coverage html  # Generate HTML coverage report
 ```
 
 ## 🌐 API Endpoints
