@@ -61,13 +61,14 @@ This project exemplifies modern web development practices with a robust CI/CD pi
 
 ## 🚀 Features
 
-* **User Registration**: Sign up with email or phone verification; all users start with the Basic plan.
+* **User Registration**: Sign up with email or phone verification; all users start without any plans.
 * **Authentication**: Social media login (Google, GitHub), two-factor authentication (2FA), JWT tokens, custom email/phone login.
 * **Artwork Download**: Download unique artworks through subscription plans with PayPal payment processing.
 * **Subscription Plans**:
-  * **Basic**: Access to limited artwork collection.
-  * **Premium**: Access to premium artwork collection + additional features.
-  * **Enterprise**: All Premium features + exclusive enterprise content.
+  * **Basic**: Access to 200px thumbnail.
+  * **Premium**: Access to 200px and 400px thumbnails + original image.
+  * **Enterprise**: All Premium features + expiring binary image links.
+  * **Custom Plans**: Admins can create plans with custom thumbnail sizes, original image access, and expiring links via Django Admin.
 * **Search**: Elasticsearch integration for fast and efficient artwork search and filtering.
 * **Frontend**: Responsive interface (HTML, CSS, JS) with custom JavaScript for photo downloads and timer-based messages.
 * **Performance**: Optimized with Redis caching and Django-Cachalot for global caching, Celery for background tasks.
