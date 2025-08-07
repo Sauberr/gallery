@@ -21,9 +21,16 @@
 </br>
 
 Gallery is a sophisticated online subscription service where users can discover and download unique artworks from talented artists around the world. Built with Django 4.2+ and Python 3.12+, this platform offers a premium art discovery experience through flexible subscription plans powered by secure PayPal integration.
-The service features three carefully crafted subscription tiers - Basic, Premium, and Enterprise - each providing access to different levels of exclusive content and features. Users can explore an extensive collection of high-quality artworks through an intelligent search system powered by Elasticsearch, ensuring lightning-fast and precise results.
-Gallery prioritizes security and user experience with comprehensive authentication options including social login integration, two-factor authentication (2FA), email verification, and flexible login methods via email or phone number. The platform leverages advanced caching strategies using Redis and Django-Cachalot for optimal performance and seamless user interactions. Cross-Origin Resource Sharing (CORS) is properly configured to enable secure API access from different domains while maintaining strict security policies.
-This project exemplifies modern web development practices with a robust CI/CD pipeline, comprehensive test coverage (85%), and clean, maintainable code enforced by industry-standard tools like Flake8, Ruff, isort, and Black. The platform also features custom JavaScript implementations for enhanced user interactions, including intuitive photo download functionality and dynamic timer-based messaging systems.
+
+The service features three carefully crafted subscription tiers — Basic, Premium, and Enterprise — each providing access to different levels of exclusive content and features. Users can explore an extensive collection of high-quality artworks through an intelligent search system powered by Elasticsearch, ensuring lightning-fast and precise results.
+
+Gallery prioritizes security and user experience with comprehensive authentication options, including social login integration, two-factor authentication (2FA), email verification, and flexible login methods via email or phone number.
+
+The platform leverages advanced caching strategies using Redis and Django-Cachalot for optimal performance and seamless user interactions. Cross-Origin Resource Sharing (CORS) is properly configured to enable secure API access from different domains while maintaining strict security policies.
+
+This project exemplifies modern web development practices with a robust CI/CD pipeline, comprehensive test coverage (85%), and clean, maintainable code enforced by industry-standard tools like Flake8, Ruff, isort, and Black.
+
+The platform also features custom JavaScript implementations for enhanced user interactions, including intuitive photo download functionality and dynamic timer-based messaging systems.
 
 ## Stack:
 
