@@ -2,23 +2,21 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static 'css/subscriptions/delete_subscription.css' %}">
+<link rel="stylesheet" href="{% static 'css/subscriptions/paypal_update_subscription_confirmed.css' %}">
 {% endblock %}
 
 {% block content %}
     {% include 'partials/navbar.html' %}
-    <div class="subscription-cancelled">
-        <h5>Subscription cancelled!</h5>
-        <div class="subscription-cancelled__icon">
-            <i class="fa-solid fa-circle-xmark" style="font-size:2.7rem;color:#dc3545;"></i>
-        </div>
+    <div class="subscription-activated">
+        <h5>Paypal update confirmed!</h5>
+        <h1>✅</h1>
         <p>
-            We regret to inform you that your subscription has been cancelled<br>
-            as per your request. Thank you for your past support!
+            Your request to update your subscription has been confirmed on Paypal.
         </p>
         <a class="btn" href="{% url 'core:index' %}">
-            <span class="btn__icon">&gt;</span> Return to dashboard
+            &gt; &nbsp; Confirm for final approval
         </a>
     </div>
     {% include 'partials/footer.html' %}
+
 {% endblock %}

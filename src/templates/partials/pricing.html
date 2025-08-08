@@ -5,10 +5,11 @@
 <link rel="stylesheet" href="{% static 'css/partials/pricing.css' %}">
 {% endblock %}
 
-
 {% block content %}
 
 {% include 'partials/navbar.html' %}
+
+{% csrf_token %}
 
 {% if subscription_id %}
 <section class="plans__container">
@@ -82,6 +83,7 @@
     </div>
 </section>
 {% endif %}
+
 <section class="plans__container">
     <div class="plans">
         <div class="planItem__container">
@@ -117,8 +119,19 @@
                             });
                         },
                         onApprove: function (data, actions) {
-                            const current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Basic"
-                            window.open(current_url, '_self')
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = '/subscriptions/create-subscription/' + data.subscriptionID + '/Basic/';
+
+                            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                            const csrfInput = document.createElement('input');
+                            csrfInput.type = 'hidden';
+                            csrfInput.name = 'csrfmiddlewaretoken';
+                            csrfInput.value = csrfToken;
+                            form.appendChild(csrfInput);
+
+                            document.body.appendChild(form);
+                            form.submit();
                         }
                     }).render('#paypal-button-container-basic');
                 </script>
@@ -154,8 +167,19 @@
                             });
                         },
                         onApprove: function (data, actions) {
-                            const current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Premium"
-                            window.open(current_url, '_self')
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = '/subscriptions/create-subscription/' + data.subscriptionID + '/Premium/';
+
+                            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                            const csrfInput = document.createElement('input');
+                            csrfInput.type = 'hidden';
+                            csrfInput.name = 'csrfmiddlewaretoken';
+                            csrfInput.value = csrfToken;
+                            form.appendChild(csrfInput);
+
+                            document.body.appendChild(form);
+                            form.submit();
                         }
                     }).render('#paypal-button-container-premium');
                 </script>
@@ -190,8 +214,19 @@
                             });
                         },
                         onApprove: function (data, actions) {
-                            const current_url = '/subscriptions/create-subscription/' + data.subscriptionID + "/Enterprise"
-                            window.open(current_url, '_self')
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = '/subscriptions/create-subscription/' + data.subscriptionID + '/Enterprise/';
+
+                            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                            const csrfInput = document.createElement('input');
+                            csrfInput.type = 'hidden';
+                            csrfInput.name = 'csrfmiddlewaretoken';
+                            csrfInput.value = csrfToken;
+                            form.appendChild(csrfInput);
+
+                            document.body.appendChild(form);
+                            form.submit();
                         }
                     }).render('#paypal-button-container-enterprise');
                 </script>

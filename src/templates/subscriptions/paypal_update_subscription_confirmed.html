@@ -13,9 +13,33 @@
         <p>
             Your request to update your subscription has been confirmed on Paypal.
         </p>
-        <a class="btn" href="{% url 'subscriptions:django_update_subscription_confirmed' subscription_id %}">
+        <button id="confirm-btn" class="btn" data-subscription-id="{{ subscription_id }}">
             &gt; &nbsp; Confirm for final approval
-        </a>
+        </button>
     </div>
     {% include 'partials/footer.html' %}
+
+    <script>
+    document.getElementById('confirm-btn').addEventListener('click', function() {
+        const subscriptionId = this.getAttribute('data-subscription-id');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch(`/subscriptions/django-update-subscription-confirmed/${subscriptionId}/`, {
+            method: 'PUT',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.body.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+    </script>
+
+    {% csrf_token %}
 {% endblock %}

@@ -18,7 +18,7 @@ from .services.paypal import (cancel_subscription_paypal, get_access_token,
 class CreateSubscription(LoginRequiredMixin, TitleMixin, View):
     title: str = "Create Subscription"
 
-    def get(self, request, subscription_id: str, plan: str) -> HttpResponse:
+    def post(self, request, subscription_id: str, plan: str) -> HttpResponse:
         if UserSubscription.objects.filter(user=request.user, is_active=True).exists():
             return HttpResponse("You already have an active subscription", status=HTTPStatus.BAD_REQUEST)
 
@@ -54,7 +54,7 @@ class ConfirmDeleteSubscription(LoginRequiredMixin, TitleMixin, DeleteView):
 
 class DeleteSubscription(LoginRequiredMixin, TitleMixin, View):
 
-    def get(self, request, subscription_id: str) -> HttpResponse:
+    def delete(self, request, subscription_id: str) -> HttpResponse:
         access_token = get_access_token()
         cancel_subscription_paypal(access_token, subscription_id)
 
@@ -66,9 +66,7 @@ class DeleteSubscription(LoginRequiredMixin, TitleMixin, View):
 
 
 class UpdateSubscription(LoginRequiredMixin, View):
-
     def get(self, request, subscription_id: str, new_plan: str) -> HttpResponse:
-
         subscription = get_object_or_404(
             UserSubscription,
             user=request.user,
@@ -85,7 +83,6 @@ class UpdateSubscription(LoginRequiredMixin, View):
 
 
 class PaypalUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
-
     def get(self, request, *args, **kwargs) -> HttpResponse:
         try:
             subscription = get_object_or_404(UserSubscription, user=request.user, is_active=True)
@@ -100,8 +97,7 @@ class PaypalUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
 
 
 class DjangoUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
-
-    def get(self, request, subscription_id: str) -> HttpResponse:
+    def put(self, request, subscription_id: str) -> HttpResponse:
         try:
             access_token = get_access_token()
             current_plan_id = get_current_subscription(access_token, subscription_id)
