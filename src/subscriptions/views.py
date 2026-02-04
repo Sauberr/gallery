@@ -16,9 +16,13 @@ from .services.paypal import (cancel_subscription_paypal, get_access_token,
 
 
 class CreateSubscription(LoginRequiredMixin, TitleMixin, View):
+    """Handle creation of new subscription for authenticated users"""
+
     title: str = "Create Subscription"
 
     def post(self, request, subscription_id: str, plan: str) -> HttpResponse:
+        """Create user subscription with PayPal subscription ID and plan"""
+
         if UserSubscription.objects.filter(user=request.user, is_active=True).exists():
             return HttpResponse("You already have an active subscription", status=HTTPStatus.BAD_REQUEST)
 
@@ -36,6 +40,8 @@ class CreateSubscription(LoginRequiredMixin, TitleMixin, View):
 
 
 class ConfirmDeleteSubscription(LoginRequiredMixin, TitleMixin, DeleteView):
+    """Display confirmation page before deleting user subscription"""
+
     model = UserSubscription
     template_name: str = "subscriptions/confirm_delete_subscription.html"
     success_url = reverse_lazy("subscriptions:delete_subscription")
@@ -44,17 +50,24 @@ class ConfirmDeleteSubscription(LoginRequiredMixin, TitleMixin, DeleteView):
     title: str = "Confirm Subscription Deletion"
 
     def get_queryset(self):
+        """Filter queryset to only current user's subscriptions"""
+
         return super().get_queryset().filter(user=self.request.user)
 
     def get_context_data(self, **kwargs):
+        """Add subscription ID to template context"""
+
         context = super().get_context_data(**kwargs)
         context["subscription_id"] = self.kwargs["subscription_id"]
         return context
 
 
 class DeleteSubscription(LoginRequiredMixin, TitleMixin, View):
+    """Handle subscription deletion and cancel PayPal subscription"""
 
     def delete(self, request, subscription_id: str) -> HttpResponse:
+        """Cancel PayPal subscription and delete user subscription record"""
+
         access_token = get_access_token()
         cancel_subscription_paypal(access_token, subscription_id)
 
@@ -66,7 +79,11 @@ class DeleteSubscription(LoginRequiredMixin, TitleMixin, View):
 
 
 class UpdateSubscription(LoginRequiredMixin, View):
+    """Handle subscription plan update via PayPal"""
+
     def get(self, request, subscription_id: str, new_plan: str) -> HttpResponse:
+        """Update subscription plan and redirect to PayPal approval link"""
+
         subscription = get_object_or_404(
             UserSubscription,
             user=request.user,
@@ -83,7 +100,11 @@ class UpdateSubscription(LoginRequiredMixin, View):
 
 
 class PaypalUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
+    """Display confirmation page after PayPal subscription update"""
+
     def get(self, request, *args, **kwargs) -> HttpResponse:
+        """Render subscription update confirmation with subscription ID"""
+
         try:
             subscription = get_object_or_404(UserSubscription, user=request.user, is_active=True)
             context = {"subscription_id": subscription.paypal_subscription_id}
@@ -97,7 +118,11 @@ class PaypalUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
 
 
 class DjangoUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
+    """Update user subscription in database after PayPal confirmation"""
+
     def put(self, request, subscription_id: str) -> HttpResponse:
+        """Fetch current plan from PayPal and update user subscription"""
+
         try:
             access_token = get_access_token()
             current_plan_id = get_current_subscription(access_token, subscription_id)

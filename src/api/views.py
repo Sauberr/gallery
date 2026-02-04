@@ -17,6 +17,8 @@ from subscriptions.serializers import (SubscriptionPlanSerializer,
 
 
 class SubscriptionPlanView(ReadOnlyModelViewSet):
+    """API endpoint for viewing subscription plans with search and filtering"""
+
     queryset = SubscriptionPlan.objects.all()
     serializer_class = SubscriptionPlanSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
@@ -26,6 +28,8 @@ class SubscriptionPlanView(ReadOnlyModelViewSet):
 
 
 class UserSubscriptionView(ReadOnlyModelViewSet):
+    """API endpoint for viewing user subscriptions with search and filtering"""
+
     queryset = UserSubscription.objects.select_related("user", "plan").all()
     serializer_class = UserSubscriptionSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
@@ -35,7 +39,10 @@ class UserSubscriptionView(ReadOnlyModelViewSet):
 
 
 class HealthView(APIView):
+    """API endpoint for application health check status"""
+
     def get(self, request, *args, **kwargs) -> Response:
+        """Return health status with database and cache check"""
 
         database_status: str = "OK"
         cache_status: str = "OK"
@@ -54,6 +61,8 @@ class HealthView(APIView):
 
 
 class ImagesViewSet(ReadOnlyModelViewSet):
+    """API endpoint for viewing images with search and filtering"""
+
     queryset = Images.objects.all()
     serializer_class = ImagesSerializer
     permission_classes = [IsAuthenticated, IsAdminOrReadOnly]

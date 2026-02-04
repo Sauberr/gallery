@@ -1,11 +1,12 @@
-from django.core.validators import (EmailValidator, MinLengthValidator,
-                                    RegexValidator)
+from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from faker import Faker
 
 
 class ContactUs(models.Model):
+    """Model ContactUs to store messages from users"""
+
     name = models.CharField(
         verbose_name=_("name"),
         max_length=255,
@@ -37,11 +38,12 @@ class ContactUs(models.Model):
         verbose_name = _("Contact Us")
         verbose_name_plural = _("Contact Us")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     @classmethod
     def generate_instances(cls, count: int) -> None:
+        """Generate fake contact us messages for testing."""
         faker = Faker()
         for _ in range(count):
             cls.objects.create(  # type: ignore

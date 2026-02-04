@@ -11,6 +11,7 @@ from subscriptions.models import SubscriptionPlan, UserSubscription
 
 def create_test_user(email="test@example.com", password="TestPass123!"):
     """Create a test user"""
+
     return get_user_model().objects.create_user(
         email=email,
         password=password,
@@ -19,6 +20,7 @@ def create_test_user(email="test@example.com", password="TestPass123!"):
 
 def create_test_admin(email="admin@example.com", password="AdminPass123!", is_staff=True):
     """Create a test admin user"""
+
     return get_user_model().objects.create_superuser(email=email, password=password, is_staff=is_staff)
 
 

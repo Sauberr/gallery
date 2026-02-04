@@ -12,6 +12,8 @@ from subscriptions.models import UserSubscription
 
 
 class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
+    """Display paginated list of images filtered by user subscription plan"""
+
     template_name: str = "images/images.html"
     title: str = "Gallery"
     model = Images
@@ -25,6 +27,8 @@ class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
     }
 
     def get_context_data(self, **kwargs):
+        """Add user subscription plan and paginated images to context"""
+
         context = super().get_context_data(**kwargs)
         user_subscription_plan = None
         allowed_plans = {}
@@ -50,6 +54,8 @@ class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
 
 
 class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
+    """Display single image detail with subscription plan access control"""
+
     template_name: str = "images/image-detail.html"
     title: str = "Image Detail"
     model = Images
@@ -62,6 +68,8 @@ class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
     }
 
     def get_context_data(self, **kwargs):
+        """Add user subscription plan and allowed plans to context"""
+
         context = super().get_context_data(**kwargs)
         user_subscription_plan = None
         allowed_plans = {}
@@ -82,6 +90,8 @@ class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
 
 
 class ImageCreateView(LoginRequiredMixin, TitleMixin, CreateView):
+    """Handle image creation and upload by authenticated users"""
+
     model = Images
     form_class = ImageCreateForm
     template_name: str = "partials/feature.html"
@@ -89,9 +99,13 @@ class ImageCreateView(LoginRequiredMixin, TitleMixin, CreateView):
     success_url = reverse_lazy("images:image-list")
 
     def form_valid(self, form):
+        """Process valid image form and display success message"""
+
         messages.success(self.request, "Image created successfully!")
         return super().form_valid(form)
 
     def form_invalid(self, form):
+        """Handle invalid image form and display error message"""
+
         messages.error(self.request, "Please correct the errors below.")
         return super().form_invalid(form)

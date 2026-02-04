@@ -1,12 +1,10 @@
-from typing import List, Tuple
-
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from faker import Faker
 
-SUBSCRIPTION_PLANS: List[Tuple[str, str]] = [
+SUBSCRIPTION_PLANS: list[tuple[str, str]] = [
     ("Basic", "Basic Plan"),
     ("Premium", "Premium Plan"),
     ("Enterprise", "Enterprise Plan"),
@@ -14,6 +12,8 @@ SUBSCRIPTION_PLANS: List[Tuple[str, str]] = [
 
 
 class Images(models.Model):
+    """Model Images to store image metadata and files"""
+
     title = models.CharField(
         verbose_name=_("title"),
         max_length=200,
@@ -56,6 +56,7 @@ class Images(models.Model):
         default=0.00,
         max_digits=10,
         decimal_places=2,
+        validators=[MinValueValidator(0.00)],
         help_text=_("Price of the image in USD"),
     )
     quantity = models.PositiveIntegerField(
@@ -78,14 +79,16 @@ class Images(models.Model):
         ordering = ["-created_at", "updated_at"]
         indexes = [models.Index(fields=["title", "author"])]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
     def get_absolute_url(self):
+        """Get absolute URL for the image detail page"""
         return reverse("images:image-list", args=[self.id])  # type: ignore
 
     @classmethod
     def generate_instances(cls, count) -> None:
+        """Generate fake image instances for testing"""
         faker = Faker()
         for _ in range(count):
             cls.objects.create(  # type: ignore

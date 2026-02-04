@@ -23,6 +23,8 @@ from core.utils.token_generator import TokenGenerator
 
 
 class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
+    """Handle user authentication with remember me and 2FA support"""
+
     template_name: str = "registration/login.html"
     title: str = "Login"
     model = get_user_model()
@@ -31,6 +33,8 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
     success_url = reverse_lazy("core:index")
 
     def form_valid(self, form):
+        """Process valid login form and handle remember me and 2FA verification"""
+
         remember_me = form.cleaned_data["remember_me"]
         if remember_me:
             self.request.session.set_expiry(2592000)
@@ -54,15 +58,19 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
+        """Handle invalid login form submission and display error message"""
         messages.error(self.request, "Please, write valid email or password")
         return super().form_invalid(form)
 
 
 class UserLogoutView(LogoutView):
+    """Handle user logout and session termination"""
     pass
 
 
 class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
+    """Handle new user registration with email verification"""
+
     template_name: str = "registration/registration.html"
     title: str = "Registration"
     model = get_user_model()
@@ -70,6 +78,8 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("account:login")
 
     def form_valid(self, form):
+        """Save inactive user and send registration email for verification"""
+
         self.object = form.save(commit=False)
         self.object.is_active = False
         self.object.save()
@@ -78,9 +88,12 @@ class UserRegistrationView(TitleMixin, SuccessMessageMixin, CreateView):
 
 
 class ActivateUser(RedirectView):
+    """Handle user account activation via email link"""
+
     url = reverse_lazy("core:index")
 
     def get(self, request, uuid64, token, *args, **kwargs):
+        """Verify activation token and activate user account"""
 
         try:
             pk = force_str(urlsafe_base64_decode(uuid64))
@@ -103,6 +116,8 @@ class ActivateUser(RedirectView):
 
 
 class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
+    """Handle password reset request and send reset email"""
+
     template_name: str = "registration/password/password_reset.html"
     title: str = "Reset Password"
     success_url = reverse_lazy("account:login")
@@ -117,15 +132,21 @@ class ResetPasswordView(TitleMixin, SuccessMessageMixin, PasswordResetView):
 
 
 class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
+    """Handle user profile viewing and updating with avatar and 2FA QR code"""
+
     template_name: str = "registration/profile.html"
     form_class = ProfileForm
     success_url = reverse_lazy("account:profile")
     title: str = "Profile"
 
     def get_object(self):
+        """Return the current authenticated user"""
+
         return self.request.user
 
     def get_initial(self):
+        """Load initial form data from user and profile fields"""
+
         user = self.request.user
         profile = user.profile
         return {
@@ -137,6 +158,8 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
         }
 
     def _update_profile(self, form):
+        """Update user and profile fields from form data"""
+
         user = form.save(commit=False)
         profile = user.profile
 
@@ -153,6 +176,8 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
         profile.save()
 
     def _has_changes(self, form, user):
+        """Check if form data differs from current user and profile data"""
+
         profile = user.profile
 
         user_changed = any(
@@ -168,12 +193,16 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
         return user_changed or profile_changed or avatar_changed
 
     def form_valid(self, form):
+        """Process valid profile form and update user data if changes detected"""
+
         if self._has_changes(form, self.request.user):
             self._update_profile(form)
             messages.success(self.request, "Profile updated successfully")
         return super().form_valid(form)
 
     def _generate_qr_code(self):
+        """Generate QR code for 2FA setup and return as base64 encoded image"""
+
         user = self.request.user
         if not user.mfa_secret:
             user.mfa_secret = pyotp.random_base32()
@@ -188,17 +217,22 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
         return f"data:image/png;base64,{base64.b64encode(buffer.getvalue()).decode()}"
 
     def get_context_data(self, **kwargs):
+        """Add QR code to template context for 2FA setup"""
+
         context = super().get_context_data(**kwargs)
         context["qrcode"] = self._generate_qr_code()
         return context
 
 
 class VerifyMfa(View):
+    """Handle 2FA verification using OTP code"""
+
     template_name: str = "registration/2FA/otp_verify.html"
     success_url = reverse_lazy("account:profile")
     auth_backend: str = "django.contrib.auth.backends.ModelBackend"
 
     def post(self, request, *args, **kwargs):
+        """Verify OTP code and enable 2FA or login user"""
 
         otp = request.POST.get("otp_code")
         user_id = request.POST.get("user_id")
@@ -220,14 +254,19 @@ class VerifyMfa(View):
         return redirect(self.success_url)
 
     def get(self, request, *args, **kwargs):
+        """Render OTP verification page."""
         user_id = request.GET.get("user_id")
         return render(request, self.template_name, {"user_id": user_id})
 
 
 class Disable2fa(LoginRequiredMixin, View):
+    """Handle disabling 2FA for user account"""
+
     success_url = reverse_lazy("account:profile")
 
     def get(self, request, *args, **kwargs):
+        """Disable 2FA for the authenticated user"""
+
         user = request.user
         if user.mfa_enabled:
             user.mfa_enabled = False

@@ -2,7 +2,7 @@ import json
 import logging
 import os
 from http import HTTPStatus
-from typing import Dict, Any
+from typing import Any, Dict
 
 import requests
 

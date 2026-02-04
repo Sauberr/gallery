@@ -1,19 +1,18 @@
 from datetime import timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import sentry_sdk
 from celery.schedules import crontab
 from decouple import config
 from django.utils.translation import gettext_lazy as _
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
-ALLOWED_HOSTS: List[Any] = ["*", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS: list[Any] = ["*", "127.0.0.1", "localhost"]
 
-INTERNAL_IPS: List[str] = [
+INTERNAL_IPS: list[str] = [
     "127.0.0.1",
     "localhost",
 ]
@@ -39,7 +38,8 @@ CELERY_BROKER_TRANSPORT = "redis"
 
 # Application definition
 
-INSTALLED_APPS: Tuple[str, ...] = (
+INSTALLED_APPS: tuple[str, ...] = (
+
     # Django apps
     "jet.dashboard",
     "jet",
@@ -55,6 +55,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "django_elasticsearch_dsl",
     "django.contrib.humanize",
     "debug_toolbar",
+
     # Custom apps
     "phonenumber_field",
     "crispy_forms",
@@ -68,6 +69,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     "rest_framework_simplejwt",
     "djoser",
     "django_celery_beat",
+
     # My apps
     "core",
     "subscriptions",
@@ -78,7 +80,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
 
 CRISPY_TEMPLATE_PACK: str = "bootstrap5"
 
-MIDDLEWARE: Tuple[str, ...] = (
+MIDDLEWARE: tuple[str, ...] = (
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -188,7 +190,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SOCIAL_AUTH_URL_NAMESPACE: str = "social"
 
-DEBUG_TOOLBAR_PANELS: List[str] = [
+DEBUG_TOOLBAR_PANELS: list[str] = [
     "debug_toolbar.panels.versions.VersionsPanel",
     "debug_toolbar.panels.timer.TimerPanel",
     "debug_toolbar.panels.settings.SettingsPanel",
@@ -205,7 +207,7 @@ DEBUG_TOOLBAR_PANELS: List[str] = [
 ]
 
 
-AUTHENTICATION_BACKENDS: List[str] = [
+AUTHENTICATION_BACKENDS: list[str] = [
     "social_core.backends.google.GoogleOAuth2",
     "social_core.backends.github.GithubOAuth2",
     "account.auth_backend.AuthBackend",
@@ -216,7 +218,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", default=
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", default="", cast=str)
 
 
-SOCIAL_AUTH_PIPELINE: Tuple[str, ...] = (
+SOCIAL_AUTH_PIPELINE: tuple[str, ...] = (
     "social_core.pipeline.social_auth.social_details",
     "social_core.pipeline.social_auth.social_uid",
     "social_core.pipeline.social_auth.auth_allowed",
@@ -239,14 +241,14 @@ JET_THEMES = [
     {"theme": "light-gray", "color": "#222", "title": "Light Gray"},
 ]
 
-SIMPLE_JWT: Dict = {
+SIMPLE_JWT: dict = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 
 
-DJOSER: Dict[str, str | bool] = {
+DJOSER: dict[str, str | bool] = {
     "LOGIN_FIELD": "email",
     "USER_CREATE_PASSWORD_RETYPE": True,
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
@@ -254,7 +256,7 @@ DJOSER: Dict[str, str | bool] = {
     "PASSWORD_RESET_CONFIRM_URL": "auth/password-reset/{uid}/{token}",
 }
 
-REST_FRAMEWORK: Dict[str, Any] = {
+REST_FRAMEWORK: dict[str, Any] = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 3,
     "DEFAULT_RENDERER_CLASSES": [

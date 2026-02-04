@@ -16,11 +16,13 @@ from .models import ContactUs
 
 
 class IndexView(TitleMixin, TemplateView):
+    """Handle homepage with image search and suggestions using Elasticsearch."""
     template_name: str = "partials/index.html"
     title: str = "Home"
 
     @staticmethod
     def get_search_results(query, correction: bool = False, size: int = 5):
+        """Search images using Elasticsearch with fuzzy matching and wildcards."""
         query = query.lower()
         search_query = Q(
             "bool",
@@ -39,6 +41,7 @@ class IndexView(TitleMixin, TemplateView):
     
     @staticmethod
     def get_correction_query(query):
+        """Get spelling correction suggestions from Elasticsearch."""
         suggest = Search(index="images")
         for field in ['title', 'author', 'description']:
             suggest = suggest.suggest(f'{field}_suggestion', query, term={'field': field})
@@ -52,6 +55,7 @@ class IndexView(TitleMixin, TemplateView):
         return best_correction if best_correction != query else None
     
     def get_context_data(self, **kwargs):
+        """Prepare context with search results or all images if no query."""
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get('q')
         if query:
@@ -76,6 +80,8 @@ class IndexView(TitleMixin, TemplateView):
         return context
     
     def get(self, request, *args, **kwargs):
+        """Handle AJAX requests for search suggestions or render index page."""
+
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             query = request.GET.get('q', '')
             suggestions = self.get_search_results(query, correction=True) if query else []
@@ -89,6 +95,8 @@ class IndexView(TitleMixin, TemplateView):
 
 
 class ImageList(TitleMixin, ListView):
+    """Display list of all images ordered by title."""
+
     template_name: str = "partials/images_list.html"
     title: str = "Images"
     model = Images
@@ -97,7 +105,11 @@ class ImageList(TitleMixin, ListView):
 
 
 class SubscriptionPlansView(CacheMixin, LoginRequiredMixin, View):
+    """Display subscription plans with user's current subscription status."""
+
     def get(self, request):
+        """Load subscription plans from cache and render pricing page"""
+
         basic_plan = self.set_get_cache(SubscriptionPlan.objects.filter(name="Basic").first(), "basic_plan", 600)
         premium_plan = self.set_get_cache(SubscriptionPlan.objects.filter(name="Premium").first(), "premium_plan", 600)
         enterprise_plan = self.set_get_cache(
@@ -129,11 +141,14 @@ class SubscriptionPlansView(CacheMixin, LoginRequiredMixin, View):
 
 
 class ContactView(TitleMixin, TemplateView):
+    """Display contact us page"""
+
     template_name: str = "partials/contact.html"
     title: str = "Contact Us"
 
 
 def ajax_contact_form(request):
+    """Handle AJAX contact form submission and save contact message."""
     if request.method == "POST":
         name = request.POST.get("full_name")
         email = request.POST.get("email")
@@ -153,25 +168,30 @@ def ajax_contact_form(request):
 
 
 class Handler403(TitleMixin, TemplateView):
+    """Handle 403 Forbidden error page"""
     template_name: str = "403.html"
     title: str = "403 Forbidden"
 
 
 class Handler404(TitleMixin, TemplateView):
+    """Handle 404 Not Found error page"""
     template_name = "404.html"
     title: str = "404 Not Found"
 
 
 class Handler500(TitleMixin, TemplateView):
+    """Handle 500 Internal Server Error page."""
     template_name: str = "500.html"
     title: str = "500 Internal Server Error"
 
 
 class Handler502(TitleMixin, TemplateView):
+    """Handle 502 Bad Gateway error page."""
     template_name: str = "502.html"
     title: str = "502 Bad Gateway"
 
 
 class Handler503(TitleMixin, TemplateView):
+    """Handle 503 Service Unavailable error page."""
     template_name: str = "503.html"
     title: str = "503 Service Unavailable"

@@ -1,7 +1,3 @@
-from typing import Sequence
-
-import pycountry
-from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
@@ -12,23 +8,11 @@ from faker import Faker
 from phonenumber_field.modelfields import PhoneNumberField
 from phonenumbers import PhoneNumberFormat, format_number, parse
 
-from account.managers import CustomerManager, PeopleManager
-
-STATUS_CHOICES: Sequence[tuple[str, str]] = (
-    ("Unmarried", "Unmarried"),
-    ("Married", "Married"),
-)
-
-SEX_CHOICES: Sequence[tuple[str, str]] = (
-    ("Male", "Male"),
-    ("Female", "Female"),
-    ("Undefined", "I don't want to tell"),
-)
-
-COUNTRY_CHOICES = [(f"{country.name}", f"{country.name}") for country in pycountry.countries]
+from account.managers import CustomerManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """Custom User model with email authentication and MFA support"""
 
     username_validator = UnicodeUsernameValidator()
 
@@ -61,14 +45,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural: str = _("Users")
         ordering = ("first_name",)
         indexes = [
-            models.Index(fields=["first_name", "last_name", "email"]),
+            models.Index(fields=["first_name"]),
+            models.Index(fields=["last_name"]),
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.first_name}_{self.last_name}"
 
     @classmethod
     def generate_instances(cls, count: int) -> None:
+        """Generate fake user instances for testing"""
         faker = Faker()
         for _ in range(count):
             user = cls.objects.create(  # noqa
@@ -82,57 +68,26 @@ class User(AbstractBaseUser, PermissionsMixin):
             )
 
     def format_phone_number(self) -> str | None:
+        """Format phone number to international format"""
         if self.phone_number:
             parsed_number = parse(str(self.phone_number), None)
             return format_number(parsed_number, PhoneNumberFormat.INTERNATIONAL)
         return None
 
     def clean(self) -> None:
+        """Normalize email before saving"""
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
     def get_full_name(self) -> str:
-        """
-        Return the first_name plus the last_name, with a space in between.
-        """
+        """Return the first_name plus the last_name, with a space in between"""
         full_name = "%s %s" % (self.first_name, self.last_name)
         return full_name.strip()
 
     def get_short_name(self) -> str:
-        """Return the short name for the user."""
+        """Return the short name for the user"""
         return self.first_name
 
     def get_working_time(self) -> str:
+        """Calculate time user has been on the site"""
         return f"Time on site: {timezone.now() - self.date_joined}"
-
-
-class ProxyUser(get_user_model()):
-    people: PeopleManager = PeopleManager()
-
-    class Meta:
-        proxy = True
-        ordering = ("-pk",)
-        verbose_name = _("Proxy User")
-        verbose_name_plural = _("Proxy Users")
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
-    location = models.CharField(max_length=44, choices=COUNTRY_CHOICES, default="Undefined")
-    avatar = models.ImageField(_("avatar"), upload_to="avatars/", blank=True, null=True)
-    sex = models.CharField(max_length=9, choices=SEX_CHOICES, default="Undefined")
-    status = models.CharField(max_length=25, choices=STATUS_CHOICES, default="Unmarried")
-    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-    birth_date = models.DateField(_("birth date"), blank=True, null=True)
-
-    def __str__(self) -> str:
-        return f"{self.user} {self.status}"
-
-    def clean(self) -> None:
-        super().clean()
-        if self.birth_date and self.birth_date > timezone.now().date():
-            raise ValueError("Birth date cannot be in the future")
-
-    class Meta:
-        verbose_name = _("User Profile")
-        verbose_name_plural = _("User Profiles")
