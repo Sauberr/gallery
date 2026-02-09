@@ -1,3 +1,4 @@
+from celery.schedules import crontab
 from decouple import config
 
 from config.settings.base import *  # noqa

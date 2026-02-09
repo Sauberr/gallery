@@ -3,9 +3,7 @@ from pathlib import Path
 from typing import Any
 
 import sentry_sdk
-from celery.schedules import crontab
 from decouple import config
-from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 

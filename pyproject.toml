@@ -112,7 +112,12 @@ django-celery-beat = "^2.8.1"
 mypy = "^1.17.0"
 django-stubs = "^5.2.2"
 python-decouple = "^3.8"
+djangorestframework-stubs = "^3.16.8"
 
+
+[tool.poetry.group.dev.dependencies]
+djangorestframework-stubs = "^3.16.8"
+django-stubs = "^5.2.9"
 
 [build-system]
 requires = ["poetry-core"]

@@ -16,13 +16,15 @@ from .models import ContactUs
 
 
 class IndexView(TitleMixin, TemplateView):
-    """Handle homepage with image search and suggestions using Elasticsearch."""
+    """Handle homepage with image search and suggestions using Elasticsearch"""
+
     template_name: str = "partials/index.html"
     title: str = "Home"
 
     @staticmethod
     def get_search_results(query, correction: bool = False, size: int = 5):
-        """Search images using Elasticsearch with fuzzy matching and wildcards."""
+        """Search images using Elasticsearch with fuzzy matching and wildcards"""
+
         query = query.lower()
         search_query = Q(
             "bool",
@@ -41,7 +43,8 @@ class IndexView(TitleMixin, TemplateView):
     
     @staticmethod
     def get_correction_query(query):
-        """Get spelling correction suggestions from Elasticsearch."""
+        """Get spelling correction suggestions from Elasticsearch"""
+
         suggest = Search(index="images")
         for field in ['title', 'author', 'description']:
             suggest = suggest.suggest(f'{field}_suggestion', query, term={'field': field})
@@ -55,7 +58,8 @@ class IndexView(TitleMixin, TemplateView):
         return best_correction if best_correction != query else None
     
     def get_context_data(self, **kwargs):
-        """Prepare context with search results or all images if no query."""
+        """Prepare context with search results or all images if no query"""
+
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get('q')
         if query:
@@ -80,7 +84,7 @@ class IndexView(TitleMixin, TemplateView):
         return context
     
     def get(self, request, *args, **kwargs):
-        """Handle AJAX requests for search suggestions or render index page."""
+        """Handle AJAX requests for search suggestions or render index page"""
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             query = request.GET.get('q', '')
@@ -95,7 +99,7 @@ class IndexView(TitleMixin, TemplateView):
 
 
 class ImageList(TitleMixin, ListView):
-    """Display list of all images ordered by title."""
+    """Display list of all images ordered by title"""
 
     template_name: str = "partials/images_list.html"
     title: str = "Images"
@@ -105,7 +109,7 @@ class ImageList(TitleMixin, ListView):
 
 
 class SubscriptionPlansView(CacheMixin, LoginRequiredMixin, View):
-    """Display subscription plans with user's current subscription status."""
+    """Display subscription plans with user's current subscription status"""
 
     def get(self, request):
         """Load subscription plans from cache and render pricing page"""
