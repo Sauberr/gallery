@@ -96,7 +96,7 @@ class ImageCreateView(LoginRequiredMixin, TitleMixin, CreateView):
     form_class = ImageCreateForm
     template_name: str = "partials/feature.html"
     title: str = "Feature Image"
-    success_url = reverse_lazy("images:image-list")
+    success_url = reverse_lazy("images:images")
 
     def form_valid(self, form):
         """Process valid image form and display success message"""

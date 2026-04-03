@@ -84,7 +84,7 @@ class Images(models.Model):
 
     def get_absolute_url(self):
         """Get absolute URL for the image detail page"""
-        return reverse("images:image-list", args=[self.id])  # type: ignore
+        return reverse("images:image_detail", args=[self.id])  # type: ignore
 
     @classmethod
     def generate_instances(cls, count) -> None:

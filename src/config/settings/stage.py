@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any
 
 from config.settings.base import *  # noqa
 
@@ -6,7 +6,7 @@ DEBUG = False
 
 SECRET_KEY = "django-secret-key"
 
-ALLOWED_HOSTS: List[Any] = ["*"]
+ALLOWED_HOSTS: list[Any] = ["*"]
 
 DATABASES = {
     "default": {

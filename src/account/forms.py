@@ -8,7 +8,6 @@ from phonenumber_field.formfields import PhoneNumberField
 
 from account.models import (COUNTRY_CHOICES, SEX_CHOICES, STATUS_CHOICES,
                             Profile)
-from account.tasks import send_registration_email
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -33,9 +32,7 @@ class UserRegistrationForm(UserCreationForm):
         )
 
     def save(self, commit=True):
-        user = super(UserRegistrationForm, self).save(commit=True)
-        send_registration_email.delay(user.id)
-        return user
+        return super(UserRegistrationForm, self).save(commit=commit)
 
     def clean_password1(self):
         password1 = self.cleaned_data.get("password1")

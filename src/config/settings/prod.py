@@ -6,7 +6,7 @@ DEBUG = False
 
 SECRET_KEY = "django-secret-key"
 
-ALLOWED_HOSTS: List[Any] = ["localhost"]
+ALLOWED_HOSTS: list[Any] = ["localhost"]
 
 CORS_ALLOW_ALL_ORIGINS: bool = False
 CORS_ALLOW_CREDENTIALS: bool = True

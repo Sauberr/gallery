@@ -2,14 +2,14 @@ import json
 import logging
 import os
 from http import HTTPStatus
-from typing import Any, Dict
+from typing import Any
 
 import requests
 
 from subscriptions.models import SubscriptionPlan, UserSubscription
 
 
-def get_paypal_headers(access_token: str) -> Dict[str, str]:
+def get_paypal_headers(access_token: str) -> dict[str, str]:
     return {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {access_token}",

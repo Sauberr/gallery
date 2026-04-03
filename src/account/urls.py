@@ -7,6 +7,7 @@ from account.views import (ActivateUser, Disable2fa, PasswordResetView,
 app_name: str = "account"
 
 urlpatterns = [
+    # Registration, Login, Logout, Profile, MFA, and Password Reset URLs
     path("registration/", UserRegistrationView.as_view(), name="registration"),
     path("login/", UserLoginView.as_view(), name="login"),
     path("logout/", UserLogoutView.as_view(), name="logout"),

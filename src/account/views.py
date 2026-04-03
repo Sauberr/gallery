@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
@@ -241,7 +241,7 @@ class VerifyMfa(View):
             messages.error(request, "Invalid user id. Please try again.")
             return render(request, self.template_name, {"user_id": user_id})
 
-        user = get_user_model().objects.get(id=user_id)
+        user = get_object_or_404(get_user_model(), id=user_id)
         if verify_2fa_otp(user, otp):
             if not request.user.is_authenticated:
                 login(request, user, backend=self.auth_backend)
