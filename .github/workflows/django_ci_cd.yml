@@ -22,19 +22,23 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
+          cache: poetry
+          cache-dependency-path: poetry.lock
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-root --only main --no-interaction --no-ansi
       - name: Check migrations
         run: |
-          python src/manage.py makemigrations
-          python src/manage.py migrate
-          python src/manage.py check
+          poetry run python src/manage.py makemigrations
+          poetry run python src/manage.py migrate
+          poetry run python src/manage.py check
       - name: Run tests
         run: |
-            python src/manage.py test && flake8
+            poetry run python src/manage.py test
+            poetry run flake8
 
             
 
