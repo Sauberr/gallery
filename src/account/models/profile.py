@@ -2,10 +2,10 @@ from typing import Sequence
 
 import pycountry
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from prompt_toolkit.validation import ValidationError
 
 STATUS_CHOICES: Sequence[tuple[str, str]] = (
     ("Unmarried", "Unmarried"),

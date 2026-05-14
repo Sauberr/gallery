@@ -29,71 +29,77 @@ class IndexView(TitleMixin, TemplateView):
         search_query = Q(
             "bool",
             should=[
-                Q("multi_match", query=query, fields=['title^7', 'author^2', 'description'],
-                  fuzziness='AUTO', prefix_length=2, operator='and'),
+                Q(
+                    "multi_match",
+                    query=query,
+                    fields=["title^7", "author^2", "description"],
+                    fuzziness="AUTO",
+                    prefix_length=2,
+                    operator="and",
+                ),
                 Q("wildcard", title={"value": f"*{query}*", "boost": 7}),
                 Q("wildcard", author={"value": f"*{query}*", "boost": 2}),
                 Q("wildcard", description={"value": f"*{query}*"}),
             ],
-            minimum_should_match=1
+            minimum_should_match=1,
         )
-        search = ImagesDocument.search().query(search_query)[0:size if correction else None]
+        search = ImagesDocument.search().query(search_query)[0 : size if correction else None]
         results = [hit.to_dict() for hit in search]
         return results
-    
+
     @staticmethod
     def get_correction_query(query):
         """Get spelling correction suggestions from Elasticsearch"""
 
         suggest = Search(index="images")
-        for field in ['title', 'author', 'description']:
-            suggest = suggest.suggest(f'{field}_suggestion', query, term={'field': field})
+        for field in ["title", "author", "description"]:
+            suggest = suggest.suggest(f"{field}_suggestion", query, term={"field": field})
         response = suggest.execute()
-    
+
         best_correction = query
         for suggestion in response.suggest:
             if response.suggest[suggestion][0].options:
                 best_correction = response.suggest[suggestion][0].options[0].text
                 break
         return best_correction if best_correction != query else None
-    
+
     def get_context_data(self, **kwargs):
         """Prepare context with search results or all images if no query"""
 
         context = super().get_context_data(**kwargs)
-        query = self.request.GET.get('q')
+        query = self.request.GET.get("q")
         if query:
-            context['original_query'] = query
+            context["original_query"] = query
             images = self.get_search_results(query)
             correction = self.get_correction_query(query)
             if correction and correction.lower() != query.lower():
-                context['correction'] = correction
+                context["correction"] = correction
                 corrected_images = self.get_search_results(correction)
                 if corrected_images:
-                    context['images'] = corrected_images
+                    context["images"] = corrected_images
                 else:
-                    context['images'] = images
+                    context["images"] = images
             else:
-                context['images'] = images
-                context['correction'] = None
+                context["images"] = images
+                context["correction"] = None
         else:
             search = Search(index="images")
             response = search.scan()
-            context['images'] = [hit.to_dict() for hit in response]
-            context['correction'] = None
+            context["images"] = [hit.to_dict() for hit in response]
+            context["correction"] = None
         return context
-    
+
     def get(self, request, *args, **kwargs):
         """Handle AJAX requests for search suggestions or render index page"""
 
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            query = request.GET.get('q', '')
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            query = request.GET.get("q", "")
             suggestions = self.get_search_results(query, correction=True) if query else []
             if not suggestions:
                 correction = self.get_correction_query(query)
                 if correction and correction.lower() != query.lower():
                     suggestions = self.get_search_results(correction, correction=True)
-                    suggestions.append({'correction': correction, 'original_query': query})
+                    suggestions.append({"correction": correction, "original_query": query})
             return JsonResponse(suggestions, safe=False)
         return super().get(request, *args, **kwargs)
 
@@ -162,7 +168,7 @@ def ajax_contact_form(request):
             data = {"bool": False}
             return JsonResponse({"data": data})
 
-        contact = ContactUs.objects.create(name=name, email=email, message=message, created_at=timezone.now())
+        contact = ContactUs.objects.create(name=name, email=email, message=message)
 
         data = {"bool": True, "message": "<i class='fa fa-exclamation-triangle'></i>"}
         return JsonResponse({"data": data, "title": "Contact Us"})
@@ -173,29 +179,49 @@ def ajax_contact_form(request):
 
 class Handler403(TitleMixin, TemplateView):
     """Handle 403 Forbidden error page"""
+
     template_name: str = "403.html"
     title: str = "403 Forbidden"
+
+    def render_to_response(self, context, **kwargs):
+        return super().render_to_response(context, status=403, **kwargs)
 
 
 class Handler404(TitleMixin, TemplateView):
     """Handle 404 Not Found error page"""
+
     template_name = "404.html"
     title: str = "404 Not Found"
+
+    def render_to_response(self, context, **kwargs):
+        return super().render_to_response(context, status=404, **kwargs)
 
 
 class Handler500(TitleMixin, TemplateView):
     """Handle 500 Internal Server Error page."""
+
     template_name: str = "500.html"
     title: str = "500 Internal Server Error"
+
+    def render_to_response(self, context, **kwargs):
+        return super().render_to_response(context, status=500, **kwargs)
 
 
 class Handler502(TitleMixin, TemplateView):
     """Handle 502 Bad Gateway error page."""
+
     template_name: str = "502.html"
     title: str = "502 Bad Gateway"
+
+    def render_to_response(self, context, **kwargs):
+        return super().render_to_response(context, status=502, **kwargs)
 
 
 class Handler503(TitleMixin, TemplateView):
     """Handle 503 Service Unavailable error page."""
+
     template_name: str = "503.html"
     title: str = "503 Service Unavailable"
+
+    def render_to_response(self, context, **kwargs):
+        return super().render_to_response(context, status=503, **kwargs)

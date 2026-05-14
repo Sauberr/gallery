@@ -8,7 +8,7 @@ from images.models import Images
 class ImagesAdmin(admin.ModelAdmin):
 
     def thumbnail(self, object):
-        return format_html('<img src="{}" width="40";" />'.format(object.image.url))
+        return format_html('<img src="{}" width="40" />', object.image.url)
 
     thumbnail.short_description = "Image"
     list_display = (
@@ -27,5 +27,5 @@ class ImagesAdmin(admin.ModelAdmin):
     search_fields = ("title", "description", "author")
     ordering = ("title", "description")
     readonly_fields = ("created_at", "updated_at")
-    list_filter = ("title", "description")
+    list_filter = ("subscription_plans", "created_at")
     list_per_page = 10

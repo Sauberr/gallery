@@ -12,7 +12,7 @@ NOTIFICATION_DAYS_THRESHOLD: int = 7
 class UserSubscription(models.Model):
     """Model UserSubscription to track user subscriptions to various plans"""
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         get_user_model(),
         verbose_name=_("user"),
         on_delete=models.CASCADE,
@@ -66,6 +66,13 @@ class UserSubscription(models.Model):
             models.Index(fields=["user"]),
             models.Index(fields=["plan"]),
             models.Index(fields=["is_active"]),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user"],
+                condition=models.Q(is_active=True),
+                name="unique_active_subscription_per_user",
+            )
         ]
 
     def __str__(self) -> str:

@@ -15,7 +15,7 @@ services:
         python manage.py loaddata fixtures/subscriptions.json &&
         python manage.py loaddata fixtures/usersubscription.json &&
         python manage.py loaddata fixtures/images.json &&
-        python manage.py runserver 0:8000"
+        gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     ports:
         - ${LOCAL_PORT}:${WSGI_PORT}
     volumes:
@@ -24,9 +24,12 @@ services:
         - media_content:/assignment/src/media
     env_file:
         - .env
+    environment:
+        - REDIS_URL=redis://redis:6379
     depends_on:
       - db
       - elasticsearch
+      - redis
 
   db:
     container_name: database_container
@@ -73,8 +76,6 @@ services:
 
   redis:
     image: redis
-    env_file:
-      - .env
     restart: on-failure
     depends_on:
       - db
@@ -87,6 +88,8 @@ services:
       - ./src:/assignment/src
     env_file:
       - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
     working_dir: /assignment/src
     depends_on:
       - redis
@@ -94,12 +97,14 @@ services:
 
   celerybeat:
     build: ./
-    command: celery -A config.celery_app.app worker -l info -S django
+    command: celery -A config.celery_app.app beat -l info -S django
     restart: always
     volumes:
       - ./src:/assignment/src
     env_file:
       - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
     working_dir: /assignment/src
     depends_on:
       - redis

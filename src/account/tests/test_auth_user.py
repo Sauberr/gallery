@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from unittest.mock import patch
 
 from django.contrib import auth
 from django.contrib.auth import get_user_model
@@ -9,11 +10,11 @@ from account.tests.common_test import CommonTest
 
 
 def create_user_with_email(email="user@example.com", password="TestPassword123!"):
-    return get_user_model().objects.create_user(email=email, password=password)
+    return get_user_model().objects.create_user(email=email, password=password, is_active=True)
 
 
 def create_admin_user_with_email(email="admin@example.com", password="TestPassword123!", is_staff=True):
-    return get_user_model().objects.create_superuser(email=email, password=password, is_staff=is_staff)
+    return get_user_model().objects.create_superuser(email=email, password=password, is_staff=is_staff, is_active=True)
 
 
 def create_user_with_phone_number(phone_number="+12125552368", password="TestPassword123!"):
@@ -21,6 +22,7 @@ def create_user_with_phone_number(phone_number="+12125552368", password="TestPas
         email=f"user_{phone_number}@example.com",
         phone_number=phone_number,
         password=password,
+        is_active=True,
     )
 
 
@@ -30,6 +32,7 @@ def create_admin_user_with_phone_number(phone_number="+12125552367", password="T
         phone_number=phone_number,
         password=password,
         is_staff=is_staff,
+        is_active=True,
     )
 
 
@@ -73,7 +76,9 @@ class TestAuthUser(CommonTest):
         user = auth.get_user(self.client)
         self.assertTrue(user.is_authenticated)
 
-    def test_user_access_with_email(self):
+    @patch("core.views.Search")
+    def test_user_access_with_email(self, mock_search):
+        mock_search.return_value.scan.return_value = []
         self.client.force_login(self.user_email)
         response = self.client.get(reverse("core:index"))
         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -88,7 +93,9 @@ class TestAuthUser(CommonTest):
         response = self.client.get(reverse("admin:index"))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def test_user_access_with_phone_number(self):
+    @patch("core.views.Search")
+    def test_user_access_with_phone_number(self, mock_search):
+        mock_search.return_value.scan.return_value = []
         self.client.force_login(self.user_phone_number)
         response = self.client.get(reverse("core:index"))
         self.assertEqual(response.status_code, HTTPStatus.OK)

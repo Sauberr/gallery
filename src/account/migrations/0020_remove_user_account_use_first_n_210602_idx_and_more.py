@@ -17,14 +17,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="user",
-            index=models.Index(
-                fields=["first_name"], name="account_use_first_n_ec5d9a_idx"
-            ),
+            index=models.Index(fields=["first_name"], name="account_use_first_n_ec5d9a_idx"),
         ),
         migrations.AddIndex(
             model_name="user",
-            index=models.Index(
-                fields=["last_name"], name="account_use_last_na_0444d4_idx"
-            ),
+            index=models.Index(fields=["last_name"], name="account_use_last_na_0444d4_idx"),
         ),
     ]

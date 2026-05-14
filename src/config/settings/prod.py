@@ -4,7 +4,7 @@ from config.settings.base import *  # noqa
 
 DEBUG = False
 
-SECRET_KEY = "django-secret-key"
+SECRET_KEY = config("SECRET_KEY")
 
 ALLOWED_HOSTS: list[Any] = ["localhost"]
 
@@ -21,7 +21,7 @@ CORS_ALLOWED_ORIGINS: list[str] = [
     "http://localhost:8000",
 ]
 
-SITE_DOMAIN: str = f"127.0.0.1:{config('LOCAL_PORT', default=8000, cast=int)}"
+SITE_DOMAIN: str = config("SITE_DOMAIN", default="localhost:8000", cast=str)
 
 
 DATABASES = {

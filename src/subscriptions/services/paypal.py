@@ -17,13 +17,13 @@ def get_paypal_headers(access_token: str) -> dict[str, str]:
 
 
 def get_access_token() -> str | None:
-    data: Dict[str, str] = {"grant_type": "client_credentials"}
+    data: dict[str, str] = {"grant_type": "client_credentials"}
 
     headers = {"Accept": "application/json", "Accept-Language": "en_US"}
 
-    client_id: str = str(os.environ.get("PAYPAL_CLIENT_ID"))
-    secret_id: str = str(os.environ.get("PAYPAL_SECRET_ID"))
-    url: str = f"{os.environ.get('PAYPAL_URL')}/v1/oauth2/token"
+    client_id: str = os.environ.get("PAYPAL_CLIENT_ID", "")
+    secret_id: str = os.environ.get("PAYPAL_SECRET_ID", "")
+    url: str = f"{os.environ.get('PAYPAL_URL', '')}/v1/oauth2/token"
 
     try:
         response = requests.post(url, data=data, headers=headers, auth=(client_id, secret_id))
@@ -37,7 +37,7 @@ def get_access_token() -> str | None:
 def cancel_subscription_paypal(access_token, subscription_id: str) -> None:
 
     try:
-        url: str = f"{os.environ.get('PAYPAL_URL')}/v1/billing/subscriptions/{subscription_id}/cancel"
+        url: str = f"{os.environ.get('PAYPAL_URL', '')}/v1/billing/subscriptions/{subscription_id}/cancel"
         requests.post(url, headers=get_paypal_headers(access_token))
 
     except requests.exceptions.RequestException as e:
@@ -54,9 +54,9 @@ def update_subscription_paypal(access_token, subscription_id: str, new_plan: str
         new_subscription_plan = SubscriptionPlan.objects.get(name=new_plan)
         new_subscription_plan_id = new_subscription_plan.paypal_plan_id
 
-        url: str = f'{os.environ.get("PAYPAL_URL")}/v1/billing/subscriptions/{subscription_id}/revise'
+        url: str = f'{os.environ.get("PAYPAL_URL", "")}/v1/billing/subscriptions/{subscription_id}/revise'
 
-        revision_data: Dict[str, Any] = {
+        revision_data: dict[str, Any] = {
             "plan_id": new_subscription_plan_id,
         }
 
@@ -83,7 +83,7 @@ def update_subscription_paypal(access_token, subscription_id: str, new_plan: str
 
 def get_current_subscription(access_token, subscription_id: str) -> str | None:
 
-    url: str = f"{os.environ.get('PAYPAL_URL')}/v1/billing/subscriptions/{subscription_id}"
+    url: str = f"{os.environ.get('PAYPAL_URL', '')}/v1/billing/subscriptions/{subscription_id}"
 
     try:
         response = requests.get(url, headers=get_paypal_headers(access_token))

@@ -2,7 +2,7 @@ from django.core.cache import cache
 
 
 class TitleMixin:
-    '''Mixin to add title to context data'''
+    """Mixin to add title to context data"""
 
     title = None
 
@@ -13,11 +13,11 @@ class TitleMixin:
 
 
 class CacheMixin:
-    '''Mixin to handle caching of query results'''
+    """Mixin to handle caching of query results"""
 
     def set_get_cache(self, query, cache_name: str, cache_time: int) -> dict[str, object]:
         data = cache.get(cache_name)
-        if not data:
+        if data is None:
             data = query
             cache.set(cache_name, data, cache_time)
 

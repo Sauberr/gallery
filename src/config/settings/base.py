@@ -15,10 +15,12 @@ INTERNAL_IPS: list[str] = [
     "localhost",
 ]
 
+REDIS_URL: str = config("REDIS_URL", default="redis://localhost:6379")
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": REDIS_URL,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -29,15 +31,14 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_RESULT_SERIALIZER: str = "json"
 CELERY_TASK_SERIALIZER: str = "json"
 
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_BROKER_TRANSPORT = "redis"
 
 
 # Application definition
 
 INSTALLED_APPS: tuple[str, ...] = (
-
     # Django apps
     "jet.dashboard",
     "jet",
@@ -52,8 +53,6 @@ INSTALLED_APPS: tuple[str, ...] = (
     "rest_framework",
     "django_elasticsearch_dsl",
     "django.contrib.humanize",
-    "debug_toolbar",
-
     # Custom apps
     "phonenumber_field",
     "crispy_forms",
@@ -67,7 +66,6 @@ INSTALLED_APPS: tuple[str, ...] = (
     "rest_framework_simplejwt",
     "djoser",
     "django_celery_beat",
-
     # My apps
     "core",
     "subscriptions",
@@ -88,7 +86,6 @@ MIDDLEWARE: tuple[str, ...] = (
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
 )
@@ -117,7 +114,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 
 sentry_sdk.init(
-    dsn="https://e234bbcf9adac056b2fd1709d2727d16@o4507838166466560.ingest.de.sentry.io/4507838177542224",
+    dsn=config("SENTRY_DSN", default=""),
     traces_sample_rate=1.0,
     profiles_sample_rate=1.0,
 )
@@ -187,23 +184,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 SOCIAL_AUTH_URL_NAMESPACE: str = "social"
-
-DEBUG_TOOLBAR_PANELS: list[str] = [
-    "debug_toolbar.panels.versions.VersionsPanel",
-    "debug_toolbar.panels.timer.TimerPanel",
-    "debug_toolbar.panels.settings.SettingsPanel",
-    "debug_toolbar.panels.headers.HeadersPanel",
-    "debug_toolbar.panels.request.RequestPanel",
-    "debug_toolbar.panels.sql.SQLPanel",
-    "debug_toolbar.panels.staticfiles.StaticFilesPanel",
-    "debug_toolbar.panels.templates.TemplatesPanel",
-    "debug_toolbar.panels.cache.CachePanel",
-    "debug_toolbar.panels.signals.SignalsPanel",
-    "debug_toolbar.panels.logging.LoggingPanel",
-    "debug_toolbar.panels.redirects.RedirectsPanel",
-    "cachalot.panels.CachalotPanel",
-]
-
 
 AUTHENTICATION_BACKENDS: list[str] = [
     "social_core.backends.google.GoogleOAuth2",

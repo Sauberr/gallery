@@ -20,10 +20,12 @@ def process_expired_subscriptions():
             )
 
             if expired_count == 0:
-                return _("No expired subscriptions found.")
+                return "No expired subscriptions found."
+
+            return f"Marked {expired_count} subscriptions as expired."
 
     except Exception as e:
-        return _(f"An error occurred while processing expired subscriptions: {str(e)}")
+        return f"An error occurred while processing expired subscriptions: {e}"
 
 
 @shared_task
@@ -32,13 +34,13 @@ def send_subscription_expiring_email(user_subscription_id: int):
         user_subscription = UserSubscription.objects.select_related("user", "plan").get(id=user_subscription_id)
 
         if user_subscription.expiration_notification_sent:
-            return _(f"Expiration notification already sent for {user_subscription.user.email}")
+            return f"Expiration notification already sent for {user_subscription.user.email}"
 
         user = user_subscription.user
         days_left = user_subscription.days_until_expiry
 
         if days_left is None or days_left > NOTIFICATION_DAYS_THRESHOLD:
-            return _(f"No expiration notification needed for {user.email}")
+            return f"No expiration notification needed for {user.email}"
 
         mail_subject = _("Your subscription is expiring soon")
         domain = settings.SITE_DOMAIN
@@ -65,13 +67,13 @@ def send_subscription_expiring_email(user_subscription_id: int):
         user_subscription.expiration_notification_sent = True
         user_subscription.save(update_fields=["expiration_notification_sent"])
 
-        return _(f"Expiration notification sent to {user.email}")
+        return f"Expiration notification sent to {user.email}"
 
     except UserSubscription.DoesNotExist:
-        return _("User subscription not found.")
+        return "User subscription not found."
 
     except Exception as e:
-        return _(f"An error occurred while sending the expiration notification: {str(e)}")
+        return f"An error occurred while sending the expiration notification: {e}"
 
 
 @shared_task
@@ -92,4 +94,4 @@ def check_subscriptions_for_notification():
         return f"Scheduled {sent_count} expiration notifications using model method"
 
     except Exception as e:
-        return f"Error checking subscriptions for notification: {str(e)}"
+        return f"Error checking subscriptions for notification: {e}"

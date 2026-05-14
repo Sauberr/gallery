@@ -1,5 +1,6 @@
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
+from django.db.models import ExpressionWrapper
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from faker import Faker
@@ -66,7 +67,10 @@ class Images(models.Model):
         help_text=_("Quantity of the image available"),
     )
     total_quantity = models.GeneratedField(
-        expression=models.F("quantity") * models.F("price"),
+        expression=ExpressionWrapper(
+            models.F("quantity") * models.F("price"),
+            output_field=models.DecimalField(max_digits=10, decimal_places=2),
+        ),
         output_field=models.DecimalField(max_digits=10, decimal_places=2),
         db_persist=True,
         help_text=_("Total value of the image based on quantity and price"),

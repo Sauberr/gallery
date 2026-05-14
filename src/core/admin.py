@@ -11,5 +11,5 @@ class ContactUsAdmin(admin.ModelAdmin):
     search_fields = ("name", "email", "message")
     ordering = ("name", "email", "message")
     readonly_fields = ("created_at",)
-    list_filter = ("name", "email", "message")
+    list_filter = ("created_at",)
     list_per_page = 10

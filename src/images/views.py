@@ -10,6 +10,24 @@ from images.forms import ImageCreateForm
 from images.models import Images
 from subscriptions.models import UserSubscription
 
+SUBSCRIPTION_ALLOWED_PLANS: dict[str, list[str]] = {
+    "Basic": ["Basic"],
+    "Premium": ["Basic", "Premium"],
+    "Enterprise": ["Basic", "Premium", "Enterprise"],
+}
+
+
+def _get_subscription_context(user) -> dict:
+    """Return user_subscription_plan and allowed_plans for the given user."""
+    try:
+        user_subscription = UserSubscription.objects.select_related("plan").only("plan__name").get(user=user)
+        return {
+            "user_subscription_plan": user_subscription.plan.name,
+            "allowed_plans": SUBSCRIPTION_ALLOWED_PLANS,
+        }
+    except UserSubscription.DoesNotExist:
+        return {"user_subscription_plan": None, "allowed_plans": {}}
+
 
 class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
     """Display paginated list of images filtered by user subscription plan"""
@@ -20,35 +38,16 @@ class ImagesList(LoginRequiredMixin, CacheMixin, TitleMixin, ListView):
     context_object_name: str = "images"
     ordering = ["title"]
 
-    ALLOWED_PLANS = {
-        "Basic": ["Basic"],
-        "Premium": ["Basic", "Premium"],
-        "Enterprise": ["Basic", "Premium", "Enterprise"],
-    }
-
     def get_context_data(self, **kwargs):
         """Add user subscription plan and paginated images to context"""
 
         context = super().get_context_data(**kwargs)
-        user_subscription_plan = None
-        allowed_plans = {}
+        context.update(_get_subscription_context(self.request.user))
 
-        try:
-            user_subscription = (
-                UserSubscription.objects.select_related("plan").only("plan__name").get(user=self.request.user)
-            )
-            user_subscription_plan = user_subscription.plan.name
-            allowed_plans = self.ALLOWED_PLANS
-        except UserSubscription.DoesNotExist:
-            pass
-
-        context["user_subscription_plan"] = user_subscription_plan
-        context["allowed_plans"] = allowed_plans
-
-        images = self.get_queryset()
+        images = self.set_get_cache(self.get_queryset(), "images", 15)
         custom_range, images = paginator(self.request, images, 4)
         context["custom_range"] = custom_range
-        context["images"] = self.set_get_cache(images, "images", 15)
+        context["images"] = images
 
         return context
 
@@ -61,31 +60,11 @@ class ImageDetail(LoginRequiredMixin, TitleMixin, DetailView):
     model = Images
     context_object_name: str = "image"
 
-    ALLOWED_PLANS = {
-        "Basic": ["Basic"],
-        "Premium": ["Basic", "Premium"],
-        "Enterprise": ["Basic", "Premium", "Enterprise"],
-    }
-
     def get_context_data(self, **kwargs):
         """Add user subscription plan and allowed plans to context"""
 
         context = super().get_context_data(**kwargs)
-        user_subscription_plan = None
-        allowed_plans = {}
-
-        try:
-            user_subscription = (
-                UserSubscription.objects.select_related("plan").only("plan__name").get(user=self.request.user)
-            )
-            user_subscription_plan = user_subscription.plan.name
-            allowed_plans = self.ALLOWED_PLANS
-        except UserSubscription.DoesNotExist:
-            pass
-
-        context["user_subscription_plan"] = user_subscription_plan
-        context["allowed_plans"] = allowed_plans
-
+        context.update(_get_subscription_context(self.request.user))
         return context
 
 

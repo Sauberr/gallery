@@ -18,4 +18,4 @@ class CommonTest(ABC, TestCase):
             response = self.client.get(self.path)
             self.assertEqual(response.status_code, HTTPStatus.OK)
             self.assertTemplateUsed(response, self.template_name)
-            self.assertEqual(response.context_data["title"], self.title)
+            self.assertEqual(response.context["title"], self.title)

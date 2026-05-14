@@ -105,16 +105,9 @@ class PaypalUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs) -> HttpResponse:
         """Render subscription update confirmation with subscription ID"""
 
-        try:
-            subscription = get_object_or_404(UserSubscription, user=request.user, is_active=True)
-            context = {"subscription_id": subscription.paypal_subscription_id}
-            return render(
-                request,
-                "subscriptions/paypal_update_subscription_confirmed.html",
-                context,
-            )
-        except UserSubscription.DoesNotExist:
-            return render(request, "subscriptions/paypal_update_subscription_confirmed.html")
+        subscription = UserSubscription.objects.filter(user=request.user, is_active=True).first()
+        context = {"subscription_id": subscription.paypal_subscription_id if subscription else None}
+        return render(request, "subscriptions/paypal_update_subscription_confirmed.html", context)
 
 
 class DjangoUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
@@ -123,20 +116,19 @@ class DjangoUpdateSubscriptionConfirmed(LoginRequiredMixin, View):
     def put(self, request, subscription_id: str) -> HttpResponse:
         """Fetch current plan from PayPal and update user subscription"""
 
-        try:
-            access_token = get_access_token()
-            current_plan_id = get_current_subscription(access_token, subscription_id)
+        access_token = get_access_token()
+        current_plan_id = get_current_subscription(access_token, subscription_id)
 
-            subscription_plan = get_object_or_404(SubscriptionPlan, paypal_plan_id=current_plan_id)
+        if not current_plan_id:
+            return HttpResponse("Unable to fetch current plan from PayPal", status=HTTPStatus.BAD_REQUEST)
 
-            updated = UserSubscription.objects.filter(user=request.user, paypal_subscription_id=subscription_id).update(
-                plan=subscription_plan, is_active=True
-            )
+        subscription_plan = get_object_or_404(SubscriptionPlan, paypal_plan_id=current_plan_id)
 
-            if not updated:
-                return HttpResponse("Subscription not found", status=HTTPStatus.NOT_FOUND)
+        updated = UserSubscription.objects.filter(user=request.user, paypal_subscription_id=subscription_id).update(
+            plan=subscription_plan, is_active=True
+        )
 
-            return render(request, "subscriptions/django_update_subscription_confirmed.html")
-
-        except UserSubscription.DoesNotExist:
+        if not updated:
             return HttpResponse("Subscription not found", status=HTTPStatus.NOT_FOUND)
+
+        return render(request, "subscriptions/django_update_subscription_confirmed.html")

@@ -1,7 +1,7 @@
-
 def cleanup_social_account(backend, uid, user=None, *args, **kwargs) -> dict[str, object]:
-    user.avatar = kwargs["response"]["picture"]
-    user.save()
+    if user:
+        user.profile.avatar = kwargs["response"].get("picture", "")
+        user.profile.save()
     return {"user": user}
 
 

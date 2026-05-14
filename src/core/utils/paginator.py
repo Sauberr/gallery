@@ -2,7 +2,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 
 def paginator(request, images, results) -> tuple:
-    '''Paginate images and return custom range and paginated images'''
+    """Paginate images and return custom range and paginated images"""
 
     page = request.GET.get("page")
     paginator = Paginator(images, results)

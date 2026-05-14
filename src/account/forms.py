@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import (AuthenticationForm, UserChangeForm,
-                                       UserCreationForm)
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
 from django_recaptcha.fields import ReCaptchaField
 from phonenumber_field.formfields import PhoneNumberField
@@ -31,13 +30,13 @@ class UserRegistrationForm(UserCreationForm):
             "captcha",
         )
 
-    def save(self, commit=True):
-        return super(UserRegistrationForm, self).save(commit=commit)
-
     def clean_password1(self):
         password1 = self.cleaned_data.get("password1")
-        special_characters = "!@#$%^&*()_-+={}[]|\:;'<>?,./"  # noqa
-        capitalize_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # noqa
+        if not password1:
+            return password1
+
+        special_characters = "!@#$%^&*()_-+={}[]|\\:;'<>?,./"  # noqa
+        capitalize_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
         has_special = any(char in special_characters for char in password1)
         has_capital = any(char in capitalize_letters for char in password1)
@@ -60,10 +59,6 @@ class UserLoginForm(AuthenticationForm):
         required=False,
         widget=forms.CheckboxInput(attrs={"class": "form-check-input", "id": "remember_me"}),
     )
-
-    class Meta:
-        model = get_user_model()
-        fields = ("email", "phone_number", "password", "remember_me")
 
 
 class ProfileForm(forms.ModelForm):
@@ -109,4 +104,4 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ("first_name", "last_name", "email", "phone_number")
+        fields = ("birth_date", "sex", "location", "status", "avatar")

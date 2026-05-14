@@ -1,7 +1,7 @@
 from django.urls import path
 
-from account.views import (ActivateUser, Disable2fa, PasswordResetView,
-                           ProfileView, UserLoginView, UserLogoutView,
+from account.views import (ActivateUser, Disable2fa, ProfileView,
+                           ResetPasswordView, UserLoginView, UserLogoutView,
                            UserRegistrationView, VerifyMfa)
 
 app_name: str = "account"
@@ -19,5 +19,5 @@ urlpatterns = [
         ActivateUser.as_view(),
         name="activate_user",
     ),
-    path("password-reset/", PasswordResetView.as_view(), name="password_reset"),
+    path("password-reset/", ResetPasswordView.as_view(), name="password_reset"),
 ]

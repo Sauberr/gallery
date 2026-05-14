@@ -3,6 +3,7 @@ from decimal import Decimal
 from http import HTTPStatus
 from unittest.mock import Mock, patch
 
+import requests
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -18,7 +19,7 @@ from subscriptions.services.paypal import (cancel_subscription_paypal,
 
 def create_test_user(email: str = "test@test.com", password: str = "testpass123") -> get_user_model():
     """Create a test user"""
-    return get_user_model().objects.create_user(email=email, password=password)
+    return get_user_model().objects.create_user(email=email, password=password, is_active=True)
 
 
 def create_test_subscription_plan(
@@ -80,7 +81,7 @@ class PayPalServiceTests(TestCase):
         )
 
     @patch("requests.post")
-    def test_get_access_token(self, mock_post: Mock, requests=None) -> None:
+    def test_get_access_token(self, mock_post: Mock) -> None:
         """Test getting PayPal access token"""
         mock_response = Mock()
         mock_response.json.return_value = {"access_token": self.access_token}
@@ -94,7 +95,7 @@ class PayPalServiceTests(TestCase):
         self.assertIsNone(token)
 
     @patch("requests.post")
-    def test_cancel_subscription_paypal(self, mock_post: Mock, requests=None) -> None:
+    def test_cancel_subscription_paypal(self, mock_post: Mock) -> None:
         """Test cancelling PayPal subscription"""
         cancel_subscription_paypal(self.access_token, "S-123")
         mock_post.assert_called_once()
@@ -104,7 +105,7 @@ class PayPalServiceTests(TestCase):
         self.assertIsNone(result)
 
     @patch("requests.post")
-    def test_update_subscription_paypal(self, mock_post: Mock, requests=None) -> None:
+    def test_update_subscription_paypal(self, mock_post: Mock) -> None:
         """Test updating PayPal subscription"""
         mock_response = Mock()
         mock_response.status_code = HTTPStatus.OK
@@ -122,7 +123,7 @@ class PayPalServiceTests(TestCase):
         self.assertIsNone(result)
 
     @patch("requests.get")
-    def test_get_current_subscription(self, mock_get: Mock, requests=None) -> None:
+    def test_get_current_subscription(self, mock_get: Mock) -> None:
         """Test getting current subscription details from PayPal"""
         mock_response = Mock()
         mock_response.status_code = HTTPStatus.OK
@@ -146,7 +147,7 @@ class SubscriptionViewsTest(TestCase):
         """Set up test data"""
         self.client = Client()
         self.user = create_test_user()
-        self.client.login(email="test@test.com", password="testpass123")
+        self.client.login(username="test@test.com", password="testpass123")
         self.plan = create_test_subscription_plan()
         self.subscription = create_test_user_subscription(user=self.user, plan=self.plan)
 
@@ -159,7 +160,7 @@ class SubscriptionViewsTest(TestCase):
             kwargs={"subscription_id": "S-NEW", "plan": "Premium"},
         )
 
-        response = self.client.get(url)
+        response = self.client.post(url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, "subscriptions/create_subscription.html")
 
@@ -168,7 +169,7 @@ class SubscriptionViewsTest(TestCase):
         self.assertEqual(subscription.plan, self.plan)
         self.assertTrue(subscription.is_active)
 
-        response = self.client.get(url)
+        response = self.client.post(url)
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
 
     @patch("subscriptions.views.get_access_token")
@@ -214,7 +215,7 @@ class SubscriptionViewsTest(TestCase):
 
         url = reverse("subscriptions:delete_subscription", kwargs={"subscription_id": "S-123"})
 
-        response = self.client.get(url)
+        response = self.client.delete(url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, "subscriptions/delete_subscription.html")
 
@@ -240,7 +241,7 @@ class SubscriptionViewsTest(TestCase):
             kwargs={"subscription_id": "S-123"},
         )
 
-        response = self.client.get(url)
+        response = self.client.put(url, content_type="application/json")
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(response, "subscriptions/django_update_subscription_confirmed.html")
 
@@ -248,7 +249,7 @@ class SubscriptionViewsTest(TestCase):
             "subscriptions:django_update_subscription_confirmed",
             kwargs={"subscription_id": "INVALID"},
         )
-        response = self.client.get(url)
+        response = self.client.put(url, content_type="application/json")
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_login_required(self):

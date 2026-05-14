@@ -5,6 +5,30 @@ from config.settings.base import *  # noqa
 
 DEBUG = True
 
+INSTALLED_APPS = INSTALLED_APPS + ("debug_toolbar",)  # type: ignore[operator]
+MIDDLEWARE = list(MIDDLEWARE)  # type: ignore[arg-type]
+MIDDLEWARE.insert(
+    MIDDLEWARE.index("django_prometheus.middleware.PrometheusAfterMiddleware"),
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+)
+MIDDLEWARE = tuple(MIDDLEWARE)
+
+DEBUG_TOOLBAR_PANELS: list[str] = [
+    "debug_toolbar.panels.versions.VersionsPanel",
+    "debug_toolbar.panels.timer.TimerPanel",
+    "debug_toolbar.panels.settings.SettingsPanel",
+    "debug_toolbar.panels.headers.HeadersPanel",
+    "debug_toolbar.panels.request.RequestPanel",
+    "debug_toolbar.panels.sql.SQLPanel",
+    "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+    "debug_toolbar.panels.templates.TemplatesPanel",
+    "debug_toolbar.panels.cache.CachePanel",
+    "debug_toolbar.panels.signals.SignalsPanel",
+    "debug_toolbar.panels.logging.LoggingPanel",
+    "debug_toolbar.panels.redirects.RedirectsPanel",
+    "cachalot.panels.CachalotPanel",
+]
+
 SECRET_KEY = "django-secret-key"
 
 ALLOWED_HOSTS: list = ["*", "127.0.0.1"]
@@ -56,8 +80,9 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="", cast=str)
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="", cast=str)
 EMAIL_FAIL_SILENTLY = config("EMAIL_FAIL_SILENTLY", default=False, cast=bool)
 
-RECAPTCHA_PUBLIC_KEY = config("RECAPTCHA_PUBLIC_KEY", default="", cast=str)
-RECAPTCHA_PRIVATE_KEY = config("RECAPTCHA_PRIVATE_KEY", default="", cast=str)
+RECAPTCHA_PUBLIC_KEY = config("RECAPTCHA_PUBLIC_KEY", default="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", cast=str)
+RECAPTCHA_PRIVATE_KEY = config("RECAPTCHA_PRIVATE_KEY", default="6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe", cast=str)
+SILENCED_SYSTEM_CHECKS = ["django_recaptcha.recaptcha_test_key_error"]
 
 CELERY_BEAT_SCHEDULE = {
     "process-expired-subscriptions": {

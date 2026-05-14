@@ -65,6 +65,7 @@ class UserLoginView(TitleMixin, SuccessMessageMixin, LoginView):
 
 class UserLogoutView(LogoutView):
     """Handle user logout and session termination"""
+
     pass
 
 
@@ -140,9 +141,9 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
     title: str = "Profile"
 
     def get_object(self):
-        """Return the current authenticated user"""
+        """Return the profile of the current authenticated user"""
 
-        return self.request.user
+        return self.request.user.profile
 
     def get_initial(self):
         """Load initial form data from user and profile fields"""
@@ -160,8 +161,8 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
     def _update_profile(self, form):
         """Update user and profile fields from form data"""
 
-        user = form.save(commit=False)
-        profile = user.profile
+        profile = form.save(commit=False)
+        user = profile.user
 
         for field in ["first_name", "last_name", "phone_number"]:
             setattr(user, field, form.cleaned_data[field])
@@ -175,10 +176,10 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
 
         profile.save()
 
-    def _has_changes(self, form, user):
+    def _has_changes(self, form, profile):
         """Check if form data differs from current user and profile data"""
 
-        profile = user.profile
+        user = profile.user
 
         user_changed = any(
             form.cleaned_data[field] != getattr(user, field) for field in ["first_name", "last_name", "phone_number"]
@@ -195,7 +196,7 @@ class ProfileView(LoginRequiredMixin, TitleMixin, UpdateView):
     def form_valid(self, form):
         """Process valid profile form and update user data if changes detected"""
 
-        if self._has_changes(form, self.request.user):
+        if self._has_changes(form, self.request.user.profile):
             self._update_profile(form)
             messages.success(self.request, "Profile updated successfully")
         return super().form_valid(form)
@@ -245,11 +246,12 @@ class VerifyMfa(View):
         if verify_2fa_otp(user, otp):
             if not request.user.is_authenticated:
                 login(request, user, backend=self.auth_backend)
-            messages.success(request, "2FA enabled successfully!")
-
+                messages.success(request, "Login successful!")
+            else:
+                messages.success(request, "2FA enabled successfully!")
         else:
-            messages.success(request, "Login successful!")
-            return redirect("account:profile")
+            messages.error(request, "Invalid OTP code. Please try again.")
+            return render(request, self.template_name, {"user_id": user_id})
 
         return redirect(self.success_url)
 

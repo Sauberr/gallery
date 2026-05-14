@@ -4,9 +4,9 @@ from config.settings.base import *  # noqa
 
 DEBUG = False
 
-SECRET_KEY = "django-secret-key"
+SECRET_KEY = config("SECRET_KEY")
 
-ALLOWED_HOSTS: list[Any] = ["*"]
+ALLOWED_HOSTS: list[Any] = config("ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",")
 
 DATABASES = {
     "default": {

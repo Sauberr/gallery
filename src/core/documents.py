@@ -6,7 +6,7 @@ from images.models import Images
 
 @registry.register_document
 class ImagesDocument(Document):
-    '''Elasticsearch document for the Images model'''
+    """Elasticsearch document for the Images model"""
 
     class Index:
         name = "images"

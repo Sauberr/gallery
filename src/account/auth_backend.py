@@ -9,8 +9,9 @@ class AuthBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             user = UserModel.objects.get(Q(email=username) | Q(phone_number=username))
-        except UserModel.DoesNotExist:
+        except (UserModel.DoesNotExist, UserModel.MultipleObjectsReturned):
             UserModel().set_password(password)
+            return None
         else:
             if user.check_password(password) and self.user_can_authenticate(user):
                 return user

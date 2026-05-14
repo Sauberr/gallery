@@ -1,4 +1,5 @@
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -15,6 +16,7 @@ def create_test_user(email="test@example.com", password="TestPass123!"):
     return get_user_model().objects.create_user(
         email=email,
         password=password,
+        is_active=True,
     )
 
 
@@ -71,6 +73,20 @@ def create_test_image(
 
 
 class APITests(APITestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._es_update_patcher = patch("django_elasticsearch_dsl.registries.registry.update")
+        cls._es_delete_patcher = patch("django_elasticsearch_dsl.registries.registry.delete")
+        cls._es_update_patcher.start()
+        cls._es_delete_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._es_update_patcher.stop()
+        cls._es_delete_patcher.stop()
+        super().tearDownClass()
+
     def setUp(self):
         """Set up test data"""
 
@@ -132,13 +148,13 @@ class APITests(APITestCase):
                 "image": "test.jpg",
             },
         )
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.put(detail_url, {"title": "Updated Title"})
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.delete(detail_url)
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.admin_token}")
         response = self.client.get(list_url)
@@ -175,13 +191,13 @@ class APITests(APITestCase):
             list_url,
             {"name": "New Plan", "description": "New Description", "cost": "19.99"},
         )
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.put(detail_url, {"name": "Updated Plan"})
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.delete(detail_url)
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.admin_token}")
         response = self.client.get(list_url)
@@ -203,7 +219,7 @@ class APITests(APITestCase):
 
         response = self.client.get(detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["user"]["email"], self.user.email)
+        self.assertEqual(response.data["user_email"], self.user.email)
 
         search_url = f"{list_url}?search={self.user.email}"
         response = self.client.get(search_url)
@@ -215,13 +231,13 @@ class APITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response = self.client.post(list_url, {"user": self.user.id, "plan": self.plan.id})
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.put(detail_url, {"is_active": False})
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = self.client.delete(detail_url)
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.admin_token}")
         response = self.client.get(list_url)

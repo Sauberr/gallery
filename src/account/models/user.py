@@ -50,21 +50,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         ]
 
     def __str__(self) -> str:
-        return f"{self.first_name}_{self.last_name}"
+        return f"{self.first_name} {self.last_name}"
 
     @classmethod
     def generate_instances(cls, count: int) -> None:
         """Generate fake user instances for testing"""
         faker = Faker()
         for _ in range(count):
-            user = cls.objects.create(  # noqa
+            cls.objects.create(  # noqa
                 first_name=faker.first_name(),
                 last_name=faker.last_name(),
                 email=faker.email(),
                 phone_number=faker.phone_number(),
-                birth_date=faker.date_time_between(start_date="-30y", end_date="-18y"),
-                avatar=faker.image_url(),
-                date_joined=faker.date_time_this_year(),
             )
 
     def format_phone_number(self) -> str | None:
@@ -90,4 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_working_time(self) -> str:
         """Calculate time user has been on the site"""
-        return f"Time on site: {timezone.now() - self.date_joined}"
+        try:
+            return f"Time on site: {timezone.now() - self.profile.date_joined}"
+        except Exception:
+            return "Time on site: unknown"

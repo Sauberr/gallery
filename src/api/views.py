@@ -54,7 +54,7 @@ class HealthView(APIView):
                 "database": database_status,
                 "cache": cache_status,
             },
-            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         return Response(health_status, status=status.HTTP_200_OK)
